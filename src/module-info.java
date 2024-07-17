@@ -6,4 +6,6 @@
  *
  */
 module EduOps {
+	requires java.sql;
+	
 }

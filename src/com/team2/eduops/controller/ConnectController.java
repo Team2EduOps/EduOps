@@ -43,4 +43,30 @@ public class ConnectController {
 				e.printStackTrace();
 			}
 		}
+		
+		public static String scanData() {
+			String str = "";
+			try {
+				str = sc.next();
+				
+			} catch(Exception e) {
+				e.printStackTrace();
+			} finally {
+				return str;			
+			}
+		}
+		
+		// data를 String 값으로 scan하여 parseInt 시도 -> 성공 시 입력된 정수값 리턴, 실패 시 음수값인 -1 값 리턴
+		// 코드 짜실 때 리턴값이 -1인지 체크하여 코드 작성
+		public static int scanIntData() {
+			int i = -1;
+			try {
+				i = Integer.parseInt(sc.next());
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			finally {
+				return i;
+			}
+		}
 }

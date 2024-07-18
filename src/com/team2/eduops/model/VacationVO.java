@@ -6,9 +6,8 @@ public class VacationVO {
 
 	// Student 테이블의 컬럼명 필드로 선언
 	private int vacate_code;
-	private String vacate_date;
+	private String vacate_date, vacate_file;
 	private int std_no, adm_no;
-	private String vacate_file;
 
 	// 테이블명은 상수값이라 바뀌지 않으므로 setter 없이 getter만 생성
 	public String getClassName() {

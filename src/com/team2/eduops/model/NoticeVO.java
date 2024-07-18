@@ -12,14 +12,11 @@ public class NoticeVO {
 	public String getClassName() {
 		return ClassName;
 	}
-
+	
 	// 필드들 getter/setter 생성
+	// Posted_date은 자동으로 생성됨으로 setter 없이 getter만 생성
 	public String getPosted_date() {
 		return posted_date;
-	}
-
-	public void setPosted_date(String posted_date) {
-		this.posted_date = posted_date;
 	}
 
 	public String getContents() {
@@ -30,11 +27,8 @@ public class NoticeVO {
 		this.contents = contents;
 	}
 
+	// Post_no은 자동으로 생성됨으로 setter 없이 getter만 생성
 	public int getPost_no() {
 		return post_no;
-	}
-
-	public void setPost_no(int post_no) {
-		this.post_no = post_no;
 	}
 }

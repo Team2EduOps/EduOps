@@ -6,19 +6,23 @@ public class PageController {
 	public void runPage() {
 		int userNo;
 		LoginController lc = new LoginController();
+//		MessageController ms = new MessageController();
 
 		while (true) {
 			userNo = -1;
+//			ms.showEntrancePage();
 			showEntrancePage();
-			switch (ConnectController.scanIntData()) {
+			
+			int menuNo = ConnectController.scanIntData();
+			switch (menuNo) {
 			case 1:
-				userNo = lc.studentLogin();
+				userNo = lc.userLogin(menuNo);
 				if (lc.checkLogin(userNo)) {
 					runStudentPage(userNo);
 				}
 				break;
 			case 2:
-				userNo = lc.adminLogin();
+				userNo = lc.userLogin(menuNo);
 				if (lc.checkLogin(userNo)) {
 					runStudentPage(userNo);
 				}
@@ -37,21 +41,22 @@ public class PageController {
 
 	}
 
-	public static void runStudentPage(int userNo) { // 학생번호
+	public void runStudentPage(int userNo) { // 학생번호
 //		showStudentPage();
 
 	}
 
-	public static void runAdminPage(int userNo) { // 관리자번호
+	public void runAdminPage(int userNo) { // 관리자번호
 //		showAdminPage();
 	}
 
-	public static void showEntrancePage() {
+	public void showEntrancePage() {
 		// 로그인회원가입 페이지 띄우기
-		System.out.println("로그인/회원가입 페이지입니다.");
+		System.out.println("===로그인/회원가입 페이지===");
 		System.out.println("1. 학생 로그인");
 		System.out.println("2. 관리자 로그인");
 		System.out.println("3. 학생 회원가입");
 		System.out.println("0. 프로그램 종료");
 	}
+
 }

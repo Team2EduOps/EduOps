@@ -3,6 +3,8 @@ package com.team2.eduops.model;
 public class AdminVO {
 	// 바뀌지 않을 테이블명 상수값 지정
 	public final String ClassName = "ADMIN";
+	public final String UserType = "관리자";
+	public final String SqlType = "adm";
 
 	// Student 테이블의 컬럼명 필드로 선언
 	private int adm_no;
@@ -11,6 +13,14 @@ public class AdminVO {
 	// 테이블명은 상수값이라 바뀌지 않으므로 setter 없이 getter만 생성
 	public String getClassName() {
 		return ClassName;
+	}
+
+	public String getUserType() {
+		return UserType;
+	}
+
+	public String getSqlType() {
+		return SqlType;
 	}
 
 	// 필드들 getter/setter 생성

@@ -1,7 +1,10 @@
 package com.team2.eduops.controller;
 
-public class PageController {
+import com.team2.eduops.model.StudentVO;
 
+public class PageController {
+	UserController uc = new UserController();
+	
 // main 메소드 안에서 종료하기 전까지 계속 돌아갈 메소드
 	public void runPage() {
 		int userNo;
@@ -24,7 +27,7 @@ public class PageController {
 			case 2:
 				userNo = lc.userLogin(menuNo);
 				if (lc.checkLogin(userNo)) {
-					runStudentPage(userNo);
+					runAdminPage(userNo);
 				}
 				break;
 			case 3:
@@ -42,12 +45,17 @@ public class PageController {
 	}
 
 	public void runStudentPage(int userNo) { // 학생번호
-//		showStudentPage();
+		StudentVO stdVo;
+		
+		// 학생 번호로 학생 정보 받아오기
+		stdVo = uc.getStdData(userNo);
+		
+		showStudentPage(stdVo.getStd_name());
 
 	}
 
 	public void runAdminPage(int userNo) { // 관리자번호
-//		showAdminPage();
+		showAdminPage();
 	}
 
 	public void showEntrancePage() {
@@ -55,6 +63,28 @@ public class PageController {
 		System.out.println("===로그인/회원가입 페이지===");
 		System.out.println("1. 학생 로그인");
 		System.out.println("2. 관리자 로그인");
+		System.out.println("3. 학생 회원가입");
+		System.out.println("0. 프로그램 종료");
+	}
+	
+	public void showStudentPage(String std_name) {
+		// 로그인회원가입 페이지 띄우기
+		System.out.println("===학생 홈 페이지===");
+		System.out.println("안녕하세요 " + std_name + "님");
+		System.out.println("1. 입실");
+		System.out.println("2. 공지 보기");
+		System.out.println("3. 퀴즈 제출");
+		System.out.println("4. 알고리즘 관리");
+		System.out.println("5. 근태 관리");
+		System.out.println("0. 로그아웃");
+
+	}
+	
+	public void showAdminPage() {
+		// 로그인회원가입 페이지 띄우기
+		System.out.println("===로그인/회원가입 페이지===");
+		System.out.println("1. 입실");
+		System.out.println("2. 공지 보기");
 		System.out.println("3. 학생 회원가입");
 		System.out.println("0. 프로그램 종료");
 	}

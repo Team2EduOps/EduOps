@@ -71,7 +71,7 @@ public class ConnectController {
 	public static String scanData() {
 		String str = null;
 		try {
-			str = sc.next();
+			str = sc.nextLine();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,7 +85,7 @@ public class ConnectController {
 	public static int scanIntData() {
 		int i = -1;
 		try {
-			i = Integer.parseInt(sc.next());
+			i = Integer.parseInt(sc.nextLine());
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -96,7 +96,7 @@ public class ConnectController {
 	////////////////////////////////
 	
 	// 준비한 쿼리문 String값 매개변수로 받아서 null값으로 비워둔 pstmt 안에 넣은 후 return
-	// 받아서 쓸 때 isPstmtNull(pstmt) 우선 실행하여 true값 받으면 문제 상황 발생
+	// 받아서 쓸 때 isNull(pstmt) 우선 실행하여 true값 받으면 문제 상황 발생
 	public static PreparedStatement getPstmt(String sql) {
 		pstmt = null;
 		try {

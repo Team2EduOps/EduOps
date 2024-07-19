@@ -2,71 +2,85 @@ package com.team2.eduops.controller;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 
+import com.team2.eduops.model.AdminVO;
 import com.team2.eduops.model.StudentVO;
 
 // 로그인 기능 관련 메소드들
 public class LoginController {
 
-	public int studentLogin() {
-		int studentNo = -1;
+	public int userLogin(int menuNo) {
+		int userNo = -1;
 		String id;
 		String pw;
-		StudentVO stdVo = new StudentVO();
 
-		showStudentLoginPage();
+		String userType = "";
+		String className = "";
+		String sqlType = "";
 
-		System.out.println("아이디를 입력하세요: ");
-		id = ConnectController.scanData();
-		System.out.println("비밀번호를 입력하세요: ");
-		pw = ConnectController.scanData();
+		if (menuNo == 1) {
+			StudentVO userVo = new StudentVO();
+			className = userVo.getClassName();
+			userType = userVo.getUserType();
+			sqlType = userVo.getSqlType();
 
-		String sql = "Select std_no, std_pw from " + stdVo.getClassName() + " where std_id = ?";
-		PreparedStatement pstmt = ConnectController.getPstmt(sql);
-		if (ConnectController.isNull(pstmt)) {
-			System.out.println("제대로 동작하지 않았습니다. 다시 입력해주세요.");
-			return studentNo;
-		}
-		try {
-			pstmt.setString(1, id);
-		} catch (Exception e) {
-//			e.printStackTrace();
-			e.getMessage();
-			return studentNo;
+		} else {
+			AdminVO userVo = new AdminVO();
+			className = userVo.getClassName();
+			className = userVo.getClassName();
+			userType = userVo.getUserType();
+			sqlType = userVo.getSqlType();
 		}
 
-		ResultSet rs = ConnectController.executePstmtQuery(pstmt);
+		String sqlNo = sqlType + "_no";
+		String sqlId = sqlType + "_id";
+		String sqlPw = sqlType + "_pw";
 
-		if (ConnectController.isNull(rs)) {
-			return studentNo;
-		}
+		showUserLoginPage(userType);
 
-		try {
-			rs.next();
-			if (pw.equals(rs.getString("std_pw"))) {
-				studentNo = rs.getInt("std_no");
+		while (userNo == -1) {
+			System.out.println("아이디를 입력하세요: ");
+			id = ConnectController.scanData();
+			System.out.println("비밀번호를 입력하세요: ");
+			pw = ConnectController.scanData();
+
+			String sql = "Select " + sqlNo + ", " + sqlPw + " from " + className + " where " + sqlId + " = ?";
+
+			PreparedStatement pstmt = ConnectController.getPstmt(sql);
+			if (ConnectController.isNull(pstmt)) {
+				System.out.println("제대로 동작하지 않았습니다. 다시 입력해주세요.");
+				continue;
 			}
-		} catch (Exception e) {
-//			e.printStackTrace();
-			e.getMessage();
+
+			try {
+				pstmt.setString(1, id);
+			} catch (Exception e) {
+//				e.printStackTrace();
+				System.out.println("문제발생");
+				e.getMessage();
+				continue;
+			}
+
+			ResultSet rs = ConnectController.executePstmtQuery(pstmt);
+
+			if (ConnectController.isNull(rs)) {
+				System.out.println("문제발생");
+				continue;
+			}
+
+			try {
+				rs.next();
+				if (pw.equals(rs.getString(sqlPw))) {
+					userNo = rs.getInt(sqlNo);
+				}
+			} catch (Exception e) {
+//				e.printStackTrace();
+				System.out.println("문제발생");
+				e.getMessage();
+				continue;
+			}
 		}
-
-		return studentNo;
-
-	}
-
-	
-	
-	
-	
-	
-	
-	
-	public int adminLogin() {
-		int adminNo = -1;
-
-		return adminNo;
+		return userNo;
 
 	}
 
@@ -78,8 +92,18 @@ public class LoginController {
 		return true;
 	}
 
+	public void showUserLoginPage(String userType) {
+		System.out.println("===" + userType + " 로그인 페이지===");
+		System.out.println("안녕하세요 :)");
+	}
+
 	public void showStudentLoginPage() {
 		System.out.println("===학생 로그인 페이지===");
+		System.out.println("안녕하세요 :)");
+	}
+
+	public void showAdminLoginPage() {
+		System.out.println("===관리자 로그인 페이지===");
 		System.out.println("안녕하세요 :)");
 	}
 }

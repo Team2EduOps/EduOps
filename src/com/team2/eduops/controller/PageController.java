@@ -24,7 +24,7 @@ public class PageController {
 			case 2:
 				userNo = lc.userLogin(menuNo);
 				if (lc.checkLogin(userNo)) {
-					runStudentPage(userNo);
+					runAdminPage(userNo);
 				}
 				break;
 			case 3:

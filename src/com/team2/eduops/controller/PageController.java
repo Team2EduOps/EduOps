@@ -1,10 +1,11 @@
 package com.team2.eduops.controller;
 
+import com.team2.eduops.model.AdminVO;
 import com.team2.eduops.model.StudentVO;
 
 public class PageController {
 	UserController uc = new UserController();
-	
+
 // main 메소드 안에서 종료하기 전까지 계속 돌아갈 메소드
 	public void runPage() {
 		int userNo;
@@ -15,7 +16,7 @@ public class PageController {
 			userNo = -1;
 //			ms.showEntrancePage();
 			showEntrancePage();
-			
+
 			int menuNo = ConnectController.scanIntData();
 			switch (menuNo) {
 			case 1:
@@ -46,16 +47,75 @@ public class PageController {
 
 	public void runStudentPage(int userNo) { // 학생번호
 		StudentVO stdVo;
-		
+
 		// 학생 번호로 학생 정보 받아오기
 		stdVo = uc.getStdData(userNo);
-		
-		showStudentPage(stdVo.getStd_name());
+
+		boolean isStdPageRun = true;
+		while (isStdPageRun) {
+			showStudentPage(stdVo.getStd_name());
+
+			int menuNo = ConnectController.scanIntData();
+			switch (menuNo) {
+			case 1:
+
+				break;
+			case 2:
+
+				break;
+			case 3:
+
+				break;
+			case 4:
+
+				break;
+			case 5:
+
+				break;
+			case 0:
+				isStdPageRun = false;
+				break;
+			default:
+				System.out.println("잘못 누르셨습니다. 다시 입력해주세요.");
+			}
+		}
 
 	}
 
 	public void runAdminPage(int userNo) { // 관리자번호
-		showAdminPage();
+		AdminVO admVo;
+
+		// 학생 번호로 학생 정보 받아오기
+		admVo = uc.getAdmData(userNo);
+
+		boolean isStdPageRun = true;
+		while (isStdPageRun) {
+			showStudentPage(admVo.getAdm_name());
+
+			int menuNo = ConnectController.scanIntData();
+			switch (menuNo) {
+			case 1:
+
+				break;
+			case 2:
+
+				break;
+			case 3:
+
+				break;
+			case 4:
+
+				break;
+			case 5:
+
+				break;
+			case 0:
+				isStdPageRun = false;
+				break;
+			default:
+				System.out.println("잘못 누르셨습니다. 다시 입력해주세요.");
+			}
+		}
 	}
 
 	public void showEntrancePage() {
@@ -66,7 +126,7 @@ public class PageController {
 		System.out.println("3. 학생 회원가입");
 		System.out.println("0. 프로그램 종료");
 	}
-	
+
 	public void showStudentPage(String std_name) {
 		// 로그인회원가입 페이지 띄우기
 		System.out.println("===학생 홈 페이지===");
@@ -79,7 +139,7 @@ public class PageController {
 		System.out.println("0. 로그아웃");
 
 	}
-	
+
 	public void showAdminPage() {
 		// 로그인회원가입 페이지 띄우기
 		System.out.println("===로그인/회원가입 페이지===");

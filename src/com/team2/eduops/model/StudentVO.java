@@ -4,6 +4,8 @@ public class StudentVO {
 
 	// 바뀌지 않을 테이블명 상수값 지정
 	public final String ClassName = "STUDENT";
+	public final String UserType = "학생";
+	public final String SqlType = "std";
 
 	// Student 테이블의 컬럼명 필드로 선언
 	private int std_no;
@@ -14,6 +16,17 @@ public class StudentVO {
 	public String getClassName() {
 		return ClassName;
 	}
+	
+	public String getUserType() {
+		return UserType;
+	}
+	
+	public String getSqlType() {
+		return SqlType;
+	}
+	
+	
+	
 
 	// 필드들 getter/setter 생성
 	public int getStd_no() {

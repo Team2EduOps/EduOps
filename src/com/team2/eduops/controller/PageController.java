@@ -10,6 +10,7 @@ public class PageController {
 	public void runPage() {
 		int userNo;
 		LoginController lc = new LoginController();
+		JoinController jc = new JoinController();
 //		MessageController ms = new MessageController();
 
 		while (true) {
@@ -32,7 +33,7 @@ public class PageController {
 				}
 				break;
 			case 3:
-				JoinController.studentJoin();
+				jc.studentJoin();
 				break;
 			case 0:
 				System.out.println("프로그램을 종료합니다.");
@@ -84,13 +85,14 @@ public class PageController {
 
 	public void runAdminPage(int userNo) { // 관리자번호
 		AdminVO admVo;
+		JoinController jc = new JoinController();
 
-		// 학생 번호로 학생 정보 받아오기
+		// 관리자 번호로 관리자 정보 받아오기
 		admVo = uc.getAdmData(userNo);
 
-		boolean isStdPageRun = true;
-		while (isStdPageRun) {
-			showStudentPage(admVo.getAdm_name());
+		boolean isAdmPageRun = true;
+		while (isAdmPageRun) {
+			showAdminPage(admVo.getAdm_name());
 
 			int menuNo = ConnectController.scanIntData();
 			switch (menuNo) {
@@ -107,10 +109,11 @@ public class PageController {
 
 				break;
 			case 5:
-
+				jc.adminJoin();
+				isAdmPageRun = false;
 				break;
 			case 0:
-				isStdPageRun = false;
+				isAdmPageRun = false;
 				break;
 			default:
 				System.out.println("잘못 누르셨습니다. 다시 입력해주세요.");
@@ -140,13 +143,17 @@ public class PageController {
 
 	}
 
-	public void showAdminPage() {
+	public void showAdminPage(String adm_name) {
 		// 로그인회원가입 페이지 띄우기
-		System.out.println("===로그인/회원가입 페이지===");
-		System.out.println("1. 입실");
-		System.out.println("2. 공지 보기");
-		System.out.println("3. 학생 회원가입");
-		System.out.println("0. 프로그램 종료");
+		System.out.println("===관리자 홈 페이지===");
+		System.out.println("안녕하세요 " + adm_name + "님");
+		System.out.println("1. 출결 관리");
+		System.out.println("2. 공지");
+		System.out.println("3. 퀴즈");
+		System.out.println("4. 숙제");
+		System.out.println("5. 관리자 추가");
+		System.out.println("6. 학생 관리");
+		System.out.println("0. 로그아웃");
 	}
 
 }

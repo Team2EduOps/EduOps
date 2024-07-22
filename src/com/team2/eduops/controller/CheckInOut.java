@@ -8,7 +8,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 
-public static void class CheckInOut {
+/*public static void class CheckInOut {
     Connection conn = DriverManager.getConnection(url,user,password);
     PreparedStatement pstmt = conn.
         //입실
@@ -39,3 +39,5 @@ public static void class CheckInOut {
 
     }
 }
+*/
+

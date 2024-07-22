@@ -10,21 +10,24 @@ import java.text.SimpleDateFormat;
 
 public class Algorithm_name_Controller {
 
-    public static void main(String[] args) {
-        ConnectController.connect();
-        menu();
-    }
-
-    // 알고리즘 문제 등록 (알고리즘 이름, 알고리즘 주소)
-    public static void menu() {
-        AlgorithmNameVO vo = new AlgorithmNameVO();
-        System.out.println("\n -=-=-=-=-= 알고리즘 문제 선정 =-=-=-=-=-");
+	public static class ReturnToMainMenuException extends RuntimeException {}
+    
+  
+    
+    public static void menulist() {
+    	System.out.println("\n -=-=-=-=-= 알고리즘 문제 선정 =-=-=-=-=-");
         System.out.println("\t 1. 알고리즘 문제 선정");  // 알고리즘 주소, 알고리즘 이름, 담당자
-        System.out.println("\t 2. 알고리즘 문제 수정");  // 알고리즘 주소, 알고리즘 이름, 담당자
+//        System.out.println("\t 2. 알고리즘 문제 수정");  // 알고리즘 주소, 알고리즘 이름, 담당자 (al_no 로 수정)
         System.out.println("\t 3. 전체보기");
         System.out.println("\t 4. 저장 (commit)");
         System.out.println("\t 5. 프로그램 종료");
+        System.out.println("\t 0. 메인 메뉴로 돌아가기 ");
         System.out.println("\t >> 원하는 메뉴 선택 하세요.    ");
+    }
+    // 알고리즘 문제 등록 (알고리즘 이름, 알고리즘 주소)
+    public static void menu() {
+        AlgorithmNameVO vo = new AlgorithmNameVO();
+        menulist();
 
         while (true) {
             int menuNo = ConnectController.scanIntData();
@@ -32,15 +35,22 @@ public class Algorithm_name_Controller {
             switch (menuNo) {
                 case 1:
                     selectAll(vo.getClassName());
+                    line();
                     insert(vo.getClassName());
+                    line();
                     selectAll(vo.getClassName());
+                    menulist();
                     break;                
-                case 2:
-                	selectAll(vo.getClassName());
-                	update(vo.getClassName());
-                	break;
+//                 case 2:
+//                	selectAll(vo.getClassName());
+//                	line();
+//                	update(vo.getClassName());
+//                	menulist();
+//                	break;
                 case 3:
                     selectAll(vo.getClassName());
+                    line();
+                    menulist();
                     break;
                 case 4:
                     if (ConnectController.commit() > 0) {
@@ -52,6 +62,8 @@ public class Algorithm_name_Controller {
                     System.out.println("프로그램 종료합니다. ! ! ! ");
                     System.exit(0);
                     break;
+                case 0:
+                    throw new ReturnToMainMenuException();  // 메인 메뉴로 돌아가기 위해 예외 던짐
                 default:
                     System.out.println("없는 번호 선택하였습니다. 1~4번 중에서 선택하세요.");
             } //end switch
@@ -80,7 +92,6 @@ public class Algorithm_name_Controller {
  // update
     public static void update(String ClassName) {
         while (true) {
-            selectAll(ClassName);
 
             System.out.println("0 선택 ==> 업데이트 탈출합니다.");
             System.out.print("수정할 AL_NO 입력: ");
@@ -198,4 +209,9 @@ public class Algorithm_name_Controller {
             return str.substring(0, maxLength) + "...";
         }
     }
+    
+    public static void line() {
+    	System.out.println("");
+    }
+    
 }

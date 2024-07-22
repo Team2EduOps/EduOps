@@ -23,13 +23,13 @@ public class LoginController {
 			className = userVo.getClassName();
 			userType = userVo.getUserType();
 			sqlType = userVo.getSqlType();
-
+			System.out.println("학생 로그인 시도");
 		} else {
 			AdminVO userVo = new AdminVO();
 			className = userVo.getClassName();
-			className = userVo.getClassName();
 			userType = userVo.getUserType();
 			sqlType = userVo.getSqlType();
+			System.out.println("관리자 로그인 시도");
 		}
 
 		String sqlNo = sqlType + "_no";
@@ -55,29 +55,33 @@ public class LoginController {
 			try {
 				pstmt.setString(1, id);
 			} catch (Exception e) {
-//				e.printStackTrace();
-				System.out.println("문제발생");
-				e.getMessage();
+				e.printStackTrace();
+				System.out.println("문제 발생");
 				continue;
 			}
 
 			ResultSet rs = ConnectController.executePstmtQuery(pstmt);
 
 			if (ConnectController.isNull(rs)) {
-				System.out.println("문제발생");
+				System.out.println("문제 발생");
 				continue;
 			}
 
+			// rs.next()가 에러나면 id가 잘못 입력된 것
+			
+			// pw랑 sqlPw랑 다르면 pw가 잘못 입력된 것
 			try {
 				rs.next();
 				if (pw.equals(rs.getString(sqlPw))) {
 					userNo = rs.getInt(sqlNo);
+					System.out.println("로그인 성공!");
+				} else {
+					System.out.println("PW가 틀렸습니다.");
+					System.out.println("다시 입력해주세요.");
 				}
 			} catch (Exception e) {
-//				e.printStackTrace();
-				System.out.println("문제발생");
-				e.getMessage();
-				continue;
+				System.out.println("ID가 틀렸습니다.");
+				System.out.println("다시 입력해주세요.");
 			}
 		}
 		return userNo;

@@ -8,54 +8,62 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.sql.SQLException;
 
-/*
-**********학생메뉴_1.입실 1.퇴실 메뉴 ************
-*/
+
+/* *********학생메뉴_1.입실 1.퇴실 메뉴 ************ */
 
 public class CheckInOut{
-    LocalDate today;
-    Date sqlDate;
+    static LocalDate localDate;
+    static Date sqlDate;
         // localdate(현재 날짜) 를 java.sql.Date로 변환
-    LocalDateTime localDateTime;
-    Timestamp timestamp;
+    static LocalDateTime localDateTime;
+    static Timestamp timestamp;
         // LocalDateTime을 java.sql.Timestamp로 변환
 
-    PreparedStatement pstmt;
-    ResultSet rs;
+    static PreparedStatement pstmt;
+    static ResultSet rs;
 
     //********입실 명단을 list에 추가 +DB에 삽입********
-    public void update(int stdno) throws SQLException {
-        today = LocalDate.now();
-        sqlDate = Date.valueOf(today);
+    public static void update(int stdno) throws SQLException {
+        localDate = LocalDate.now();
+        sqlDate = Date.valueOf(localDate);
         localDateTime = LocalDateTime.now();
         timestamp = Timestamp.valueOf(localDateTime);
 
-        System.out.println("\t 입실이 완료되었습니다.: "+ today);
+        System.out.println("\t 입실이 완료되었습니다.: "+ localDateTime);
         String sql = "INSERT INTO ATTENDANCE (std_no,attend_date, ci_time) VALUES (?,?,?)";
         pstmt = ConnectController.getPstmt(sql);
         pstmt.setInt(1,stdno);
         pstmt.setDate(2,sqlDate);
         pstmt.setTimestamp(3,timestamp);
+        ConnectController.executePstmtUpdate(pstmt);
+        if(ConnectController.commit()==-1) {
+            System.out.println("커밋 오류");
+        }
     }
 
     //*********퇴실시 명단에서 삭제+DB에 update(CO_time과 Attend_status)**********
-    public void delete(int stdno) throws SQLException {
-        today = LocalDate.now();
-        sqlDate = Date.valueOf(today);
+    public static void delete(int stdno) throws SQLException {
+        localDate = LocalDate.now();
+        sqlDate = Date.valueOf(localDate);
         localDateTime = LocalDateTime.now();
         timestamp = Timestamp.valueOf(localDateTime);
-        LocalTime cIt=null;
-        LocalTime cOt=null;
-        LocalTime entryTime=null;
-        LocalTime exitTime=null;
+        LocalTime cIt=null,cOt=null,entryTime=null,exitTime=null;
 
-        System.out.println("\t 퇴실이 완료되었습니다.: "+ today);
-        String sql = "UPDATE ATTENDANCE set CO_TIME = "+timestamp+ " where STD_NO = "+stdno+"and ATTEND_DATE = "+sqlDate;
+        System.out.println("\t 퇴실이 완료되었습니다.: "+ localDateTime);
+        String sql = "UPDATE ATTENDANCE set CO_TIME = ? where STD_NO = ? and ATTEND_DATE = ?";
         pstmt = ConnectController.getPstmt(sql);
+        pstmt.setTimestamp(1,timestamp);
+        pstmt.setInt(2,stdno);
+        pstmt.setDate(3,sqlDate);
+        if(ConnectController.commit()==-1) {
+            System.out.println("커밋 오류");
+        }
 
         //*******0:결석(default), 1: 출석, 2: 공가, 3: 지각 ,4: 조퇴**********
-        sql = "SELECT CI_TIME,CO_TIME from ATTENDANCE where std_no = "+stdno+ " AND ATTEND_DATE="+sqlDate;
+        sql = "SELECT CI_TIME,CO_TIME from ATTENDANCE where std_no = ? AND ATTEND_DATE = ?";
         pstmt = ConnectController.getPstmt(sql);
+        pstmt.setInt(1,stdno);
+        pstmt.setDate(2,sqlDate);
         rs = ConnectController.executePstmtQuery(pstmt);
         if(rs.next()){
             cIt = rs.getTimestamp("CI_TIME").toLocalDateTime().toLocalTime();
@@ -66,33 +74,55 @@ public class CheckInOut{
         }
 
         int attendStatus = 0; //결석:0 // 공가:1
-        if(cIt.isBefore(entryTime)&&cOt.isAfter(exitTime)){
-            attendStatus=1;  // 지각:3
-        }else if(cIt.isAfter(entryTime)&&cOt.isAfter(exitTime)){
-            attendStatus=3;  // 조퇴:4
+        if(cIt!=null){
+            if(cIt.isBefore(entryTime)&&cOt.isAfter(exitTime)){
+                attendStatus=1;  // 지각:3
+            }else if(cIt.isAfter(entryTime)&&cOt.isAfter(exitTime)){
+                attendStatus=3;  // 조퇴:4
             }else{  attendStatus=4;}
-        //attendStatus update
-        sql = "UPDATE ATTENDANCE set ATTEND_STATUS = "+attendStatus+ " where STD_NO = "+stdno+" and ATTEND_DATE = "+sqlDate;
+            //attendStatus update
+        }else{ System.out.println("입실을 하지 않았습니다. 입실 먼저해주세요.");}
+        sql = "UPDATE ATTENDANCE set ATTEND_STATUS = ? where STD_NO = ? and ATTEND_DATE = ?";
+        pstmt.setInt(1,attendStatus);
+        pstmt.setInt(2,stdno);
+        pstmt.setDate(3,sqlDate);
         pstmt = ConnectController.getPstmt(sql);
+        if(ConnectController.commit()==-1) {
+            System.out.println("커밋 오류");
+        }
     }
 
-    //********최종: 명단에 있는지 확인하여, 입/퇴실 여부 출력 :********
-    public void checkIO(int stdno) throws SQLException {
-
-        sqlDate = Date.valueOf(LocalDate.now());
-        String sql = "SELECT * from ATTENDANCE where std_no = "+stdno+ " AND ATTEND_DATE = "+sqlDate;
+    //********명단에 있는지 확인하여, 입/퇴실 메뉴 보이기 :********
+    public static boolean showcheckIO(int stdno) throws SQLException {
+        localDate = LocalDate.now();
+        sqlDate = Date.valueOf(localDate);
+        System.out.println(localDate);
+        String sql = "SELECT * from ATTENDANCE where std_no = ? AND ATTEND_DATE = ?";
         pstmt = ConnectController.getPstmt(sql);
+        pstmt.setInt(1,stdno);
+        pstmt.setDate(2,sqlDate);
         rs = ConnectController.executePstmtQuery(pstmt);
 
         if (!rs.isBeforeFirst()) { //값이 없으면, 입실 생성
+            return true;
+        } else { //값이 있으면, 퇴실 생성
+            return false;
+        }
+    }
+
+    //********최종:입실 또는 퇴실 *****************
+    public static void checkIO(int stdno) throws SQLException {
+        if(showcheckIO(stdno)){
             System.out.println("\t 1. 입실");
             update(stdno);
-        } else { //값이 있으면, 퇴실 생성
+        }else{
             System.out.println("\t 1. 퇴실");
             delete(stdno);
         }
     }
-    public void main(String[] args) throws SQLException {
+
+    public static void main(String[] args) throws SQLException {
+        ConnectController.connect();
         checkIO(1);
     }
 }

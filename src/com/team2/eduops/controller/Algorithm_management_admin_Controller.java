@@ -8,9 +8,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 public class Algorithm_management_admin_Controller {
-    public static void main(String[] args) {
-        ConnectController.connect();
-        
+
+
+        public static void almanagementadmin() {
         while (true) {
             System.out.println("=-=-=-=-=-  알고리즘 보기 -=-=-=-=-=");
             System.out.println("\t 1. 알고리즘 날짜별 보기 ");
@@ -139,7 +139,7 @@ public class Algorithm_management_admin_Controller {
                     System.exit(0);
             }
         }
-    }
+       }
 
     // 문자열을 지정된 최대 길이로 자릅니다.
     private static String truncateString(String str, int maxLength) {

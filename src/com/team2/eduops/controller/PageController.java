@@ -10,6 +10,7 @@ public class PageController {
 	LoginController lc = new LoginController();
 	JoinController jc = new JoinController();
 	QuizController qc = new QuizController();
+	AlgorithmController ac = new AlgorithmController();
 
 	StudentVO stdVo;
 	AdminVO admVo;
@@ -76,7 +77,7 @@ public class PageController {
 				runStudentQuizPage(stdVo);
 				break;
 			case 4:
-
+				runStudentAlgorithmPage(stdVo);
 				break;
 			case 5:
 
@@ -112,7 +113,7 @@ public class PageController {
 				runAdminQuizPage(admVo);
 				break;
 			case 4:
-
+				runAdminAlgorithmPage(admVo);
 				break;
 			case 5:
 				jc.adminJoin();
@@ -216,6 +217,60 @@ public class PageController {
 		} // end while
 	}
 	
+	public void runStudentAlgorithmPage(StudentVO stdVo) {
+		boolean isRunStudentAlgorithmPage = true;
+		while (isRunStudentAlgorithmPage) {
+			showStudentAlgorithmPage();
+			int menuNo = ConnectController.scanIntData();
+			
+			switch (menuNo) {
+			case 1:
+				// 알고리즘 등록
+				ac.addAlgorithmName(stdVo);
+				break;
+			case 2:
+				// 알고리즘 제출
+				ac.addAlgorithmAnswer(stdVo);
+				break;
+			case 3:
+				//전체보기
+				ac.selectAlgorithmAll();
+				break;
+			case 0:
+				// exception
+				isRunStudentAlgorithmPage = false;
+				break;
+			default:
+				System.out.println("없는 번호 선택하였습니다. 1~2번 중에서 선택하세요.");
+			} // end switch
+		} // end while
+	}
+	
+	public void runAdminAlgorithmPage(AdminVO admVo) {
+		boolean isRunAdminAlgorithmPage = true;
+		while (isRunAdminAlgorithmPage) {
+			showAdminAlgorithmPage();
+			int menuNo = ConnectController.scanIntData();
+			
+
+			switch (menuNo) {
+			case 1:
+				// 주차별 보기
+				ac.displayAlgorithmByDate();
+				break;
+			case 2 :
+				// 팀별 보기
+				ac.displayAlgorithmByTeam();
+				break;
+			case 0:
+				// exception
+				isRunAdminAlgorithmPage = false;
+				break;
+			default:
+				System.out.println("없는 번호 선택하였습니다. 1~2번 중에서 선택하세요.");
+			} // end switch
+		} // end while
+	}
 	
 	
 	//////// CLI 화면 띄우기 메소드들 /////////
@@ -278,4 +333,24 @@ public class PageController {
         System.out.println("\t 3. 퀴즈 팀별 보기 ");
         System.out.println("\t 4. 종료 ");
 	}
+	
+	public void showStudentAlgorithmPage() {
+    	System.out.println("\n -=-=-=-=-= 알고리즘 문제 선정 =-=-=-=-=-");
+        System.out.println("\t 1. 알고리즘 문제 선정");  // 알고리즘 주소, 알고리즘 이름, 담당자
+        System.out.println("\t 2. 알고리즘 번호 및 코드 제출");  // 알고리즘 번호 및 코드 기입, 제출자 번호
+//        System.out.println("\t 2. 알고리즘 문제 수정");  // 알고리즘 주소, 알고리즘 이름, 담당자 (al_no 로 수정)
+        System.out.println("\t 3. 전체보기");
+        System.out.println("\t 0. 뒤로가기 ");
+        System.out.println("\t >> 원하는 메뉴 선택 하세요.    ");
+	}
+	
+	public void showAdminAlgorithmPage() {
+		System.out.println("=-=-=-=-=-  알고리즘 보기 -=-=-=-=-=");
+        System.out.println("\t 1. 알고리즘 날짜별 보기 ");
+        System.out.println("\t 2. 알고리즘 팀별 보기 ");
+        System.out.println("\t 0. 뒤로 가기 ");
+        System.out.println("\t >> 원하는 메뉴 선택 하세요.    ");
+
+	}
+
 }

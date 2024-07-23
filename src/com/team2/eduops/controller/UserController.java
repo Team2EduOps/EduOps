@@ -23,7 +23,7 @@ public class UserController {
 
 		ResultSet rs = ConnectController.executePstmtQuery(pstmt);
 
-		if (ConnectController.isNull(rs)) {
+		if (UtilController.isNull(rs)) {
 			System.out.println("문제발생");
 			return stdVo;
 		}
@@ -59,7 +59,7 @@ public class UserController {
 
 		ResultSet rs = ConnectController.executePstmtQuery(pstmt);
 
-		if (ConnectController.isNull(rs)) {
+		if (UtilController.isNull(rs)) {
 			System.out.println("문제발생");
 			return admVo;
 		}

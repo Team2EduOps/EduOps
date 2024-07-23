@@ -1,0 +1,45 @@
+Index: src/com/team2/eduops/model/VacationVO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.team2.eduops.model;\n\npublic class VacationVO {\n\t// 바뀌지 않을 테이블명 상수값 지정\n\tpublic final String ClassName = \"VACATION\";\n\n\t// Student 테이블의 컬럼명 필드로 선언\n\tprivate int vacate_code;\n\tprivate String vacate_date;\n\tprivate int std_no, adm_no;\n\tprivate String vacate_file;\n\n\t// 테이블명은 상수값이라 바뀌지 않으므로 setter 없이 getter만 생성\n\tpublic String getClassName() {\n\t\treturn ClassName;\n\t}\n\n\t// 필드들 getter/setter 생성\n\tpublic int getVacate_code() {\n\t\treturn vacate_code;\n\t}\n\n\tpublic void setVacate_code(int vacate_code) {\n\t\tthis.vacate_code = vacate_code;\n\t}\n\n\tpublic String getVacate_date() {\n\t\treturn vacate_date;\n\t}\n\n\tpublic void setVacate_date(String vacate_date) {\n\t\tthis.vacate_date = vacate_date;\n\t}\n\n\tpublic int getStd_no() {\n\t\treturn std_no;\n\t}\n\n\tpublic void setStd_no(int std_no) {\n\t\tthis.std_no = std_no;\n\t}\n\n\tpublic int getAdm_no() {\n\t\treturn adm_no;\n\t}\n\n\tpublic void setAdm_no(int adm_no) {\n\t\tthis.adm_no = adm_no;\n\t}\n\n\tpublic String getVacate_file() {\n\t\treturn vacate_file;\n\t}\n\n\tpublic void setVacate_file(String vacate_file) {\n\t\tthis.vacate_file = vacate_file;\n\t}\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/com/team2/eduops/model/VacationVO.java b/src/com/team2/eduops/model/VacationVO.java
+--- a/src/com/team2/eduops/model/VacationVO.java	(revision 501e7d273dee03baa92a20cd51d69552ffcfee82)
++++ b/src/com/team2/eduops/model/VacationVO.java	(date 1721271990345)
+@@ -19,7 +19,6 @@
+ 	public int getVacate_code() {
+ 		return vacate_code;
+ 	}
+-
+ 	public void setVacate_code(int vacate_code) {
+ 		this.vacate_code = vacate_code;
+ 	}
+@@ -27,7 +26,6 @@
+ 	public String getVacate_date() {
+ 		return vacate_date;
+ 	}
+-
+ 	public void setVacate_date(String vacate_date) {
+ 		this.vacate_date = vacate_date;
+ 	}
+Index: src/com/team2/eduops/controller/ConnectController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.team2.eduops.controller;\n\nimport java.sql.Connection;\nimport java.sql.PreparedStatement;\nimport java.sql.ResultSet;\nimport java.sql.ResultSetMetaData;\nimport java.sql.SQLException;\nimport java.sql.Statement;\nimport java.sql.Types;\nimport java.util.Scanner;\n\nimport com.team2.eduops.dbConn.util.*;\n\n\n// db 연결 기능 관련 메소드들\npublic class ConnectController {\n\t// DB 연결, 삽입, 삭제, 수정, 검색...\n\t\tstatic Scanner sc = new Scanner(System.in);\n\t\tstatic Connection conn = null; // 문자열, 객체는 기본 초기값 null\n\t\tstatic PreparedStatement pstmt;\n\t\tstatic Statement stmt;\n\t\tstatic ResultSet rs;\n\n\t\t// connect\n\t\tpublic static void connect() {\n\t\t\ttry {\n\t\t\t\tconn = ConnectionHelper.getConnection(\"oracle\");\n\t\t\t\tstmt = conn.createStatement();\n\t\t\t\tconn.setAutoCommit(false); // 자동 커밋 끄기\n\t\t\t} catch (Exception e) {\n\t\t\t\te.printStackTrace();\n\t\t\t}\n\t\t}\n\n\t\t// close\n\t\tpublic static void close() {\n\t\t\ttry {\n\t\t\t\tCloseHelper.close(rs);\n\t\t\t\tCloseHelper.close(pstmt);\n\t\t\t\tCloseHelper.close(stmt);\n\t\t\t\tCloseHelper.close(conn);\n\t\t\t} catch (Exception e) {\n\t\t\t\te.printStackTrace();\n\t\t\t}\n\t\t}\n\t\t\n\t\tpublic static String scanData() {\n\t\t\tString str = \"\";\n\t\t\ttry {\n\t\t\t\tstr = sc.next();\n\t\t\t\t\n\t\t\t} catch(Exception e) {\n\t\t\t\te.printStackTrace();\n\t\t\t} finally {\n\t\t\t\treturn str;\t\t\t\n\t\t\t}\n\t\t}\n\t\t\n\t\t// data를 String 값으로 scan하여 parseInt 시도 -> 성공 시 입력된 정수값 리턴, 실패 시 음수값인 -1 값 리턴\n\t\t// 코드 짜실 때 리턴값이 -1인지 체크하여 코드 작성\n\t\tpublic static int scanIntData() {\n\t\t\tint i = -1;\n\t\t\ttry {\n\t\t\t\ti = Integer.parseInt(sc.next());\n\t\t\t} catch(Exception e) {\n\t\t\t\te.printStackTrace();\n\t\t\t}\n\t\t\tfinally {\n\t\t\t\treturn i;\n\t\t\t}\n\t\t}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/com/team2/eduops/controller/ConnectController.java b/src/com/team2/eduops/controller/ConnectController.java
+--- a/src/com/team2/eduops/controller/ConnectController.java	(revision 501e7d273dee03baa92a20cd51d69552ffcfee82)
++++ b/src/com/team2/eduops/controller/ConnectController.java	(date 1721286491260)
+@@ -26,7 +26,7 @@
+ 			try {
+ 				conn = ConnectionHelper.getConnection("oracle");
+ 				stmt = conn.createStatement();
+-				conn.setAutoCommit(false); // 자동 커밋 끄기
++				conn.setAutoCommit(false); // 자동 커밋
+ 			} catch (Exception e) {
+ 				e.printStackTrace();
+ 			}

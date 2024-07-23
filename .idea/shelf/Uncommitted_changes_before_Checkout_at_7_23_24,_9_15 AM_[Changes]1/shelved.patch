@@ -1,0 +1,21 @@
+Index: src/com/team2/eduops/dbConn/util/ConnectionHelper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.team2.eduops.dbConn.util;\n\nimport java.sql.Connection;\nimport java.sql.DriverManager;\n\n\n//\tsingleton 방식으로 db 연결 메소드 작성함\npublic class ConnectionHelper {\n\tprivate static Connection conn;\n\tprivate ConnectionHelper() { }\n\t\n\tpublic static Connection getConnection(String dsn) {\n\t\tif(conn != null) {\n\t\t\treturn conn;\n\t\t}\n\t\t\n\t\ttry {\n\t\t\tif(dsn.equalsIgnoreCase(\"oracle\")) {\n\t\t\t\tClass.forName(\"oracle.jdbc.OracleDriver\");\n\t\t\t\tconn = DriverManager.getConnection(\"jdbc:oracle:thin:@192.168.0.156:1521:xe\", \"eduops\", \"eduopsoracle\");\n//\t\t\t\tconn = DriverManager.getConnection(\"jdbc:oracle:thin:@localhost:1521:xe\", \"test\", \"oracle\");\n\t\t\t\t\t\t\n\t\t\t} else if(dsn.equalsIgnoreCase(\"mysql\")) {\n\t\t\t\tClass.forName(\"com.mysql.jdbc.Driver\");\n\t\t\t\tconn = DriverManager.getConnection(\"jdbc:mysql://localhost:3306/EduOpsDB\", \"system\", \"password\");\n\t\t\t}\n\t\t} catch(Exception e) {\n\t\t\te.printStackTrace();\n\t\t} finally {\n\t\t\treturn conn;\n\t\t}\n\t}\n\t\n\t\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/com/team2/eduops/dbConn/util/ConnectionHelper.java b/src/com/team2/eduops/dbConn/util/ConnectionHelper.java
+--- a/src/com/team2/eduops/dbConn/util/ConnectionHelper.java	
++++ b/src/com/team2/eduops/dbConn/util/ConnectionHelper.java	
+@@ -17,6 +17,10 @@
+ 		try {
+ 			if(dsn.equalsIgnoreCase("oracle")) {
+ 				Class.forName("oracle.jdbc.OracleDriver");
++				String dbUrl = "jdbc:oracle:thin:@localhost:1521:xe";
++//				conn = DriverManager.getConnection(dbUrl, "system", "pass");
++
++
+ 				conn = DriverManager.getConnection("jdbc:oracle:thin:@192.168.0.156:1521:xe", "eduops", "eduopsoracle");
+ //				conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "test", "oracle");
+ 						

@@ -1,0 +1,253 @@
+Index: src/com/team2/eduops/model/VacationVO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.team2.eduops.model;\n\npublic class VacationVO {\n\t// 바뀌지 않을 테이블명 상수값 지정\n\tpublic final String ClassName = \"VACATION\";\n\n\t// Student 테이블의 컬럼명 필드로 선언\n\tprivate int vacate_code;\n\tprivate String vacate_date, vacate_file;\n\tprivate int std_no, adm_no;\n\n\t// 테이블명은 상수값이라 바뀌지 않으므로 setter 없이 getter만 생성\n\tpublic String getClassName() {\n\t\treturn ClassName;\n\t}\n\n\t// 필드들 getter/setter 생성\n\tpublic int getVacate_code() {\n\t\treturn vacate_code;\n\t}\n\n\tpublic void setVacate_code(int vacate_code) {\n\t\tthis.vacate_code = vacate_code;\n\t}\n\n\tpublic String getVacate_date() {\n\t\treturn vacate_date;\n\t}\n\n\tpublic void setVacate_date(String vacate_date) {\n\t\tthis.vacate_date = vacate_date;\n\t}\n\n\tpublic int getStd_no() {\n\t\treturn std_no;\n\t}\n\n\tpublic void setStd_no(int std_no) {\n\t\tthis.std_no = std_no;\n\t}\n\n\tpublic int getAdm_no() {\n\t\treturn adm_no;\n\t}\n\n\tpublic void setAdm_no(int adm_no) {\n\t\tthis.adm_no = adm_no;\n\t}\n\n\tpublic String getVacate_file() {\n\t\treturn vacate_file;\n\t}\n\n\tpublic void setVacate_file(String vacate_file) {\n\t\tthis.vacate_file = vacate_file;\n\t}\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/com/team2/eduops/model/VacationVO.java b/src/com/team2/eduops/model/VacationVO.java
+--- a/src/com/team2/eduops/model/VacationVO.java	(revision 1dc6518fdadcbe345c90bdf1b39b77fe8d2fd59c)
++++ b/src/com/team2/eduops/model/VacationVO.java	(date 1721351446005)
+@@ -18,7 +18,6 @@
+ 	public int getVacate_code() {
+ 		return vacate_code;
+ 	}
+-
+ 	public void setVacate_code(int vacate_code) {
+ 		this.vacate_code = vacate_code;
+ 	}
+@@ -26,7 +25,6 @@
+ 	public String getVacate_date() {
+ 		return vacate_date;
+ 	}
+-
+ 	public void setVacate_date(String vacate_date) {
+ 		this.vacate_date = vacate_date;
+ 	}
+Index: src/com/team2/eduops/controller/ConnectController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.team2.eduops.controller;\n\nimport java.sql.Connection;\nimport java.sql.PreparedStatement;\nimport java.sql.ResultSet;\nimport java.util.Scanner;\n\nimport com.team2.eduops.dbConn.util.*;\n\n// db 연결 기능 관련 메소드들\npublic class ConnectController {\n\t// DB 연결, 삽입, 삭제, 수정, 검색...\n\tstatic Scanner sc = new Scanner(System.in);\n\tstatic Connection conn = null; // 문자열, 객체는 기본 초기값 null\n\tstatic PreparedStatement pstmt;\n\tstatic ResultSet rs;\n\n\t\n\t// connect\n\tpublic static void connect() {\n\t\ttry {\n\t\t\tconn = ConnectionHelper.getConnection(\"oracle\");\n\t\t\tconn.setAutoCommit(false); // 자동 커밋 끄기\n\t\t} catch (Exception e) {\n\t\t\te.printStackTrace();\n\t\t}\n\t}\n\n\t// close\n\tpublic static void close() {\n\t\ttry {\n\t\t\tCloseHelper.close(rs);\n\t\t\tCloseHelper.close(pstmt);\n\t\t\tCloseHelper.close(conn);\n\t\t} catch (Exception e) {\n\t\t\te.printStackTrace();\n\t\t}\n\t}\n\n\t// rollback\n\t// rollback 메소드 실행 성공 시 1, 실패 시 -1 값 리턴\n\tpublic static int rollback() {\n\t\tint result = -1;\n\t\ttry {\n\t\t\tconn.rollback();\n\t\t\tresult = 1;\n\t\t} catch(Exception e) {\n\t\t\te.printStackTrace();\n\t\t}\n\t\treturn result;\n\t}\n\t\n\t// commmit\n\t// commit 메소드 실행 성공 시 1, 실패 시 -1 값 리턴\n\tpublic static int commit() {\n\t\tint result = -1;\n\t\ttry {\n\t\t\tconn.commit();\n\t\t\tresult = 1;\n\t\t} catch(Exception e) {\n\t\t\te.printStackTrace();\n\t\t}\n\t\treturn result;\n\t}\n\t\n\t////////////////////////////////\n\t\n\t\n\t// Scanner 객체 사용해서 String 값 받기 메소드\n\t// isNull(String str) 메소드로 null값 체크 후 사용\n\tpublic static String scanData() {\n\t\tString str = null;\n\t\ttry {\n\t\t\tstr = sc.nextLine();\n\n\t\t} catch (Exception e) {\n\t\t\te.printStackTrace();\n\t\t} finally {\n\t\t\treturn str;\n\t\t}\n\t}\n\n\t// data를 String 값으로 scan하여 parseInt 시도 -> 성공 시 입력된 정수값 리턴, 실패 시 음수값인 -1 값 리턴\n\t// isNegative(int num) 메소드로 음수값 리턴 받았는지 확인 후 사용\n\tpublic static int scanIntData() {\n\t\tint i = -1;\n\t\ttry {\n\t\t\ti = Integer.parseInt(sc.nextLine());\n\t\t} catch (Exception e) {\n\t\t\te.printStackTrace();\n\t\t} finally {\n\t\t\treturn i;\n\t\t}\n\t}\n\n\t////////////////////////////////\n\t\n\t// 준비한 쿼리문 String값 매개변수로 받아서 null값으로 비워둔 pstmt 안에 넣은 후 return\n\t// 받아서 쓸 때 isNull(pstmt) 우선 실행하여 true값 받으면 문제 상황 발생\n\tpublic static PreparedStatement getPstmt(String sql) {\n\t\tpstmt = null;\n\t\ttry {\n\t\tpstmt = conn.prepareStatement(sql);\n\t\t} catch(Exception e) {\n\t\t\te.printStackTrace();\n\t\t}\n\t\treturn pstmt;\n\t}\n\t\n\t// 쿼리문 단순실행 -> 성공 시 성공 결과값 정수 리턴, 실패 시 -1 리턴\n\tpublic static int executePstmtUpdate(PreparedStatement pstmt) {\n\t\tint result = -1;\n\t\ttry {\n\t\t\tresult = pstmt.executeUpdate();\n\t\t} catch(Exception e) {\n\t\t\te.printStackTrace();\n\t\t}\n\t\treturn result; \n\t}\n\n\t// 쿼리문 실행 후 db에서 값 받아옴 -> 성공 시 ResultSet rs 안에 값 담아서 return, 실패 시 null값 리턴\n\tpublic static ResultSet executePstmtQuery(PreparedStatement pstmt) {\n\t\tResultSet rs = null;\n\t\ttry {\n\t\t\trs = pstmt.executeQuery();\n\t\t} catch(Exception e) {\n\t\t\te.printStackTrace();\n\t\t}\n\t\treturn rs; \n\t}\n\t\n\t///////////////////////////////////\n\t\n\tpublic static boolean isNegative(int num) {\n\t\tif(num < 0) {\n\t\t\treturn true;\n\t\t}\n\t\treturn false;\n\t}\n\t\n\tpublic static boolean isNull(String str) {\n\t\tif(str == null) {\n\t\t\treturn true;\n\t\t}\n\t\treturn false;\n\t}\n\t\n\tpublic static boolean isNull(PreparedStatement pstmt) {\n\t\tif(pstmt == null) {\n\t\t\treturn true;\n\t\t}\n\t\treturn false;\n\t}\n\t\n\tpublic static boolean isNull(ResultSet rs) {\n\t\tif(rs == null) {\n\t\t\treturn true;\n\t\t}\n\t\treturn false;\n\t}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/com/team2/eduops/controller/ConnectController.java b/src/com/team2/eduops/controller/ConnectController.java
+--- a/src/com/team2/eduops/controller/ConnectController.java	(revision 1dc6518fdadcbe345c90bdf1b39b77fe8d2fd59c)
++++ b/src/com/team2/eduops/controller/ConnectController.java	(date 1721351446190)
+@@ -3,159 +3,70 @@
+ import java.sql.Connection;
+ import java.sql.PreparedStatement;
+ import java.sql.ResultSet;
++import java.sql.ResultSetMetaData;
++import java.sql.SQLException;
++import java.sql.Statement;
++import java.sql.Types;
+ import java.util.Scanner;
+ 
+ import com.team2.eduops.dbConn.util.*;
+ 
++
+ // db 연결 기능 관련 메소드들
+ public class ConnectController {
+ 	// DB 연결, 삽입, 삭제, 수정, 검색...
+-	static Scanner sc = new Scanner(System.in);
+-	static Connection conn = null; // 문자열, 객체는 기본 초기값 null
+-	static PreparedStatement pstmt;
+-	static ResultSet rs;
++		static Scanner sc = new Scanner(System.in);
++		static Connection conn = null; // 문자열, 객체는 기본 초기값 null
++		static PreparedStatement pstmt;
++		static Statement stmt;
++		static ResultSet rs;
+ 
+-	
+-	// connect
+-	public static void connect() {
+-		try {
+-			conn = ConnectionHelper.getConnection("oracle");
+-			conn.setAutoCommit(false); // 자동 커밋 끄기
+-		} catch (Exception e) {
+-			e.printStackTrace();
+-		}
+-	}
++		// connect
++		public static void connect() {
++			try {
++				conn = ConnectionHelper.getConnection("oracle");
++				stmt = conn.createStatement();
++				conn.setAutoCommit(false); // 자동 커밋 끄기
++			} catch (Exception e) {
++				e.printStackTrace();
++			}
++		}
+ 
+-	// close
+-	public static void close() {
+-		try {
+-			CloseHelper.close(rs);
+-			CloseHelper.close(pstmt);
+-			CloseHelper.close(conn);
+-		} catch (Exception e) {
+-			e.printStackTrace();
+-		}
+-	}
+-
+-	// rollback
+-	// rollback 메소드 실행 성공 시 1, 실패 시 -1 값 리턴
+-	public static int rollback() {
+-		int result = -1;
+-		try {
+-			conn.rollback();
+-			result = 1;
+-		} catch(Exception e) {
+-			e.printStackTrace();
+-		}
+-		return result;
+-	}
+-	
+-	// commmit
+-	// commit 메소드 실행 성공 시 1, 실패 시 -1 값 리턴
+-	public static int commit() {
+-		int result = -1;
+-		try {
+-			conn.commit();
+-			result = 1;
+-		} catch(Exception e) {
+-			e.printStackTrace();
+-		}
+-		return result;
+-	}
+-	
+-	////////////////////////////////
+-	
+-	
+-	// Scanner 객체 사용해서 String 값 받기 메소드
+-	// isNull(String str) 메소드로 null값 체크 후 사용
+-	public static String scanData() {
+-		String str = null;
+-		try {
+-			str = sc.nextLine();
+-
+-		} catch (Exception e) {
+-			e.printStackTrace();
+-		} finally {
+-			return str;
+-		}
+-	}
+-
+-	// data를 String 값으로 scan하여 parseInt 시도 -> 성공 시 입력된 정수값 리턴, 실패 시 음수값인 -1 값 리턴
+-	// isNegative(int num) 메소드로 음수값 리턴 받았는지 확인 후 사용
+-	public static int scanIntData() {
+-		int i = -1;
+-		try {
+-			i = Integer.parseInt(sc.nextLine());
+-		} catch (Exception e) {
+-			e.printStackTrace();
+-		} finally {
+-			return i;
+-		}
+-	}
+-
+-	////////////////////////////////
+-	
+-	// 준비한 쿼리문 String값 매개변수로 받아서 null값으로 비워둔 pstmt 안에 넣은 후 return
+-	// 받아서 쓸 때 isNull(pstmt) 우선 실행하여 true값 받으면 문제 상황 발생
+-	public static PreparedStatement getPstmt(String sql) {
+-		pstmt = null;
+-		try {
+-		pstmt = conn.prepareStatement(sql);
+-		} catch(Exception e) {
+-			e.printStackTrace();
+-		}
+-		return pstmt;
+-	}
+-	
+-	// 쿼리문 단순실행 -> 성공 시 성공 결과값 정수 리턴, 실패 시 -1 리턴
+-	public static int executePstmtUpdate(PreparedStatement pstmt) {
+-		int result = -1;
+-		try {
+-			result = pstmt.executeUpdate();
+-		} catch(Exception e) {
+-			e.printStackTrace();
+-		}
+-		return result; 
+-	}
+-
+-	// 쿼리문 실행 후 db에서 값 받아옴 -> 성공 시 ResultSet rs 안에 값 담아서 return, 실패 시 null값 리턴
+-	public static ResultSet executePstmtQuery(PreparedStatement pstmt) {
+-		ResultSet rs = null;
+-		try {
+-			rs = pstmt.executeQuery();
+-		} catch(Exception e) {
+-			e.printStackTrace();
+-		}
+-		return rs; 
+-	}
+-	
+-	///////////////////////////////////
+-	
+-	public static boolean isNegative(int num) {
+-		if(num < 0) {
+-			return true;
+-		}
+-		return false;
+-	}
+-	
+-	public static boolean isNull(String str) {
+-		if(str == null) {
+-			return true;
+-		}
+-		return false;
+-	}
+-	
+-	public static boolean isNull(PreparedStatement pstmt) {
+-		if(pstmt == null) {
+-			return true;
+-		}
+-		return false;
+-	}
+-	
+-	public static boolean isNull(ResultSet rs) {
+-		if(rs == null) {
+-			return true;
+-		}
+-		return false;
+-	}
++		// close
++		public static void close() {
++			try {
++				CloseHelper.close(rs);
++				CloseHelper.close(pstmt);
++				CloseHelper.close(stmt);
++				CloseHelper.close(conn);
++			} catch (Exception e) {
++				e.printStackTrace();
++			}
++		}
++		
++		public static String scanData() {
++			String str = "";
++			try {
++				str = sc.next();
++				
++			} catch(Exception e) {
++				e.printStackTrace();
++			} finally {
++				return str;			
++			}
++		}
++		
++		// data를 String 값으로 scan하여 parseInt 시도 -> 성공 시 입력된 정수값 리턴, 실패 시 음수값인 -1 값 리턴
++		// 코드 짜실 때 리턴값이 -1인지 체크하여 코드 작성
++		public static int scanIntData() {
++			int i = -1;
++			try {
++				i = Integer.parseInt(sc.next());
++			} catch(Exception e) {
++				e.printStackTrace();
++			}
++			finally {
++				return i;
++			}
++		}
+ }

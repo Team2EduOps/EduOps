@@ -23,13 +23,11 @@ public class LoginController {
 			className = userVo.getClassName();
 			userType = userVo.getUserType();
 			sqlType = userVo.getSqlType();
-			System.out.println("학생 로그인 시도");
 		} else {
 			AdminVO userVo = new AdminVO();
 			className = userVo.getClassName();
 			userType = userVo.getUserType();
 			sqlType = userVo.getSqlType();
-			System.out.println("관리자 로그인 시도");
 		}
 
 		String sqlNo = sqlType + "_no";
@@ -76,11 +74,11 @@ public class LoginController {
 					userNo = rs.getInt(sqlNo);
 					System.out.println("로그인 성공!");
 				} else {
-					System.out.println("PW가 틀렸습니다.");
+					System.out.println("ID / PW가 틀렸습니다.");
 					System.out.println("다시 입력해주세요.");
 				}
 			} catch (Exception e) {
-				System.out.println("ID가 틀렸습니다.");
+				System.out.println("ID / PW가 틀렸습니다.");
 				System.out.println("다시 입력해주세요.");
 			}
 		}

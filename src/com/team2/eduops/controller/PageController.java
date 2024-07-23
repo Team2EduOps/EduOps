@@ -1,6 +1,7 @@
 package com.team2.eduops.controller;
 
 import com.team2.eduops.model.AdminVO;
+import com.team2.eduops.model.QuizVO;
 import com.team2.eduops.model.StudentVO;
 
 public class PageController {
@@ -8,7 +9,10 @@ public class PageController {
 	NoticeController nc = new NoticeController();
 	LoginController lc = new LoginController();
 	JoinController jc = new JoinController();
+	QuizController qc = new QuizController();
 
+	StudentVO stdVo;
+	AdminVO admVo;
 	
 	////// 프로그램 돌리는 메소드들 ////////
 	
@@ -51,7 +55,7 @@ public class PageController {
 	}
 
 	public void runStudentPage(int userNo) { // 학생번호
-		StudentVO stdVo;
+		
 
 		// 학생 번호로 학생 정보 받아오기
 		stdVo = uc.getStdData(userNo);
@@ -69,7 +73,7 @@ public class PageController {
 				nc.displayNotice();
 				break;
 			case 3:
-
+				runStudentQuizPage(stdVo);
 				break;
 			case 4:
 
@@ -88,7 +92,6 @@ public class PageController {
 	}
 
 	public void runAdminPage(int userNo) { // 관리자번호
-		AdminVO admVo;
 
 		// 관리자 번호로 관리자 정보 받아오기
 		admVo = uc.getAdmData(userNo);
@@ -150,7 +153,66 @@ public class PageController {
 		}
 	}
 
+	public void runStudentQuizPage(StudentVO stdVo) {
+		QuizVO vo = new QuizVO();
+
+		boolean isRunStudentQuizPage = true;
+		while (isRunStudentQuizPage) {
+			int menuNo = ConnectController.scanIntData();
+			showStudentQuizPage();
+
+			switch (menuNo) {
+			case 1:
+				qc.addQuizAnswer(stdVo);
+				break;
+//	                case 2:
+//	                	selectAll(vo.getClassName());
+//	                	line();
+//	                	update(vo.getClassName());
+//	                	menulist();
+//	                	break;
+			case 3:
+				qc.selectQuizAll();
+				break;
+			case 0:
+				isRunStudentQuizPage = false;
+				// exception
+				break;
+			default:
+				System.out.println("없는 번호 선택하였습니다. 1~3번 중에서 선택하세요.");
+			} // end switch
+		} // end while
+	}
 	
+	public void runAdminQuizPage(AdminVO admVo) {
+
+		boolean isRunAdminQuizPage = true;
+		while (isRunAdminQuizPage) {
+			int menuNo = ConnectController.scanIntData();
+			showAdminQuizPage();
+
+			switch (menuNo) {
+			case 1:
+				// 퀴즈 추가
+				qc.addQuiz(admVo);
+				break;
+			case 2:
+				// 주차별 보기
+				qc.displayQuizByDate();
+				break;
+			case 3:
+				// 팀별 보기
+				qc.displayQuizByTeam();
+				break;
+			case 0:
+				// exception
+				isRunAdminQuizPage = false;
+				break;
+			default:
+				System.out.println("없는 번호 선택하였습니다. 1~3번 중에서 선택하세요.");
+			} // end switch
+		} // end while
+	}
 	
 	
 	
@@ -196,5 +258,23 @@ public class PageController {
 		System.out.println("1. 공지 추가");
 		System.out.println("2. 공지 보기");
 		System.out.println("3. 공지 수정");
+	}
+	
+	public void showStudentQuizPage() {
+		System.out.println("\n -=-=-=-=-= 퀴즈 코드 제출 =-=-=-=-=-");
+		System.out.println("\t 1. 퀴즈 번호 및 코드 제출"); // 퀴즈 코드, 퀴즈 번호 담당자(관리자)
+//	        System.out.println("\t 2. 퀴즈 제출 수정");  // 퀴즈 코드 , 퀴즈 번호, 학생번호 수정, where 퀴즈번호, 학생번호 설정
+		System.out.println("\t 3. 전체보기");
+		System.out.println("\t 4. 저장 (commit)");
+		System.out.println("\t 5. 프로그램 종료");
+		System.out.println("\t >> 원하는 메뉴 선택 하세요.  ");
+	}
+	
+	public void showAdminQuizPage() {
+		System.out.println("=-=-=-=-=-  퀴즈 보기 -=-=-=-=-=");
+        System.out.println("\t 1. 퀴즈 추가 ");
+        System.out.println("\t 2. 퀴즈 날짜별 보기 ");
+        System.out.println("\t 3. 퀴즈 팀별 보기 ");
+        System.out.println("\t 4. 종료 ");
 	}
 }

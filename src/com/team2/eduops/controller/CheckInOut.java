@@ -55,6 +55,7 @@ public class CheckInOut{
         pstmt.setTimestamp(1,timestamp);
         pstmt.setInt(2,stdno);
         pstmt.setDate(3,sqlDate);
+        ConnectController.executePstmtUpdate(pstmt);
         if(ConnectController.commit()==-1) {
             System.out.println("커밋 오류");
         }
@@ -73,6 +74,7 @@ public class CheckInOut{
             exitTime = LocalTime.of(18,0);
         }
 
+        //attendStatus update
         int attendStatus = 0; //결석:0 // 공가:1
         if(cIt!=null){
             if(cIt.isBefore(entryTime)&&cOt.isAfter(exitTime)){
@@ -80,13 +82,14 @@ public class CheckInOut{
             }else if(cIt.isAfter(entryTime)&&cOt.isAfter(exitTime)){
                 attendStatus=3;  // 조퇴:4
             }else{  attendStatus=4;}
-            //attendStatus update
-        }else{ System.out.println("입실을 하지 않았습니다. 입실 먼저해주세요.");}
+        }else{ System.out.println("입실을 하지 않았습니다. 입실 먼저해주세요."); }
+
         sql = "UPDATE ATTENDANCE set ATTEND_STATUS = ? where STD_NO = ? and ATTEND_DATE = ?";
+        pstmt = ConnectController.getPstmt(sql);
         pstmt.setInt(1,attendStatus);
         pstmt.setInt(2,stdno);
         pstmt.setDate(3,sqlDate);
-        pstmt = ConnectController.getPstmt(sql);
+        ConnectController.executePstmtUpdate(pstmt);
         if(ConnectController.commit()==-1) {
             System.out.println("커밋 오류");
         }
@@ -119,11 +122,6 @@ public class CheckInOut{
             System.out.println("\t 1. 퇴실");
             delete(stdno);
         }
-    }
-
-    public static void main(String[] args) throws SQLException {
-        ConnectController.connect();
-        checkIO(1);
     }
 }
 

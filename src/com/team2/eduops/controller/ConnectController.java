@@ -158,4 +158,19 @@ public class ConnectController {
 		}
 		return false;
 	}
+	
+	/////////////////////////////
+	
+	// 문자열을 지정된 최대 길이로 자릅니다.
+	public static String truncateString(String str, int maxLength) {
+		if (str.length() <= maxLength) {
+			return str;
+		} else {
+			return str.substring(0, maxLength) + "...";
+		}
+	}
+
+	public static void line() {
+		System.out.println("");
+	}
 }

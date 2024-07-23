@@ -20,18 +20,18 @@ public class QuizController {
 	// 퀴즈 문제 제출
 	public void addQuiz(AdminVO admVo) {
 		selectQuizAll();
-		ConnectController.line();
+		UtilController.line();
 		insertQuiz(admVo);
-		ConnectController.line();
+		UtilController.line();
 		selectQuizAll();
 	}
 
 	// 퀴즈코드 추가 메소드
 	public void addQuizAnswer(StudentVO stdVo) {
 		selectQuizAnswerAll();
-		ConnectController.line();
+		UtilController.line();
 		insertQuizAnswer(stdVo);
-		ConnectController.line();
+		UtilController.line();
 		selectQuizAnswerAll();
 	}
 
@@ -101,7 +101,7 @@ public class QuizController {
 				int quizNo = rs.getInt("QUIZ_NO");
 
 				// 긴 문자열 자르기
-				quizText = ConnectController.truncateString(quizText, col1Width - 3);
+				quizText = UtilController.truncateString(quizText, col1Width - 3);
 
 				// 데이터 행 출력
 				System.out.printf("%-" + col1Width + "s%" + col2Width + "d%" + col3Width + "d\n", quizText, stdNo,
@@ -139,8 +139,8 @@ public class QuizController {
 				String date = dateFormat.format(sqlDate); // 포맷된 날짜 문자열
 
 				// 긴 텍스트 자르기
-				quizname = ConnectController.truncateString(quizname, col2Width - 3);
-				date = ConnectController.truncateString(date, col4Width - 3);
+				quizname = UtilController.truncateString(quizname, col2Width - 3);
+				date = UtilController.truncateString(date, col4Width - 3);
 
 				// 데이터 출력
 				System.out.printf("%-" + col1Width + "d%" + col2Width + "s%" + col3Width + "d%" + col4Width + "s\n",
@@ -193,7 +193,7 @@ public class QuizController {
 		}
 
 		rs = ConnectController.executePstmtQuery(pstmt);
-		if (ConnectController.isNull(rs)) {
+		if (UtilController.isNull(rs)) {
 			System.out.println("executePstmtQuery 중 문제 발생");
 			return;
 		}
@@ -219,7 +219,7 @@ public class QuizController {
 				String date = dateFormat.format(quizDate); // 포맷된 날짜 문자열
 
 				// 긴 문자열 자르기
-				quizText = ConnectController.truncateString(quizText, col3Width - 3);
+				quizText = UtilController.truncateString(quizText, col3Width - 3);
 
 				// 데이터 행 출력
 				System.out.printf(
@@ -260,7 +260,7 @@ public class QuizController {
 			}
 
 			rs = ConnectController.executePstmtQuery(pstmt);
-			if (ConnectController.isNull(rs)) {
+			if (UtilController.isNull(rs)) {
 				teamName = null;
 				System.out.println("해당 팀이 존재하지 않습니다.");
 				return;
@@ -287,7 +287,7 @@ public class QuizController {
 					String team = rs.getString("TEAM_NAME");
 
 					// 긴 문자열 자르기
-					quizText = ConnectController.truncateString(quizText, col3Width - 3);
+					quizText = UtilController.truncateString(quizText, col3Width - 3);
 
 					// 데이터 행 출력
 					System.out.printf(

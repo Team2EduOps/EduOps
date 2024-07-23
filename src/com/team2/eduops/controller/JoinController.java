@@ -26,7 +26,7 @@ public class JoinController {
 
 				pstmt = ConnectController.getPstmt(sql);
 
-				if (ConnectController.isNull(pstmt)) {
+				if (UtilController.isNull(pstmt)) {
 					System.out.println("제대로 동작하지 않았습니다. 다시 입력해주세요.");
 					continue;
 				}
@@ -41,7 +41,7 @@ public class JoinController {
 
 				rs = ConnectController.executePstmtQuery(pstmt);
 
-				if (ConnectController.isNull(rs)) {
+				if (UtilController.isNull(rs)) {
 					System.out.println("문제 발생!!");
 					continue;
 				}
@@ -70,7 +70,7 @@ public class JoinController {
 			while (stdVo.getSeat_no() == 0) {
 				System.out.println("자리 번호를 입력해주세요: ");
 				tmp = ConnectController.scanIntData();
-				if (!ConnectController.isNegative(tmp)) {
+				if (!UtilController.isNegative(tmp)) {
 					stdVo.setSeat_no(tmp);
 				} else {
 					System.out.println("자리 번호를 올바르게 입력해주세요.");
@@ -80,7 +80,7 @@ public class JoinController {
 				sql = "select std_name from " + stdVo.getClassName() + " where seat_no = ?";
 
 				pstmt = ConnectController.getPstmt(sql);
-				if (ConnectController.isNull(pstmt)) {
+				if (UtilController.isNull(pstmt)) {
 					System.out.println("제대로 동작하지 않았습니다. 다시 입력해주세요.");
 					continue;
 				}
@@ -95,7 +95,7 @@ public class JoinController {
 
 				rs = ConnectController.executePstmtQuery(pstmt);
 
-				if (ConnectController.isNull(rs)) {
+				if (UtilController.isNull(rs)) {
 					System.out.println("문제 발생!!");
 					continue;
 				}
@@ -121,7 +121,7 @@ public class JoinController {
 					+ " (std_id, std_pw, std_name, team_name, seat_no) values(?, ?, ?, ?, ?)";
 
 			pstmt = ConnectController.getPstmt(sql);
-			if (ConnectController.isNull(pstmt)) {
+			if (UtilController.isNull(pstmt)) {
 				System.out.println("제대로 동작하지 않았습니다. 다시 입력해주세요.");
 				continue;
 			}
@@ -167,7 +167,7 @@ public class JoinController {
 
 				pstmt = ConnectController.getPstmt(sql);
 
-				if (ConnectController.isNull(pstmt)) {
+				if (UtilController.isNull(pstmt)) {
 					System.out.println("제대로 동작하지 않았습니다. 다시 입력해주세요.");
 					continue;
 				}
@@ -182,7 +182,7 @@ public class JoinController {
 
 				rs = ConnectController.executePstmtQuery(pstmt);
 
-				if (ConnectController.isNull(rs)) {
+				if (UtilController.isNull(rs)) {
 					System.out.println("문제 발생!!");
 					continue;
 				}
@@ -211,7 +211,7 @@ public class JoinController {
 			sql = "insert into " + admVo.getClassName() + " (adm_id, adm_pw, adm_name) values(?, ?, ?)";
 
 			pstmt = ConnectController.getPstmt(sql);
-			if (ConnectController.isNull(pstmt)) {
+			if (UtilController.isNull(pstmt)) {
 				System.out.println("제대로 동작하지 않았습니다. 다시 입력해주세요.");
 				continue;
 			}

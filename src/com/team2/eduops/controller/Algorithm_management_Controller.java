@@ -2,8 +2,8 @@ package com.team2.eduops.controller;
 
 
 public class Algorithm_management_Controller {                     //알고리즘 문제 선정 및 제출
-	public static void main(String[] args) {
-		ConnectController.connect();
+
+	public static void almanagement() {
 		
 		
 		while(true) {
@@ -39,7 +39,7 @@ public class Algorithm_management_Controller {                     //알고리�
 			}
 		}
         
-        
+	}
         
 	}
-}
+

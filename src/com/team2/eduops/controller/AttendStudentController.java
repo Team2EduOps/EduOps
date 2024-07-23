@@ -15,7 +15,7 @@ import com.team2.eduops.dbConn.util.*;
 public class AttendStudentController {
     static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     //근태 관리 메뉴 동작
-   /* public static void attendMenu(int stdno) throws ClassNotFoundException {
+   public static void attendMenu(int stdno) throws ClassNotFoundException, SQLException, ParseException {
         boolean backpage = true;
         while (backpage) {
             showAttendMenu();  // 메뉴 보이기
@@ -30,12 +30,12 @@ public class AttendStudentController {
                     break;
                 case 1:
                     System.out.println("일자별 근태 조회 페이지입니다.");
-                    lookupDaily();
+                    lookupDaily(stdno);
                     break;
 
                 case 2:
                     System.out.println("월별 근태 조회 페이지입니다.");
-                    lookupMonthly();
+                    lookupMonthly(stdno);
                     break;
 
                 case 3:
@@ -68,7 +68,7 @@ public class AttendStudentController {
 
                 case 4:
                     System.out.println("휴가신청 페이지입니다.");
-                    applyVacation();
+                    applyVacation(stdno);
                     break;
 
                 default:
@@ -77,7 +77,7 @@ public class AttendStudentController {
             } //switch end
         } // while end
     }// atttendMenu end
-*/
+
     //5.근태 관리 메뉴 :showAttendMenu
     public static void showAttendMenu() {
         System.out.println("\n------5.근태관리-------");
@@ -210,29 +210,27 @@ public class AttendStudentController {
                  }else System.out.println("\t 올바른 형식이 아닙니다.. 다시 입력해 주세요.");
              }
          }
+    //applyVacation- 휴가 신청(근태 page)
 
-    public static void main(String[] args) throws SQLException, ParseException {
-        ConnectController.connect();
-        lookupMonthly(1);
-        ConnectController.close();
+    public static void applyVacation (int stdno){
+
+    }
+
+    //lookupCashPresent - 누적 지원금 조회(근태 page)
+    public static void lookupCashPresent (int stdno){
+
+    }
+
+    //lookupCashPast- 지난 누적 지원금 조회 월별(근태 page)
+    public static void lookupCashPast (int stdno){
+
+    }
+
+    public static void main(String[] args) throws SQLException, ParseException, ClassNotFoundException {
+     attendMenu(1);
     }
 }
 
-        //applyVacation- 휴가 신청(근태 page)
 
-        /*public static void applyVacation ( int stdno){
-
-        }
-
-        //lookupCashPresent - 누적 지원금 조회(근태 page)
-        public static void lookupCashPresent ( int stdno){
-
-        }
-
-        //lookupCashPast- 지난 누적 지원금 조회 월별(근태 page)
-        public static void lookupCashPast ( int stdno){
-
-        }
-        */
 
 

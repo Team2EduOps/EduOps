@@ -7,10 +7,10 @@ import java.time.format.DateTimeFormatter;
 import java.sql.Date;
 import java.sql.Timestamp;
 
-
-/*public static void class CheckInOut {
+/*
+public static void class CheckInOut {
     Connection conn = DriverManager.getConnection(url,user,password);
-    PreparedStatement pstmt = conn.
+    PreparedStatement pstmt = conn
         //입실
         public static void checkIn(int stdno) throws SQLException,ClassNotFoundException {
             System.out.println("입실이 완료되었습니다.");
@@ -37,6 +37,9 @@ import java.sql.Timestamp;
 
         pstmt = conn.prepareStatement("UPDATE ATTENDANCE set CO_TIME = "+currentTimestamp+ " where STD_NO = "+stdno+"and ATTEND_DATE = "+today);
 
+        public static void main(String[] args){
+
+        }
     }
 }
 */

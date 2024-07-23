@@ -8,9 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 public class Quiz_management_admin_Controller {
-    public static void main(String[] args) {
-        ConnectController.connect();
-        
+public static void  quizmanagement() {
         while (true) {
         	try {
             System.out.println("=-=-=-=-=-  퀴즈 보기 -=-=-=-=-=");
@@ -149,8 +147,8 @@ public class Quiz_management_admin_Controller {
 			System.out.println("메인 메뉴로 돌아갑니다. ");
         }
         }
-        
-    }
+}
+    
 
     // 문자열을 지정된 최대 길이로 자릅니다.
     private static String truncateString(String str, int maxLength) {

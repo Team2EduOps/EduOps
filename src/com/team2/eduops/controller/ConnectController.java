@@ -74,7 +74,7 @@ public class ConnectController {
 			str = sc.nextLine();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("scanner 값 받아오기 문제 발생");
 		} finally {
 			return str;
 		}
@@ -84,10 +84,11 @@ public class ConnectController {
 	// isNegative(int num) 메소드로 음수값 리턴 받았는지 확인 후 사용
 	public static int scanIntData() {
 		int i = -1;
+		String tmp = sc.nextLine();
 		try {
-			i = Integer.parseInt(sc.nextLine());
+			i = Integer.parseInt(tmp);
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("정수 변환에 문제 발생");
 		} finally {
 			return i;
 		}

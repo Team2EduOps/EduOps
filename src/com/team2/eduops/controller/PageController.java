@@ -109,7 +109,7 @@ public class PageController {
 				runNoticePage(admVo);
 				break;
 			case 3:
-
+				runAdminQuizPage(admVo);
 				break;
 			case 4:
 
@@ -158,8 +158,8 @@ public class PageController {
 
 		boolean isRunStudentQuizPage = true;
 		while (isRunStudentQuizPage) {
-			int menuNo = ConnectController.scanIntData();
 			showStudentQuizPage();
+			int menuNo = ConnectController.scanIntData();
 
 			switch (menuNo) {
 			case 1:
@@ -172,7 +172,7 @@ public class PageController {
 //	                	menulist();
 //	                	break;
 			case 3:
-				qc.selectQuizAll();
+				qc.selectQuizAnswerAll();
 				break;
 			case 0:
 				isRunStudentQuizPage = false;
@@ -188,8 +188,8 @@ public class PageController {
 
 		boolean isRunAdminQuizPage = true;
 		while (isRunAdminQuizPage) {
-			int menuNo = ConnectController.scanIntData();
 			showAdminQuizPage();
+			int menuNo = ConnectController.scanIntData();
 
 			switch (menuNo) {
 			case 1:
@@ -258,6 +258,7 @@ public class PageController {
 		System.out.println("1. 공지 추가");
 		System.out.println("2. 공지 보기");
 		System.out.println("3. 공지 수정");
+		System.out.println("0. 뒤로 가기");
 	}
 	
 	public void showStudentQuizPage() {
@@ -265,8 +266,7 @@ public class PageController {
 		System.out.println("\t 1. 퀴즈 번호 및 코드 제출"); // 퀴즈 코드, 퀴즈 번호 담당자(관리자)
 //	        System.out.println("\t 2. 퀴즈 제출 수정");  // 퀴즈 코드 , 퀴즈 번호, 학생번호 수정, where 퀴즈번호, 학생번호 설정
 		System.out.println("\t 3. 전체보기");
-		System.out.println("\t 4. 저장 (commit)");
-		System.out.println("\t 5. 프로그램 종료");
+		System.out.println("\t 0. 뒤로 가기");
 		System.out.println("\t >> 원하는 메뉴 선택 하세요.  ");
 	}
 	
@@ -275,6 +275,6 @@ public class PageController {
         System.out.println("\t 1. 퀴즈 추가 ");
         System.out.println("\t 2. 퀴즈 날짜별 보기 ");
         System.out.println("\t 3. 퀴즈 팀별 보기 ");
-        System.out.println("\t 4. 종료 ");
+        System.out.println("\t 0. 뒤로 가기");
 	}
 }

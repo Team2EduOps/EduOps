@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.sql.SQLException;
 
 /*
 **********학생메뉴_1.입실 1.퇴실 메뉴 ************

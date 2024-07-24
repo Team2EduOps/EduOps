@@ -91,8 +91,7 @@ public class MessageController {
 
 	}
 
-	
-    public void showAttendMenu() {
+    public void showStudentAttendPage() {
         System.out.println("\n------5.근태관리-------");
         System.out.println("근태 관리 페이지입니다.");
         System.out.println("\t 5-1. 일자별");
@@ -101,14 +100,22 @@ public class MessageController {
         System.out.println("\t 5-4. 휴가 신청");
         System.out.println("\t 뒤 페이지 이동: 0");
         System.out.println("\t >> 원하는 메뉴 선택 하세요.   ");
-    } //end
-    
-	public void showCashMenu() {
+    }
+
+	public void showStudentAttendCashPage() {
 		System.out.println("\n------5-3.누적 지원금 조회-------");
 		System.out.println("누적 지원금 조회페이지입니다.");
 		System.out.println("\t 1. 현재 누적 지원금");
 		System.out.println("\t 2. 지난 지원금: 월별");
 		System.out.println("\t 뒤 페이지 이동: 0");
 		System.out.println("\t >> 원하는 메뉴 선택 하세요.   ");
-	}// end
+	}
+
+	public void showAdminStudentPage() {
+		System.out.println("\n-----6.학생 관리-------");
+		System.out.println("\t 1. 학생 보기");
+		System.out.println("\t 2. 휴가 승인");
+		System.out.println("\t 뒤 페이지 이동: 0");
+		System.out.println("\t >> 원하는 메뉴 선택 하세요.   ");
+	}
 }

@@ -36,7 +36,7 @@ public class AttendProfessorContoller {
         }
     }
 
-    //*********approveVacation-교수님 메뉴 ->학생관리 -> 2. 휴가 승인 -> 출석상태 : 공가로 변경********
+    //*********approveVacation-교수님 메뉴 ->학생관리 -> 2. 휴가 승인 -> 출석상태 : 공가로 변경***********
     public static void updateAttendance(String stdNo, Date attendDate) throws SQLException {
         String updateSQL = "UPDATE attendance SET status = ? WHERE std_no = ? AND attend_date = ?";
         PreparedStatement pstmt = ConnectController.getPstmt(updateSQL);

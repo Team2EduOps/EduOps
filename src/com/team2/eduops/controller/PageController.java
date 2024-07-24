@@ -1,11 +1,6 @@
 package com.team2.eduops.controller;
 
-import java.io.FileNotFoundException;
-import java.sql.SQLException;
-import java.text.ParseException;
-
 import com.team2.eduops.model.AdminVO;
-import com.team2.eduops.model.QuizVO;
 import com.team2.eduops.model.StudentVO;
 
 public class PageController {
@@ -67,8 +62,7 @@ public class PageController {
 		// 학생 번호로 학생 정보 받아오기
 		stdVo = uc.getStdData(userNo);
 
-		boolean isStdPageRun = true;
-		while (isStdPageRun) {
+		while (true) {
 			mc.showStudentPage(stdVo, cio.showcheckIO(stdVo));
 
 			int menuNo = ConnectController.scanIntData();
@@ -76,7 +70,7 @@ public class PageController {
 			case 1:
 				// 입실
 				// 입실 시 -> 퇴실 처리 메소드
-				cio.checkIO(stdVo); 
+				cio.checkIO(stdVo);
 				break;
 			case 2:
 				nc.displayNotice();
@@ -91,9 +85,11 @@ public class PageController {
 				// 근태 관리
 				attendMenu(stdVo);
 				break;
+			case 6:
+				// 유저 정보 변경
+				runStdUserPage(stdVo);
 			case 0:
-				isStdPageRun = false;
-				break;
+				return;
 			default:
 				System.out.println("잘못 누르셨습니다. 다시 입력해주세요.");
 			}
@@ -106,15 +102,14 @@ public class PageController {
 		// 관리자 번호로 관리자 정보 받아오기
 		admVo = uc.getAdmData(userNo);
 
-		boolean isAdmPageRun = true;
-		while (isAdmPageRun) {
+		while (true) {
 			mc.showAdminPage(admVo.getAdm_name());
 
 			int menuNo = ConnectController.scanIntData();
 			switch (menuNo) {
 			case 1:
 				// 출결 관리
-				
+
 				break;
 			case 2:
 				runNoticePage(admVo);
@@ -127,11 +122,13 @@ public class PageController {
 				break;
 			case 5:
 				jc.adminJoin();
-				isAdmPageRun = false;
+				return;
+			case 6:
 				break;
+			case 7:
+				uc.updateAdmPw(admVo);
 			case 0:
-				isAdmPageRun = false;
-				break;
+				return;
 			default:
 				System.out.println("잘못 누르셨습니다. 다시 입력해주세요.");
 			}
@@ -140,8 +137,7 @@ public class PageController {
 
 	public void runNoticePage(AdminVO admVo) {
 
-		boolean isNoticePageRun = true;
-		while (isNoticePageRun) {
+		while (true) {
 			mc.showNoticePage();
 
 			int menuNo = ConnectController.scanIntData();
@@ -156,8 +152,7 @@ public class PageController {
 				nc.modifyNotice();
 				break;
 			case 0:
-				isNoticePageRun = false;
-				break;
+				return;
 			default:
 				System.out.println("잘못 누르셨습니다. 다시 입력해주세요.");
 			}
@@ -165,10 +160,7 @@ public class PageController {
 	}
 
 	public void runStudentQuizPage(StudentVO stdVo) {
-		QuizVO vo = new QuizVO();
-
-		boolean isRunStudentQuizPage = true;
-		while (isRunStudentQuizPage) {
+		while (true) {
 			mc.showStudentQuizPage();
 			int menuNo = ConnectController.scanIntData();
 
@@ -186,9 +178,7 @@ public class PageController {
 				qc.selectQuizAnswerAll();
 				break;
 			case 0:
-				isRunStudentQuizPage = false;
-				// exception
-				break;
+				return;
 			default:
 				System.out.println("없는 번호 선택하였습니다. 1~3번 중에서 선택하세요.");
 			} // end switch
@@ -196,9 +186,7 @@ public class PageController {
 	}
 
 	public void runAdminQuizPage(AdminVO admVo) {
-
-		boolean isRunAdminQuizPage = true;
-		while (isRunAdminQuizPage) {
+		while (true) {
 			mc.showAdminQuizPage();
 			int menuNo = ConnectController.scanIntData();
 
@@ -216,9 +204,7 @@ public class PageController {
 				qc.displayQuizByTeam();
 				break;
 			case 0:
-				// exception
-				isRunAdminQuizPage = false;
-				break;
+				return;
 			default:
 				System.out.println("없는 번호 선택하였습니다. 1~3번 중에서 선택하세요.");
 			} // end switch
@@ -226,8 +212,7 @@ public class PageController {
 	}
 
 	public void runStudentAlgorithmPage(StudentVO stdVo) {
-		boolean isRunStudentAlgorithmPage = true;
-		while (isRunStudentAlgorithmPage) {
+		while (true) {
 			mc.showStudentAlgorithmPage();
 			int menuNo = ConnectController.scanIntData();
 
@@ -245,9 +230,7 @@ public class PageController {
 				ac.selectAlgorithmAll();
 				break;
 			case 0:
-				// exception
-				isRunStudentAlgorithmPage = false;
-				break;
+				return;
 			default:
 				System.out.println("없는 번호 선택하였습니다. 1~2번 중에서 선택하세요.");
 			} // end switch
@@ -255,8 +238,7 @@ public class PageController {
 	}
 
 	public void runAdminAlgorithmPage(AdminVO admVo) {
-		boolean isRunAdminAlgorithmPage = true;
-		while (isRunAdminAlgorithmPage) {
+		while (true) {
 			mc.showAdminAlgorithmPage();
 			int menuNo = ConnectController.scanIntData();
 
@@ -270,19 +252,15 @@ public class PageController {
 				ac.displayAlgorithmByTeam();
 				break;
 			case 0:
-				// exception
-				isRunAdminAlgorithmPage = false;
-				break;
+				return;
 			default:
 				System.out.println("없는 번호 선택하였습니다. 1~2번 중에서 선택하세요.");
 			} // end switch
 		} // end while
 	}
 
-	
 	/* *********최종 코드 : 5. 근태 관리 메뉴 동작*********** **/
-	public void attendMenu(StudentVO stdVo)
-			throws ClassNotFoundException, SQLException, ParseException, FileNotFoundException {
+	public void attendMenu(StudentVO stdVo) {
 		boolean backpage = true;
 		int stdNo = stdVo.getStd_no();
 		while (backpage) {
@@ -348,6 +326,47 @@ public class PageController {
 			default:
 				System.out.println("메뉴에 없는 번호를 선택하였습니다. 1~2번 중에서 선택하세요.");
 				break;
+			}
+		}
+	}
+
+	public void runStdUserPage(StudentVO stdVo) {
+		while (true) {
+			mc.showStdUserPage();
+			switch (ConnectController.scanIntData()) {
+			case -1:
+				System.out.println("잘못된 입력값입니다. 다시 입력해 주세요.");
+				break;
+			case 1:
+				uc.updateStdPw(stdVo);
+				break;
+			case 2:
+				uc.updateTeam(stdVo);
+				break;
+			case 3:
+				uc.updateSeatNo(stdVo);
+			case 0:
+				return;
+			default:
+				System.out.println("메뉴에 없는 번호를 선택하였습니다. 1~2번 중에서 선택하세요.");
+			}
+		}
+	}
+	
+	public void runAdmUserPage(AdminVO admVo) {
+		while (true) {
+			mc.showAdmUserPage();
+			switch (ConnectController.scanIntData()) {
+			case -1:
+				System.out.println("잘못된 입력값입니다. 다시 입력해 주세요.");
+				break;
+			case 1:
+				uc.updateAdmPw(admVo);
+				break;
+			case 0:
+				return;
+			default:
+				System.out.println("잘못 누르셨습니다. 다시 입력해주세요.");
 			}
 		}
 	}

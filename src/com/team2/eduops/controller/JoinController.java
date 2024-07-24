@@ -144,7 +144,7 @@ public class JoinController {
 				System.out.println("문제 발생");
 			}
 		}
-
+		ConnectController.commit();
 		System.out.println("회원가입이 완료되었습니다. 로그인해주세요.");
 	}
 
@@ -234,6 +234,7 @@ public class JoinController {
 			}
 		}
 
+		ConnectController.commit();
 		System.out.println("회원가입이 완료되었습니다. 로그인해주세요.");
 	}
 

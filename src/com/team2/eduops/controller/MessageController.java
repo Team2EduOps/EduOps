@@ -29,6 +29,7 @@ public class MessageController {
 		System.out.println("3. 퀴즈 제출");
 		System.out.println("4. 알고리즘 관리");
 		System.out.println("5. 근태 관리");
+		System.out.println("6. 사용자 정보");
 		System.out.println("0. 로그아웃");
 
 	}
@@ -43,6 +44,7 @@ public class MessageController {
 		System.out.println("4. 숙제");
 		System.out.println("5. 관리자 추가");
 		System.out.println("6. 학생 관리");
+		System.out.println("7. 사용자 정보");
 		System.out.println("0. 로그아웃");
 	}
 
@@ -111,4 +113,19 @@ public class MessageController {
 		System.out.println("\t 뒤 페이지 이동: 0");
 		System.out.println("\t >> 원하는 메뉴 선택 하세요.   ");
 	}// end
+	
+	public void showStdUserPage() {
+		System.out.println("\n------6.사용자 정보-------");
+        System.out.println("사용자 정보 페이지입니다.");
+        System.out.println("\t 6-1. 비밀번호 변경");
+        System.out.println("\t 6-2. 소속 팀 변경");
+        System.out.println("\t 0: 뒤로 가기");
+	}
+	
+	public void showAdmUserPage() {
+		System.out.println("\n------7.사용자 정보-------");
+        System.out.println("사용자 정보 페이지입니다.");
+        System.out.println("\t 7-1. 비밀번호 변경");
+        System.out.println("\t 0: 뒤로 가기");
+	}
 }

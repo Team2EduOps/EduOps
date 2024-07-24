@@ -9,28 +9,13 @@ import java.text.SimpleDateFormat;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 //date형식으로 받아오기 위한 library
-
-import com.team2.eduops.dbConn.util.*;
 
 //학생 출결 관리 관련 메소드들
 public class AttendStudentController {
     static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     //************5.근태 관리 메뉴 :showAttendMenu************
-    public static void showAttendMenu() {
-        System.out.println("\n------5.근태관리-------");
-        System.out.println("근태 관리 페이지입니다.");
-        System.out.println("\t 5-1. 일자별");
-        System.out.println("\t 5-2. 월별");
-        System.out.println("\t 5-3. 누적 지원금 조회");
-        System.out.println("\t 5-4. 휴가 신청");
-        System.out.println("\t 뒤 페이지 이동: 0");
-        System.out.println("\t >> 원하는 메뉴 선택 하세요.   ");
-    } //end
 
     //*********날짜 형식 맞는지 확인 메소드************
     private static boolean isValidDate(String dateString) {
@@ -55,7 +40,6 @@ public class AttendStudentController {
             inputDate = ConnectController.scanData();
 
             if (isValidDate(inputDate)) { //날짜형식에 맞다면!
-                String sql = "SELECT ATTEND_STATUS FROM ATTENDANCE WHERE TO_CHAR(ATTEND_DATE,'YYYY-MM-DD') = '" + inputDate + "' AND STD_NO = " + stdno;
                 PreparedStatement pstmt = ConnectController.getPstmt(sql);
                 ResultSet rs = ConnectController.executePstmtQuery(pstmt);
 
@@ -124,9 +108,6 @@ public class AttendStudentController {
             if (isValidYearMonth(inputMonth)) { //맞는 형식으로 입력!
                 String firstdate = inputMonth + "-01";
                 String lastdate = inputMonth + "-31";
-                String sql = "SELECT TO_CHAR(ATTEND_DATE,'YYYY-MM-DD') ,ATTEND_STATUS " +
-                        "FROM ATTENDANCE WHERE ATTEND_DATE BETWEEN TO_DATE('" + firstdate + "','YYYY-MM-DD') AND TO_DATE('" + lastdate + "','YYYY-MM-DD') " +
-                        "AND STD_NO = " + stdno;
 
                 PreparedStatement pstmt = ConnectController.getPstmt(sql);
                 ResultSet rs = ConnectController.executePstmtQuery(pstmt);
@@ -149,19 +130,10 @@ public class AttendStudentController {
                     }//for end
                     bool = false;
                 } //내부 while end
-            } else System.out.println("\t 올바른 형식이 아닙니다.. 다시 입력해 주세요.");
         }
     }
 
     //**********5-3.누적 지원금 메뉴 : showCashMenu********
-    public static void showCashMenu() {
-        System.out.println("\n------5-3.누적 지원금 조회-------");
-        System.out.println("누적 지원금 조회페이지입니다.");
-        System.out.println("\t 1. 현재 누적 지원금");
-        System.out.println("\t 2. 지난 지원금: 월별");
-        System.out.println("\t 뒤 페이지 이동: 0");
-        System.out.println("\t >> 원하는 메뉴 선택 하세요.   ");
-    }//end
 
 
     //*************applyVacation- 휴가 신청(근태 page)*************************
@@ -200,9 +172,6 @@ public class AttendStudentController {
         int[] statusCount = new int[5]; // 0: 결석, 1: 출석, 2: 공가, 3: 지각, 4: 조퇴
         String firstdate = formattedDate + "-01";
         String lastdate = formattedDate + "-31";
-        String sql = "SELECT ATTEND_STATUS " +
-                "FROM ATTENDANCE WHERE ATTEND_DATE BETWEEN TO_DATE('" + firstdate + "','YYYY-MM-DD') AND TO_DATE('" + lastdate + "','YYYY-MM-DD') " +
-                "AND STD_NO = " + stdno;
 
         PreparedStatement pstmt = ConnectController.getPstmt(sql);
         ResultSet rs = ConnectController.executePstmtQuery(pstmt);
@@ -246,9 +215,6 @@ public class AttendStudentController {
                 int[] statusCount = new int[5]; // 0: 결석, 1: 출석, 2: 공가, 3: 지각, 4: 조퇴
                 String firstdate = inputMonth + "-01";
                 String lastdate = inputMonth + "-31";
-                String sql = "SELECT ATTEND_STATUS " +
-                        "FROM ATTENDANCE WHERE ATTEND_DATE BETWEEN TO_DATE('" + firstdate + "','YYYY-MM-DD') AND TO_DATE('" + lastdate + "','YYYY-MM-DD') " +
-                        "AND STD_NO = " + stdno;
 
                 PreparedStatement pstmt = ConnectController.getPstmt(sql);
                 ResultSet rs = ConnectController.executePstmtQuery(pstmt);
@@ -280,74 +246,7 @@ public class AttendStudentController {
                     System.out.println(inputMonth + "월 금액: " + amount + "원");
 
                 } //내부 while end
-            } else System.out.println("\t 올바른 형식이 아닙니다.. 다시 입력해 주세요.");
         }
     }
 
-    /* *********최종 코드 : 5. 근태 관리 메뉴 동작*********** **/
-    public static void attendMenu(int stdno) throws ClassNotFoundException, SQLException, ParseException, FileNotFoundException {
-        boolean backpage = true;
-        while (backpage) {
-            showAttendMenu();  // 메뉴 보이기
-            //메뉴 고르기
-            switch (ConnectController.scanIntData()) {
-                case -1:
-                    System.out.println("잘못된 입력값입니다. 다시 입력하여주세요.");
-                    break;
-                case 0:
-                    System.out.println("뒤 페이지로 이동합니다.");
-                    backpage = false;
-                    break;
-                case 1:
-                    System.out.println("일자별 근태 조회 페이지입니다.");
-                    lookupDaily(stdno);
-                    break;
-
-                case 2:
-                    System.out.println("월별 근태 조회 페이지입니다.");
-                    lookupMonthly(stdno);
-                    break;
-
-                case 3:
-                    System.out.println("누적 지원금 조회 페이지입니다.");
-                    boolean backpage2 = true;
-                    while (backpage2) {
-                        showCashMenu();
-                        switch (ConnectController.scanIntData()) {
-                            case -1:
-                                System.out.println("잘못된 입력값입니다. 다시 입력하여주세요.");
-                                break;
-                            case 0:
-                                System.out.println("뒤 페이지로 이동합니다.");
-                                backpage2 = false;
-                                break;
-                            case 1:
-                                System.out.print("현재 누적 지원금:");
-                                lookupCashPresent(stdno);
-                                break;
-                            case 2:
-                                System.out.println("월별 지원금 조회 페이지입니다.");
-                                lookupCashPast(stdno);
-                                break;
-                            default:
-                                System.out.println("메뉴에 없는 번호를 선택하였습니다. 1~2번 중에서 선택하세요.");
-                                break;
                         }
-                    }//case 3 while end
-                    break;
-
-                case 4:
-                    System.out.println("휴가신청 페이지입니다.");
-                    applyVacation(stdno);
-                    break;
-
-                default:
-                    System.out.println("메뉴에 없는 번호를 선택하셨습니다. 1~4번 중에서 선택하세요.");
-                    break;
-            } //switch end
-        } // while end
-    }// atttendMenu end
-}
-
-
-

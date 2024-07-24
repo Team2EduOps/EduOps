@@ -1,5 +1,9 @@
 package com.team2.eduops.controller;
 
+import java.io.FileNotFoundException;
+import java.sql.SQLException;
+import java.text.ParseException;
+
 import com.team2.eduops.model.AdminVO;
 import com.team2.eduops.model.QuizVO;
 import com.team2.eduops.model.StudentVO;
@@ -12,6 +16,8 @@ public class PageController {
 	JoinController jc = new JoinController();
 	QuizController qc = new QuizController();
 	AlgorithmController ac = new AlgorithmController();
+	CheckInOut cio = new CheckInOut();
+	AttendStudentController asc = new AttendStudentController();
 
 	StudentVO stdVo;
 	AdminVO admVo;
@@ -63,12 +69,14 @@ public class PageController {
 
 		boolean isStdPageRun = true;
 		while (isStdPageRun) {
-			mc.showStudentPage(stdVo.getStd_name());
-			
+			mc.showStudentPage(stdVo, cio.showcheckIO(stdVo));
+
 			int menuNo = ConnectController.scanIntData();
 			switch (menuNo) {
 			case 1:
-
+				// 입실
+				// 입실 시 -> 퇴실 처리 메소드
+				cio.checkIO(stdVo); 
 				break;
 			case 2:
 				nc.displayNotice();
@@ -80,7 +88,8 @@ public class PageController {
 				runStudentAlgorithmPage(stdVo);
 				break;
 			case 5:
-
+				// 근태 관리
+				attendMenu(stdVo);
 				break;
 			case 0:
 				isStdPageRun = false;
@@ -104,7 +113,8 @@ public class PageController {
 			int menuNo = ConnectController.scanIntData();
 			switch (menuNo) {
 			case 1:
-
+				// 출결 관리
+				
 				break;
 			case 2:
 				runNoticePage(admVo);
@@ -269,4 +279,76 @@ public class PageController {
 		} // end while
 	}
 
+	
+	/* *********최종 코드 : 5. 근태 관리 메뉴 동작*********** **/
+	public void attendMenu(StudentVO stdVo)
+			throws ClassNotFoundException, SQLException, ParseException, FileNotFoundException {
+		boolean backpage = true;
+		int stdNo = stdVo.getStd_no();
+		while (backpage) {
+			mc.showAttendMenu(); // 메뉴 보이기
+			// 메뉴 고르기
+			switch (ConnectController.scanIntData()) {
+			case -1:
+				System.out.println("잘못된 입력값입니다. 다시 입력하여주세요.");
+				break;
+			case 0:
+				System.out.println("뒤 페이지로 이동합니다.");
+				backpage = false;
+				break;
+			case 1:
+				System.out.println("일자별 근태 조회 페이지입니다.");
+				asc.lookupDaily(stdNo);
+				break;
+
+			case 2:
+				System.out.println("월별 근태 조회 페이지입니다.");
+				asc.lookupMonthly(stdNo);
+				break;
+
+			case 3:
+				System.out.println("누적 지원금 조회 페이지입니다.");
+				runCashMenuPage(stdNo);
+
+				break;
+
+			case 4:
+				System.out.println("휴가신청 페이지입니다.");
+				asc.applyVacation(stdNo);
+				break;
+
+			default:
+				System.out.println("메뉴에 없는 번호를 선택하셨습니다. 1~4번 중에서 선택하세요.");
+				break;
+			} // switch end
+		} // while end
+
+	}// atttendMenu end
+
+	public void runCashMenuPage(int stdNo) {
+		boolean backpage2 = true;
+		while (backpage2) {
+			mc.showCashMenu();
+			switch (ConnectController.scanIntData()) {
+			case -1:
+				System.out.println("잘못된 입력값입니다. 다시 입력하여주세요.");
+				break;
+			case 0:
+				System.out.println("뒤 페이지로 이동합니다.");
+				backpage2 = false;
+				break;
+			case 1:
+				System.out.print("현재 누적 지원금:");
+				asc.lookupCashPresent(stdNo);
+				break;
+			case 2:
+				System.out.println("월별 지원금 조회 페이지입니다.");
+				asc.lookupCashPast(stdNo);
+				break;
+			default:
+				System.out.println("메뉴에 없는 번호를 선택하였습니다. 1~2번 중에서 선택하세요.");
+				break;
+			}
+		}
+	}
 }

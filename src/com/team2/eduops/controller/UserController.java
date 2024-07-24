@@ -37,7 +37,8 @@ public class UserController {
 			stdVo.setTeam_name(rs.getString("team_name"));
 		} catch (Exception e) {
 //				e.printStackTrace();
-			System.out.println(e.getMessage());
+			System.out.println("문제발생");
+			e.getMessage();
 		}
 
 		return stdVo;
@@ -71,7 +72,8 @@ public class UserController {
 			admVo.setAdm_name(rs.getString("adm_name"));
 		} catch (Exception e) {
 //				e.printStackTrace();
-			System.out.println(e.getMessage());
+			System.out.println("문제발생");
+			e.getMessage();
 		}
 
 		return admVo;

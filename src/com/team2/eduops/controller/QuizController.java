@@ -262,9 +262,21 @@ public class QuizController {
 			rs = ConnectController.executePstmtQuery(pstmt);
 			if (UtilController.isNull(rs)) {
 				teamName = null;
-				System.out.println("해당 팀이 존재하지 않습니다.");
-				return;
+				System.out.println("executeQuery 도중 문제 발생");
+				continue;
 			}
+			
+			try {
+				if(!rs.next()) {
+					teamName = null;
+					System.out.println("해당하는 팀의 데이터가 존재하지 않습니다.");
+					return;
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+				System.out.println("rs 값 next() 중 문제 발생");
+			}
+			
 			
 			// 열 너비 정의 (예상 데이터 크기에 따라 조정)
 			int col1Width = 20; // std_name 용
@@ -280,7 +292,7 @@ public class QuizController {
 			
 			try {
 				// 결과 집합의 각 행 출력
-				while (rs.next()) {
+				do {
 					String stdName = rs.getString("STD_NAME");
 					String quizName = rs.getString("QUIZ_NAME");
 					String quizText = rs.getString("QUIZ_TEXT");
@@ -293,10 +305,10 @@ public class QuizController {
 					System.out.printf(
 							"%-" + col1Width + "s %-" + col2Width + "s %-" + col3Width + "s %-" + col4Width + "s\n",
 							stdName, quizName, quizText, team);
-				}
+				} while(rs.next());
 			} catch (SQLException e) {
 				e.printStackTrace();
-				System.out.println("rs.next() 실행 중 문제 발생");
+				System.out.println("rs 내용 출력 실행 중 문제 발생");
 			}
 		}
 	}

@@ -62,4 +62,24 @@ public class MessageController {
         System.out.println("\t 3. 퀴즈 팀별 보기 ");
         System.out.println("\t 0. 뒤로 가기");
 	}
+	
+	public void showStudentAlgorithmPage() {
+    	System.out.println("\n -=-=-=-=-= 알고리즘 문제 선정 =-=-=-=-=-");
+        System.out.println("\t 1. 알고리즘 문제 선정");  // 알고리즘 주소, 알고리즘 이름, 담당자
+        System.out.println("\t 2. 알고리즘 번호 및 코드 제출");  // 알고리즘 번호 및 코드 기입, 제출자 번호
+//        System.out.println("\t 2. 알고리즘 문제 수정");  // 알고리즘 주소, 알고리즘 이름, 담당자 (al_no 로 수정)
+        System.out.println("\t 3. 전체보기");
+        System.out.println("\t 0. 뒤로가기 ");
+        System.out.println("\t >> 원하는 메뉴 선택 하세요.    ");
+	}
+	
+	public void showAdminAlgorithmPage() {
+		System.out.println("=-=-=-=-=-  알고리즘 보기 -=-=-=-=-=");
+        System.out.println("\t 1. 알고리즘 날짜별 보기 ");
+        System.out.println("\t 2. 알고리즘 팀별 보기 ");
+        System.out.println("\t 0. 뒤로 가기 ");
+        System.out.println("\t >> 원하는 메뉴 선택 하세요.    ");
+
+	}
+
 }

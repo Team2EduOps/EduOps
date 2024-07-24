@@ -7,6 +7,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Scanner;
 
 import com.team2.eduops.model.AdminVO;
 import com.team2.eduops.model.QuizNameVO;
@@ -40,38 +41,62 @@ public class QuizController {
 	// insert // 퀴즈 코드 제출
 	public void insertQuizAnswer(StudentVO stdVo) {
 		String sql = "INSERT INTO " + quizVo.getClassName() + " (QUIZ_TEXT, STD_NO, QUIZ_NO) VALUES (?,?,?)";
-
+		int result = -1;
 		try (PreparedStatement pstmt = ConnectController.getPstmt(sql)) {
-			System.out.println("퀴즈 코드: ");
-			String quizCode = ConnectController.scanData();
+//			System.out.println("퀴즈 코드: ");
+//			String quizCode = ConnectController.scanData();
+			System.out.println("퀴즈 코드를 입력하세요 (종료하려면 'END' 입력):");
+            String QuizText = getQuizTextFromInput();
 			System.out.println("퀴즈 번호: ");
 			int stdNo = stdVo.getStd_no();
 			String quizNo = ConnectController.scanData();
-			pstmt.setString(1, quizCode);
+			pstmt.setString(1, QuizText);
 			pstmt.setInt(2, stdNo);
 			pstmt.setString(3, quizNo);
-			int result = ConnectController.executePstmtUpdate(pstmt);
+			result = ConnectController.executePstmtUpdate(pstmt);
 			System.out.println(result + "개 입력완료");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		if(!UtilController.isNegative(result)) {
+			ConnectController.commit();
+		}
 	}
 
+	private String getQuizTextFromInput() {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder QuizText = new StringBuilder();
+        String line;
+        
+        while (true) {
+            line = scanner.nextLine();
+            if (line.equalsIgnoreCase("END")) {
+                break;
+            }
+            QuizText.append(line).append("\n");
+        }
+        
+        return QuizText.toString();
+    }
+	
 	// insert // 퀴즈 문제 제출 - 이름, 담당자(관리자)
 	public void insertQuiz(AdminVO admVo) {
 
 		String sql = "INSERT INTO " + quizNameVo.getClassName() + " (QUIZ_NAME, ADM_NO) VALUES (?,?)";
-
+		int result = -1;
 		try (PreparedStatement pstmt = ConnectController.getPstmt(sql)) {
 			System.out.println("퀴즈 이름: ");
 			String quizName = ConnectController.scanData();
 			int admNo = admVo.getAdm_no();
 			pstmt.setString(1, quizName);
 			pstmt.setInt(2, admNo);
-			int result = ConnectController.executePstmtUpdate(pstmt);
+			result = ConnectController.executePstmtUpdate(pstmt);
 			System.out.println(result + "개 입력완료");
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		if(!UtilController.isNegative(result)) {
+			ConnectController.commit();
 		}
 	}
 
@@ -90,9 +115,9 @@ public class QuizController {
 			int col2Width = 20; // STD_NO 용
 			int col3Width = 20; // AL_NO 용
 
-			// 헤더 출력
-			System.out.printf("%-" + col1Width + "s%" + col2Width + "s%" + col3Width + "s\n", "퀴즈 코드", "제출자 번호",
-					"퀴즈 번호");
+//			// 헤더 출력
+//			System.out.printf("%-" + col1Width + "s%" + col2Width + "s%" + col3Width + "s\n", "퀴즈 코드", "제출자 번호",
+//					"퀴즈 번호");
 
 			// 결과 집합의 각 행 출력
 			while (rs.next()) {
@@ -100,13 +125,21 @@ public class QuizController {
 				int stdNo = rs.getInt("STD_NO");
 				int quizNo = rs.getInt("QUIZ_NO");
 
-				// 긴 문자열 자르기
-				quizText = UtilController.truncateString(quizText, col1Width - 3);
-
-				// 데이터 행 출력
-				System.out.printf("%-" + col1Width + "s%" + col2Width + "d%" + col3Width + "d\n", quizText, stdNo,
-						quizNo);
+//				// 긴 문자열 자르기
+//				quizText = UtilController.truncateString(quizText, col1Width - 3);
+//
+//				// 데이터 행 출력
+//				System.out.printf("%-" + col1Width + "s%" + col2Width + "d%" + col3Width + "d\n", quizText, stdNo,
+//						quizNo);
+				
+				// 원하는 출력 형식으로 결과 출력
+	            System.out.println("퀴즈코드 - " + quizText);
+	            System.out.println("학생 번호 - " + stdNo);
+	            System.out.println("퀴즈 번호 - " + quizNo);
+	            System.out.println();  // 빈 줄을 추가하여 각 레코드 구분
 			}
+		
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -156,6 +189,7 @@ public class QuizController {
 	
 	/////// select 조건문 /////////
 	// 퀴즈 날짜별 보기 - 관리자
+/*
 	public void displayQuizByDate() {
 		// 날짜 포맷 확인 및 변환
 		SimpleDateFormat inputDateFormat = new SimpleDateFormat("yy/MM/dd");
@@ -231,7 +265,82 @@ public class QuizController {
 			System.out.println("rs.next() 진행중 문제 발생");
 		}
 	}
+*/
+	// 퀴즈 날짜별 보기 - 관리자 (수정버전)
+    public void displayQuizByDate() {
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("yy/MM/dd");
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date sqlDate = null;
+        String sql;
+        PreparedStatement pstmt;
+        ResultSet rs;
 
+        // 날짜 입력 및 데이터 조회
+        while (true) {
+            System.out.println("조회할 날짜를 입력하세요 (형식: yy/MM/dd): ");
+            String selectDate = ConnectController.scanData();
+
+            try {
+                java.util.Date utilDate = inputDateFormat.parse(selectDate);
+                sqlDate = new Date(utilDate.getTime());
+            } catch (ParseException e) {
+                System.out.println("날짜 형식이 잘못되었습니다. 형식: yy/MM/dd");
+                continue; // 날짜 형식이 잘못되었으면 다시 입력 받기
+            }
+
+            sql = "SELECT C.std_name, B.quiz_name, A.quiz_text, B.quiz_date " +
+                  "FROM Quiz A " +
+                  "INNER JOIN QUIZ_NAME B ON A.quiz_no = B.quiz_no " +
+                  "INNER JOIN STUDENT C ON A.std_no = C.std_no " +
+                  "WHERE TRUNC(B.quiz_date) = ?";
+
+            pstmt = ConnectController.getPstmt(sql);
+
+            try {
+                pstmt.setDate(1, sqlDate);
+                rs = ConnectController.executePstmtQuery(pstmt);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("쿼리 실행 중 문제 발생");
+                return; // 쿼리 실행 중 문제 발생 시 메서드 종료
+            }
+
+            if (UtilController.isNull(rs)) {
+                System.out.println("해당 날짜에 데이터가 존재하지 않습니다.");
+                return; // 데이터가 없는 경우 메서드 종료
+            }
+
+            // 결과 집합의 각 행 출력
+            try {
+                while (rs.next()) {
+                    String stdName = rs.getString("STD_NAME");
+                    String quizName = rs.getString("QUIZ_NAME");
+                    String quizText = rs.getString("QUIZ_TEXT");
+                    Date quizDate = rs.getDate("QUIZ_DATE");
+                    String date = outputDateFormat.format(quizDate); // 포맷된 날짜 문자열
+
+                    // 원하는 출력 형식으로 결과 출력
+                    System.out.println("학생이름 - " + stdName);
+                    System.out.println("퀴즈 이름 - " + quizName);
+                    System.out.println("퀴즈 내용 - " + quizText);
+                    System.out.println("날짜 - " + date);
+                    System.out.println();  // 빈 줄을 추가하여 각 레코드 구분
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("결과 출력 중 문제 발생");
+            }
+
+            // 다른 날짜 조회 여부 묻기
+            System.out.println("다른 날짜를 조회하시겠습니까? (y/n)");
+            String response = ConnectController.scanData();
+            if (!response.equalsIgnoreCase("y")) {
+                return; // 다시검색
+            }
+        }
+    }
+	
+    /*
 	// 퀴즈 팀별 보기 - 관리자
 	public void displayQuizByTeam() {
 		String teamName = null;
@@ -312,6 +421,79 @@ public class QuizController {
 			}
 		}
 	}
+	*/
+    // 팀별 보기 처리 수정버전
+    public void displayQuizByTeam() {
+        String teamName = null;
+        String sql;
+        PreparedStatement pstmt;
+        ResultSet rs;
+
+      
+        while (true) {
+            System.out.println("조회할 팀 이름을 입력하세요: ");
+            teamName = ConnectController.scanData();
+
+            sql = "SELECT C.std_name, B.quiz_name, A.quiz_text, C.team_name " +
+                  "FROM Quiz A " +
+                  "INNER JOIN QUIZ_NAME B ON A.quiz_no = B.quiz_no " +
+                  "INNER JOIN STUDENT C ON A.std_no = C.std_no " +
+                  "WHERE C.team_name = ?";
+
+            pstmt = ConnectController.getPstmt(sql);
+
+            try {
+                pstmt.setString(1, teamName);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("pstmt set 데이터 중 문제 발생");
+                continue; // 문제 발생 시 다시 팀 이름 입력 받기
+            }
+
+
+                rs = ConnectController.executePstmtQuery(pstmt);
+                if (UtilController.isNull(rs)) {
+                	teamName = null; // 다시 팀 이름 입력 받기
+                    System.out.println("해당 팀의 데이터가 존재하지 않습니다.");
+                    continue;
+                }
+
+
+try {
+                // 결과 집합의 각 행 출력
+                boolean hasData = false;
+                while (rs.next()) {
+                    hasData = true;
+                    String stdName = rs.getString("STD_NAME");
+                    String quizName = rs.getString("QUIZ_NAME");
+                    String quizText = rs.getString("QUIZ_TEXT");
+                    String team = rs.getString("TEAM_NAME");
+
+                 // 원하는 출력 형식으로 결과 출력
+	                System.out.println("학생이름 - " + stdName);
+	                System.out.println("퀴즈 이름 - " + quizName);
+	                System.out.println("코드 - " + quizText);
+	                System.out.println("팀이름 - " + team);  // 빈 줄을 추가하여 각 레코드 구분
+	                System.out.println("");
+                }
+
+                if (!hasData) {
+                    System.out.println("해당 팀의 데이터가 존재하지 않습니다.");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("쿼리 실행 중 문제 발생");
+            }
+
+            // 팀 이름 입력을 다시 받을지 여부를 사용자에게 묻기
+            System.out.println("다른 팀 이름을 조회하시겠습니까? (y/n)");
+            String response = ConnectController.scanData();
+            if (!response.equalsIgnoreCase("y")) {
+                return; // 종료
+            }
+        }
+    }
+    
 	/////// select 조건문 /////////
 	
 	

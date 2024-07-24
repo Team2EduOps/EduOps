@@ -11,12 +11,13 @@ public class PageController {
 	LoginController lc = new LoginController();
 	JoinController jc = new JoinController();
 	QuizController qc = new QuizController();
+	AlgorithmController ac = new AlgorithmController();
 
 	StudentVO stdVo;
 	AdminVO admVo;
-	
+
 	////// 프로그램 돌리는 메소드들 ////////
-	
+
 // main 메소드 안에서 종료하기 전까지 계속 돌아갈 메소드
 	public void runPage() {
 		int userNo;
@@ -56,7 +57,6 @@ public class PageController {
 	}
 
 	public void runStudentPage(int userNo) { // 학생번호
-		
 
 		// 학생 번호로 학생 정보 받아오기
 		stdVo = uc.getStdData(userNo);
@@ -77,7 +77,7 @@ public class PageController {
 				runStudentQuizPage(stdVo);
 				break;
 			case 4:
-
+				runStudentAlgorithmPage(stdVo);
 				break;
 			case 5:
 
@@ -104,7 +104,7 @@ public class PageController {
 			int menuNo = ConnectController.scanIntData();
 			switch (menuNo) {
 			case 1:
-				
+
 				break;
 			case 2:
 				runNoticePage(admVo);
@@ -113,7 +113,7 @@ public class PageController {
 				runAdminQuizPage(admVo);
 				break;
 			case 4:
-
+				runAdminAlgorithmPage(admVo);
 				break;
 			case 5:
 				jc.adminJoin();
@@ -127,13 +127,13 @@ public class PageController {
 			}
 		}
 	}
-	
+
 	public void runNoticePage(AdminVO admVo) {
 
 		boolean isNoticePageRun = true;
-		while(isNoticePageRun) {
+		while (isNoticePageRun) {
 			mc.showNoticePage();
-			
+
 			int menuNo = ConnectController.scanIntData();
 			switch (menuNo) {
 			case 1:
@@ -184,7 +184,7 @@ public class PageController {
 			} // end switch
 		} // end while
 	}
-	
+
 	public void runAdminQuizPage(AdminVO admVo) {
 
 		boolean isRunAdminQuizPage = true;
@@ -214,8 +214,59 @@ public class PageController {
 			} // end switch
 		} // end while
 	}
-	
-	
-	
+
+	public void runStudentAlgorithmPage(StudentVO stdVo) {
+		boolean isRunStudentAlgorithmPage = true;
+		while (isRunStudentAlgorithmPage) {
+			mc.showStudentAlgorithmPage();
+			int menuNo = ConnectController.scanIntData();
+
+			switch (menuNo) {
+			case 1:
+				// 알고리즘 등록
+				ac.addAlgorithmName(stdVo);
+				break;
+			case 2:
+				// 알고리즘 제출
+				ac.addAlgorithmAnswer(stdVo);
+				break;
+			case 3:
+				// 전체보기
+				ac.selectAlgorithmAll();
+				break;
+			case 0:
+				// exception
+				isRunStudentAlgorithmPage = false;
+				break;
+			default:
+				System.out.println("없는 번호 선택하였습니다. 1~2번 중에서 선택하세요.");
+			} // end switch
+		} // end while
+	}
+
+	public void runAdminAlgorithmPage(AdminVO admVo) {
+		boolean isRunAdminAlgorithmPage = true;
+		while (isRunAdminAlgorithmPage) {
+			mc.showAdminAlgorithmPage();
+			int menuNo = ConnectController.scanIntData();
+
+			switch (menuNo) {
+			case 1:
+				// 주차별 보기
+				ac.displayAlgorithmByDate();
+				break;
+			case 2:
+				// 팀별 보기
+				ac.displayAlgorithmByTeam();
+				break;
+			case 0:
+				// exception
+				isRunAdminAlgorithmPage = false;
+				break;
+			default:
+				System.out.println("없는 번호 선택하였습니다. 1~2번 중에서 선택하세요.");
+			} // end switch
+		} // end while
+	}
 
 }

@@ -103,7 +103,7 @@ public class AttendStudentController {
     }//while end
 
     //********년 월 형식 맞는지 확인 메소드**********
-    public boolean isValidYearMonth(String date) {
+    public static boolean isValidYearMonth(String date) {
         final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM");
         final String DATE_PATTERN = "yyyy-MM";
         try {
@@ -189,8 +189,8 @@ public class AttendStudentController {
 
     }
 
-//*********현재 누적 지원금 조회*************
-    public static void lookupCashPresent (int stdno) throws SQLException {
+    //*********현재 누적 지원금 조회*************
+    public static void lookupCashPresent(int stdno) throws SQLException {
         // 현재 날짜와 시간을 가져옵니다.
         Date now = new Date();
         // SimpleDateFormat을 사용하여 "yyyy-MM" 형식으로 포맷팅합니다.
@@ -198,45 +198,45 @@ public class AttendStudentController {
         String formattedDate = sdf.format(now);
         // 출석 상태 개수를 저장할 배열
         int[] statusCount = new int[5]; // 0: 결석, 1: 출석, 2: 공가, 3: 지각, 4: 조퇴
-            String firstdate = formattedDate + "-01";
-            String lastdate = formattedDate + "-31";
-            String sql = "SELECT ATTEND_STATUS " +
-                    "FROM ATTENDANCE WHERE ATTEND_DATE BETWEEN TO_DATE('" + firstdate + "','YYYY-MM-DD') AND TO_DATE('" + lastdate + "','YYYY-MM-DD') " +
-                    "AND STD_NO = " + stdno;
+        String firstdate = formattedDate + "-01";
+        String lastdate = formattedDate + "-31";
+        String sql = "SELECT ATTEND_STATUS " +
+                "FROM ATTENDANCE WHERE ATTEND_DATE BETWEEN TO_DATE('" + firstdate + "','YYYY-MM-DD') AND TO_DATE('" + lastdate + "','YYYY-MM-DD') " +
+                "AND STD_NO = " + stdno;
 
-            PreparedStatement pstmt = ConnectController.getPstmt(sql);
-            ResultSet rs = ConnectController.executePstmtQuery(pstmt);
-            ResultSetMetaData metaData = rs.getMetaData();
-            //case1- DB에 없는 값, 튜플 X
-            if (!rs.isBeforeFirst()) {
-                System.out.println("\t 해당 월에 데이터가 없습니다.");
-            } else {
-                while (rs.next()) {
-                    int status = rs.getInt("attend_status");
-                    if (status >= 0 && status <= 4) {
-                        statusCount[status]++;
-                    }
+        PreparedStatement pstmt = ConnectController.getPstmt(sql);
+        ResultSet rs = ConnectController.executePstmtQuery(pstmt);
+        ResultSetMetaData metaData = rs.getMetaData();
+        //case1- DB에 없는 값, 튜플 X
+        if (!rs.isBeforeFirst()) {
+            System.out.println("\t 해당 월에 데이터가 없습니다.");
+        } else {
+            while (rs.next()) {
+                int status = rs.getInt("attend_status");
+                if (status >= 0 && status <= 4) {
+                    statusCount[status]++;
                 }
-                System.out.println("결석(0): " + statusCount[0]);
-                System.out.println("출석(1): " + statusCount[1]);
-                System.out.println("공가(2): " + statusCount[2]);
-                System.out.println("지각(3): " + statusCount[3]);
-                System.out.println("조퇴(4): " + statusCount[4]);
-                int amount = 300000;
-                int index0Value = statusCount[0];
-                amount -= index0Value * 10000;
+            }
+            System.out.println("결석(0): " + statusCount[0]);
+            System.out.println("출석(1): " + statusCount[1]);
+            System.out.println("공가(2): " + statusCount[2]);
+            System.out.println("지각(3): " + statusCount[3]);
+            System.out.println("조퇴(4): " + statusCount[4]);
+            int amount = 300000;
+            int index0Value = statusCount[0];
+            amount -= index0Value * 10000;
 
-                // 인덱스 3의 값을 3으로 나눈 몫에 따라 1만원씩 감소
-                int index3Value = statusCount[3];
-                amount -= (index3Value / 3) * 10000;
+            // 인덱스 3의 값을 3으로 나눈 몫에 따라 1만원씩 감소
+            int index3Value = statusCount[3];
+            amount -= (index3Value / 3) * 10000;
 
-                // 결과 출력
-                System.out.println("현재 누적 금액: " + amount + "원");
-            } //내부 while end
+            // 결과 출력
+            System.out.println("현재 누적 금액: " + amount + "원");
+        } //내부 while end
     }
 
     //lookupCashPast- 지난 누적 지원금 조회 월별(근태 page)
-    public static void lookupCashPast (int stdno){
+    public static void lookupCashPast(int stdno) throws SQLException, ParseException, FileNotFoundException {
         boolean bool = true;
         while (bool) {
             System.out.print("\t YYYY-MM 형식 입력: ");
@@ -247,44 +247,45 @@ public class AttendStudentController {
                 String firstdate = inputMonth + "-01";
                 String lastdate = inputMonth + "-31";
                 String sql = "SELECT ATTEND_STATUS " +
-                "FROM ATTENDANCE WHERE ATTEND_DATE BETWEEN TO_DATE('" + firstdate + "','YYYY-MM-DD') AND TO_DATE('" + lastdate + "','YYYY-MM-DD') " +
-                "AND STD_NO = " + stdno;
+                        "FROM ATTENDANCE WHERE ATTEND_DATE BETWEEN TO_DATE('" + firstdate + "','YYYY-MM-DD') AND TO_DATE('" + lastdate + "','YYYY-MM-DD') " +
+                        "AND STD_NO = " + stdno;
 
-            PreparedStatement pstmt = ConnectController.getPstmt(sql);
-            ResultSet rs = ConnectController.executePstmtQuery(pstmt);
-            //case1- DB에 없는 값, 튜플 X
-            if (!rs.isBeforeFirst()) {
-                System.out.println("\t 해당 월에 데이터가 없습니다.");
-            } else {
-                while (rs.next()) {
-                int status = rs.getInt("attend_status");
-                if (status >= 0 && status <= 4) {
-                        statusCount[status]++;
+                PreparedStatement pstmt = ConnectController.getPstmt(sql);
+                ResultSet rs = ConnectController.executePstmtQuery(pstmt);
+                //case1- DB에 없는 값, 튜플 X
+                if (!rs.isBeforeFirst()) {
+                    System.out.println("\t 해당 월에 데이터가 없습니다.");
+                } else {
+                    while (rs.next()) {
+                        int status = rs.getInt("attend_status");
+                        if (status >= 0 && status <= 4) {
+                            statusCount[status]++;
+                        }
                     }
-                }
-                System.out.println("결석(0): " + statusCount[0]);
-                System.out.println("출석(1): " + statusCount[1]);
-                System.out.println("공가(2): " + statusCount[2]);
-                System.out.println("지각(3): " + statusCount[3]);
-                System.out.println("조퇴(4): " + statusCount[4]);
-                // 인덱스 0의 값에 따라 1만원씩 감소
-               int amount = 300000;
-                int index0Value = statusCount[0];
-                amount -= index0Value * 10000;
+                    System.out.println("결석(0): " + statusCount[0]);
+                    System.out.println("출석(1): " + statusCount[1]);
+                    System.out.println("공가(2): " + statusCount[2]);
+                    System.out.println("지각(3): " + statusCount[3]);
+                    System.out.println("조퇴(4): " + statusCount[4]);
+                    // 인덱스 0의 값에 따라 1만원씩 감소
+                    int amount = 300000;
+                    int index0Value = statusCount[0];
+                    amount -= index0Value * 10000;
 
-                // 인덱스 3의 값을 3으로 나눈 몫에 따라 1만원씩 감소
-                int index3Value = statusCount[3];
-                amount -= (index3Value / 3) * 10000;
+                    // 인덱스 3의 값을 3으로 나눈 몫에 따라 1만원씩 감소
+                    int index3Value = statusCount[3];
+                    amount -= (index3Value / 3) * 10000;
 
-                // 결과 출력
-                System.out.println(inputMonth+"월 금액: " + amount + "원");
+                    // 결과 출력
+                    System.out.println(inputMonth + "월 금액: " + amount + "원");
 
-            } //내부 while end
+                } //내부 while end
             } else System.out.println("\t 올바른 형식이 아닙니다.. 다시 입력해 주세요.");
+        }
     }
 
     /* *********최종 코드 : 5. 근태 관리 메뉴 동작*********** **/
-    public static void attendMenu(int stdno) throws ClassNotFoundException, SQLException, ParseException {
+    public static void attendMenu(int stdno) throws ClassNotFoundException, SQLException, ParseException, FileNotFoundException {
         boolean backpage = true;
         while (backpage) {
             showAttendMenu();  // 메뉴 보이기

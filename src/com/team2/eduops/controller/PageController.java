@@ -172,7 +172,10 @@ public class PageController {
 //	                	update(vo.getClassName());
 //	                	menulist();
 //	                	break;
-			case 3:
+			case 2: //문제보기
+				qc.selectQuizAll();
+				break;
+			case 3: //코드보기
 				qc.selectQuizAnswerAll();
 				break;
 			case 0:
@@ -231,8 +234,12 @@ public class PageController {
 				ac.addAlgorithmAnswer(stdVo);
 				break;
 			case 3:
-				// 전체보기
+				// 문제보기
 				ac.selectAlgorithmAll();
+				break;
+			case 4:
+				// 코드보기
+				ac.selectAlgorithmAnswerAll();
 				break;
 			case 0:
 				// exception

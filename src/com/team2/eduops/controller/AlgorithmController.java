@@ -17,17 +17,17 @@ public class AlgorithmController {
 
 	public void addAlgorithmName(StudentVO stdVo) { // 문제 출제
 		selectAlgorithmAll();
-		ConnectController.line();
+		UtilController.line();
 		insertAlgorithm(stdVo);
-		ConnectController.line();
+		UtilController.line();
 		selectAlgorithmAll();
 	}
 
 	public void addAlgorithmAnswer(StudentVO stdVo) { // 문제 코드 제출
 		selectAlgorithmAnswerAll();
-		ConnectController.line();
+		UtilController.line();
 		insertAlgorithmAnswer(stdVo);
-		ConnectController.line();
+		UtilController.line();
 		selectAlgorithmAnswerAll();
 	}
 
@@ -68,7 +68,7 @@ public class AlgorithmController {
 			e.printStackTrace();
 		}
 		rs = ConnectController.executePstmtQuery(pstmt);
-		if (ConnectController.isNull(rs)) {
+		if (UtilController.isNull(rs)) {
 			System.out.println("해당 날짜에 데이터가 존재하지 않습니다");
 		}
 
@@ -96,7 +96,7 @@ public class AlgorithmController {
 				String date = dateFormat.format(alDate); // 포맷된 날짜 문자열
 
 				// 긴 문자열 자르기
-				alText = ConnectController.truncateString(alText, col3Width - 3);
+				alText = UtilController.truncateString(alText, col3Width - 3);
 
 				// 데이터 행 출력
 				System.out.printf(
@@ -139,7 +139,7 @@ public class AlgorithmController {
 		
 
 			rs = ConnectController.executePstmtQuery(pstmt);
-			if (ConnectController.isNull(rs)) {
+			if (UtilController.isNull(rs)) {
 				teamName = null;
 				System.out.println("해당 팀이 존재하지 않습니다. ");
 				return;
@@ -165,7 +165,7 @@ public class AlgorithmController {
                     String team = rs.getString("TEAM_NAME");
 
                     // 긴 문자열 자르기
-                    alText = ConnectController.truncateString(alText, col3Width - 3);
+                    alText = UtilController.truncateString(alText, col3Width - 3);
 
                  // 데이터 행 출력
                     System.out.printf("%-" + col1Width + "s %-" + col2Width + "s %-" + col3Width + "s %-" + col4Width + "s\n",
@@ -196,7 +196,7 @@ public class AlgorithmController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		if(!ConnectController.isNegative(result)) {
+		if(!UtilController.isNegative(result)) {
 			ConnectController.commit();
 		}
 	}
@@ -224,7 +224,7 @@ public class AlgorithmController {
 				int alNo = rs.getInt("AL_NO");
 
 				// 긴 문자열 자르기
-				alText = ConnectController.truncateString(alText, col1Width - 3);
+				alText = UtilController.truncateString(alText, col1Width - 3);
 
 				// 데이터 행 출력
 				System.out.printf("%-" + col1Width + "s%" + col2Width + "d%" + col3Width + "d\n", alText, stdNo, alNo);
@@ -254,7 +254,7 @@ public class AlgorithmController {
 			e.printStackTrace();
 		}
 		
-		if(!ConnectController.isNegative(result)) {
+		if(!UtilController.isNegative(result)) {
 			ConnectController.commit();
 		}
 	}
@@ -287,9 +287,9 @@ public class AlgorithmController {
 				String date = dateFormat.format(sqlDate); // 포맷된 날짜 문자열
 
 				// 긴 텍스트 자르기
-				alurl = ConnectController.truncateString(alurl, col2Width - 3);
-				alname = ConnectController.truncateString(alname, col3Width - 3);
-				date = ConnectController.truncateString(date, col5Width - 3);
+				alurl = UtilController.truncateString(alurl, col2Width - 3);
+				alname = UtilController.truncateString(alname, col3Width - 3);
+				date = UtilController.truncateString(date, col5Width - 3);
 
 				// 데이터 출력
 				System.out.printf("%-" + col1Width + "d%" + col2Width + "s%" + col3Width + "s%" + col4Width + "d%"

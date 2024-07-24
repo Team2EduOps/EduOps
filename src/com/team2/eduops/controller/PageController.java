@@ -5,6 +5,7 @@ import com.team2.eduops.model.QuizVO;
 import com.team2.eduops.model.StudentVO;
 
 public class PageController {
+	MessageController mc = new MessageController();
 	UserController uc = new UserController();
 	NoticeController nc = new NoticeController();
 	LoginController lc = new LoginController();

@@ -45,7 +45,7 @@ public class LoginController {
 			String sql = "Select " + sqlNo + ", " + sqlPw + " from " + className + " where " + sqlId + " = ?";
 
 			PreparedStatement pstmt = ConnectController.getPstmt(sql);
-			if (ConnectController.isNull(pstmt)) {
+			if (UtilController.isNull(pstmt)) {
 				System.out.println("제대로 동작하지 않았습니다. 다시 입력해주세요.");
 				continue;
 			}
@@ -60,7 +60,7 @@ public class LoginController {
 
 			ResultSet rs = ConnectController.executePstmtQuery(pstmt);
 
-			if (ConnectController.isNull(rs)) {
+			if (UtilController.isNull(rs)) {
 				System.out.println("문제 발생");
 				continue;
 			}

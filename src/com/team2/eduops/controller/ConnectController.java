@@ -74,7 +74,7 @@ public class ConnectController {
 			str = sc.nextLine();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("scanner 값 받아오기 문제 발생");
 		} finally {
 			return str;
 		}
@@ -84,10 +84,11 @@ public class ConnectController {
 	// isNegative(int num) 메소드로 음수값 리턴 받았는지 확인 후 사용
 	public static int scanIntData() {
 		int i = -1;
+		String tmp = sc.nextLine();
 		try {
-			i = Integer.parseInt(sc.nextLine());
+			i = Integer.parseInt(tmp);
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("정수 변환에 문제 발생");
 		} finally {
 			return i;
 		}
@@ -127,50 +128,5 @@ public class ConnectController {
 			e.printStackTrace();
 		}
 		return rs; 
-	}
-	
-	///////////////////////////////////
-	
-	public static boolean isNegative(int num) {
-		if(num < 0) {
-			return true;
-		}
-		return false;
-	}
-	
-	public static boolean isNull(String str) {
-		if(str == null) {
-			return true;
-		}
-		return false;
-	}
-	
-	public static boolean isNull(PreparedStatement pstmt) {
-		if(pstmt == null) {
-			return true;
-		}
-		return false;
-	}
-	
-	public static boolean isNull(ResultSet rs) {
-		if(rs == null) {
-			return true;
-		}
-		return false;
-	}
-	
-	/////////////////////////////
-	
-	// 문자열을 지정된 최대 길이로 자릅니다.
-	public static String truncateString(String str, int maxLength) {
-		if (str.length() <= maxLength) {
-			return str;
-		} else {
-			return str.substring(0, maxLength) + "...";
-		}
-	}
-
-	public static void line() {
-		System.out.println("");
 	}
 }

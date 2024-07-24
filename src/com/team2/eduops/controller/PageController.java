@@ -176,7 +176,7 @@ public class PageController {
 				qc.selectQuizAll();
 				break;
 			case 3: //코드보기
-				qc.selectQuizAnswerAll();
+				qc.selectQuizAnswer(stdVo);
 				break;
 			case 0:
 				isRunStudentQuizPage = false;
@@ -239,7 +239,7 @@ public class PageController {
 				break;
 			case 4:
 				// 코드보기
-				ac.selectAlgorithmAnswerAll();
+				ac.selectAlgorithmAnswer(stdVo);
 				break;
 			case 0:
 				// exception

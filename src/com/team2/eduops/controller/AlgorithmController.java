@@ -25,11 +25,11 @@ public class AlgorithmController {
 	}
 
 	public void addAlgorithmAnswer(StudentVO stdVo) { // 문제 코드 제출
-		selectAlgorithmAnswerAll();
+		selectAlgorithmAnswer(stdVo);
 		UtilController.line();
 		insertAlgorithmAnswer(stdVo);
 		UtilController.line();
-		selectAlgorithmAnswerAll();
+		selectAlgorithmAnswer(stdVo);
 	}
 
 	/*
@@ -372,12 +372,13 @@ public class AlgorithmController {
     }
 
 	// select all //모든 데이터 선택
-	public void selectAlgorithmAnswerAll() {
-		String sql = "SELECT AL_TEXT, STD_NO, AL_NO FROM " + algorithmVo.getClassName();
+	public void selectAlgorithmAnswer(StudentVO stdVo) {
+		String sql = "SELECT AL_TEXT, STD_NO, AL_NO FROM " + algorithmVo.getClassName() + " WHERE STD_NO = ?";
 
-		try (PreparedStatement pstmt = ConnectController.getPstmt(sql);
-				ResultSet rs = ConnectController.executePstmtQuery(pstmt)) {
-
+		try  {
+			PreparedStatement pstmt = ConnectController.getPstmt(sql);
+			pstmt.setInt(1, stdVo.getStd_no());
+			ResultSet rs = ConnectController.executePstmtQuery(pstmt);
 			// 열 너비 정의 (예상 데이터 크기에 따라 조정)
 			int col1Width = 35; // AL_TEXT 용
 			int col2Width = 20; // STD_NO 용

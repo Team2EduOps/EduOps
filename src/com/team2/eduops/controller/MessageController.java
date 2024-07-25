@@ -27,6 +27,16 @@ public class MessageController {
 			checkIoStr = "입실";
 			break;
 		}
+		
+		// 학생 홈 페이지 띄우기
+		System.out.println("===학생 홈 페이지===");
+		System.out.println("안녕하세요 " + std_name + "님");
+		System.out.println("1. " + checkIoStr);
+		System.out.println("2. 공지 보기");
+		System.out.println("3. 퀴즈 제출");
+		System.out.println("4. 알고리즘 관리");
+		System.out.println("5. 근태 관리");
+		System.out.println("0. 로그아웃");
 	}
 
 	public void showAdminPage(String adm_name) {

@@ -128,15 +128,15 @@ public class MessageController {
 	public void showStdUserPage() {
 		System.out.println("\n------6.사용자 정보-------");
 		System.out.println("사용자 정보 페이지입니다.");
-		System.out.println("\t 6-1. 비밀번호 변경");
-		System.out.println("\t 6-2. 소속 팀 변경");
+		System.out.println("\t 1. 비밀번호 변경");
+		System.out.println("\t 2. 소속 팀 변경");
 		System.out.println("\t 0: 뒤로 가기");
 	}
 
 	public void showAdmUserPage() {
 		System.out.println("\n------7.사용자 정보-------");
 		System.out.println("사용자 정보 페이지입니다.");
-		System.out.println("\t 7-1. 비밀번호 변경");
+		System.out.println("\t 1. 비밀번호 변경");
 		System.out.println("\t 0: 뒤로 가기");
 	}
 }

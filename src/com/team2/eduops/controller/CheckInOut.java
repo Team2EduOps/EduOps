@@ -129,7 +129,6 @@ public class CheckInOut {
 		while (checkIo == -1) {
 			LocalDate localDate = LocalDate.now();
 			Date sqlDate = Date.valueOf(localDate);
-			System.out.println(localDate);
 
 			// data 가져오기 : 값이 없는 경우 _결석과 입실 "입실"띄우기
 			String sql = "SELECT * from ATTENDANCE where std_no = ? AND ATTEND_DATE = ?";

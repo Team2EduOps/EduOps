@@ -2,10 +2,84 @@ package com.team2.eduops.controller;
 
 
 import java.sql.PreparedStatement;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+
+public class AttendMake {
+    public void initializeAllAttendance() {
+        String sql = "SELECT * FROM ATTENDANCE WHERE ATTEND_DATE = TRUNC(SYSDATE)";
+        PreparedStatement pstmt = ConnectController.getPstmt(sql);
+        ResultSet rs = ConnectController.executePstmtQuery(pstmt);
+        try {
+            if (!rs.isBeforeFirst()) {
+                return;
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        Stack<Integer> arrStdNo = new Stack<>();
+        sql = "SELECT * FROM STUDENT";
+        pstmt = ConnectController.getPstmt(sql);
+        rs = ConnectController.executePstmtQuery(pstmt);
+        try {
+            while (rs.next()) {
+                arrStdNo.add(rs.getInt("STD_NO"));
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        // ------------------------------------------------------------------------------
+        sql = "INSERT INTO ATTENDANCE(ATTEND_CODE, ATTEND_DATE, STD_NO) VALUES(?, TRUNC(SYSDATE), ?)";
+        pstmt = ConnectController.getPstmt(sql);
+        int attend_code = lastAttendCode();
+        try {
+            while (!arrStdNo.empty()) {
+                pstmt.setInt(1, attend_code++);
+                pstmt.setInt(2, arrStdNo.pop());
+                ConnectController.executePstmtUpdate(pstmt);
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public int lastAttendCode() {
+        String sql = "SELECT * FROM ATTENDANCE WHERE ATTEND_CODE = (SELECT MAX(ATTEND_CODE) FROM ATTENDANCE)";
+        PreparedStatement pstmt = ConnectController.getPstmt(sql);
+        ResultSet rs = ConnectController.executePstmtQuery(pstmt);
+        try {
+            rs.next();
+            int attend_code = rs.getInt("ATTEND_CODE") + 1;
+            return attend_code;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // 비정상 종료
+    }
+}
+
+        // ConnectController.commit();
+        // ----------------------------------------------------------------
+        // to check if working fine.
+        // ----------------------------------------------------------------
+//		sql = "SELECT * FROM ATTENDANCE WHERE ATTEND_DATE = TRUNC(SYSDATE)";
+//		pstmt = ConnectController.getPstmt(sql);
+//		rs = ConnectController.executePstmtQuery(pstmt);
+//		try {
+//			while(rs.next()) {
+//				System.out.println(rs.getInt("STD_NO"));
+//				System.out.println(rs.getInt("ATTEND_CODE"));
+//				System.out.println(rs.getDate("ATTEND_DATE"));
+//			}
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 /*
 //잡: 해당 시간에 수행할 과제

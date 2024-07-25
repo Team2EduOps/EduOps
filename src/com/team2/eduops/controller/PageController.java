@@ -71,7 +71,6 @@ public class PageController {
 		boolean isStdPageRun = true;
 		while (isStdPageRun) {
 			mc.showStudentPage(stdVo, cio.showcheckIO(stdVo));
-
 			int menuNo = ConnectController.scanIntData();
 			switch (menuNo) {
 			case 1:

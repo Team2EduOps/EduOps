@@ -3,6 +3,8 @@ package com.team2.eduops.controller;
 import com.team2.eduops.model.StudentVO;
 
 public class MessageController {
+
+	CheckInOut cio = new CheckInOut();
 	//////// CLI 화면 띄우기 메소드들 /////////
 	public void showEntrancePage() {
 		// 로그인회원가입 페이지 띄우기
@@ -14,15 +16,15 @@ public class MessageController {
 	}
 
 	public void showStudentPage(StudentVO stdVo, int checkIo) {
-
 		String std_name = stdVo.getStd_name();
 		String checkIoStr = "입실";
 		switch(checkIo){
-			case 1,2,3,4: checkIoStr=" 퇴실 처리 완료: 오늘 출석 조회";
+			case 1,2,3,4: checkIoStr="퇴실 완료: 오늘자 조회";
 				break;
 			case 5: checkIoStr="퇴실";
 				break;
 			default: checkIoStr="입실";
+				break;
 		}
 
 		// 학생 홈 페이지 띄우기

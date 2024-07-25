@@ -353,10 +353,40 @@ public class PageController {
 			}
 		}
 	}
+
+	public void runAdminAttendancePage(StudentVO stdVo) {
+		boolean backpage = true;
+		while (backpage) {
+			mc.showAdminAttenancePage();
+			switch (ConnectController.scanIntData()) {
+				case -1:
+					System.out.println("/t 잘못된 입력값입니다. 다시 입력하여주세요.");
+					break;
+				case 0:
+					System.out.println("/t 뒤 페이지로 이동합니다.");
+					backpage = false;
+					break;
+				case 1:
+					System.out.println("\t 1-1. 출결 보기");
+					System.out.println("\t 출결 보기 페이지입니다.");
+					//함수 넣기
+					break;
+				case 2:
+					System.out.println("\t 1-2. 출결 변경");
+					System.out.println("\t 출결 변경 페이지입니다.");
+					//함수 넣기
+				default:
+					System.out.println("메뉴에 없는 번호를 선택하였습니다. 1~2번 중에서 선택하세요.");
+					break;
+			}
+		}
+	}
+
+
 	public void runAdminStudentPage(StudentVO stdVo){
 		boolean backpage = true;
 		while (backpage) {
-			mc.showStudentAttendCashPage();
+			mc.showAdminStudentPage();
 			switch (ConnectController.scanIntData()) {
 				case -1:
 					System.out.println("/t 잘못된 입력값입니다. 다시 입력하여주세요.");
@@ -375,7 +405,6 @@ public class PageController {
 					System.out.println("\t 휴가 승인 페이지입니다.");
 					int vacationCode=apc.lookupVacation(stdVo);
 					apc.updateAttendance(vacationCode,stdVo);
-
 					break;
 				default:
 					System.out.println("메뉴에 없는 번호를 선택하였습니다. 1~2번 중에서 선택하세요.");

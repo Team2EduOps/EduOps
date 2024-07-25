@@ -192,6 +192,7 @@ public class CheckInOut {
 				if (!rs.isBeforeFirst()) { // 튜플인 있으면서 attend_status 값이 없으면, "퇴실"출력:5
 					checkIo = 1;
 				}else{
+					rs.next();
 					checkIo=rs.getInt("ATTEND_STATUS"); //1(출석),2(공가),3(지각),4(조퇴) 반환
 				}
 

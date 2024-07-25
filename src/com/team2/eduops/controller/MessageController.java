@@ -115,6 +115,13 @@ public class MessageController {
 		System.out.println("\t >> 원하는 메뉴 선택 하세요.   ");
 	}
 
+	public void showAdminAttenancePage(){
+		System.out.println("\n-----1-1.출결 관리-------");
+		System.out.println("\t 출결 관리 페이지입니다. ");
+		System.out.println("\t 1. 출결 보기");
+		System.out.println("\t 2. 출결 승인");
+	}
+
 	public void showAdminStudentPage() {
 		System.out.println("\n-----6.학생 관리-------");
 		System.out.println("\t 1. 학생 보기");

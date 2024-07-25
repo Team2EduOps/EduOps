@@ -76,7 +76,6 @@ public class PageController {
 			switch (menuNo) {
 			case 1:
 				// 입실
-				// 입실 시 -> 퇴실 처리 메소드
 				cio.checkIO(stdVo); 
 				break;
 			case 2:

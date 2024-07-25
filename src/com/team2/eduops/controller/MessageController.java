@@ -16,9 +16,13 @@ public class MessageController {
 	public void showStudentPage(StudentVO stdVo, int checkIo) {
 
 		String std_name = stdVo.getStd_name();
-		String checkIoStr = "퇴실";
-		if (checkIo == 1) {
-			checkIoStr = "입실";
+		String checkIoStr = "입실";
+		switch(checkIo){
+			case 1,2,3,4: checkIoStr=" 퇴실 처리 완료: 오늘 출석 조회";
+				break;
+			case 5: checkIoStr="퇴실";
+				break;
+			default: checkIoStr="입실";
 		}
 
 		// 학생 홈 페이지 띄우기

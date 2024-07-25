@@ -127,7 +127,7 @@ public class PageController {
 			case 6:
 				break;
 			case 7:
-				uc.updateAdmPw(admVo);
+				runAdmUserPage(admVo);
 			case 0:
 				return;
 			default:

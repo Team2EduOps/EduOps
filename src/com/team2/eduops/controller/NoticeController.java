@@ -13,7 +13,7 @@ public class NoticeController {
 	public void displayNotice() {
 		System.out.println("          공지");
 		System.out.println("========================");
-		String sql = "SELECT * from NOTICE where POSTED_DATE > TRUNC(SYSDATE) - 7";
+		String sql = "SELECT * from NOTICE where POSTED_DATE > TRUNC(SYSDATE) - 7"; 
 		PreparedStatement pstmt = ConnectController.getPstmt(sql);
 		ResultSet rs = ConnectController.executePstmtQuery(pstmt);
 		try {

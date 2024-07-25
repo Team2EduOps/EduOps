@@ -92,9 +92,9 @@ public class UserController {
 			}
 
 			while (newPw == null) {
-				System.out.println("새 비밀번호를 입력해 주세요.");
+				System.out.println("새 비밀번호를 입력해 주세요(최대 20자): ");
 				newPw = ConnectController.scanData();
-				System.out.println("새 비밀번호를 다시 한 번 입력해 주세요.");
+				System.out.println("새 비밀번호를 다시 한 번 입력해 주세요: ");
 				newPwChk = ConnectController.scanData();
 
 				if (!newPw.equals(newPwChk)) {
@@ -189,22 +189,26 @@ public class UserController {
 			}
 
 			while (newPw == null) {
-				System.out.println("새 비밀번호를 입력해 주세요.");
+				System.out.println("새 비밀번호를 입력해 주세요(최대 20자): ");
 				newPw = ConnectController.scanData();
-				System.out.println("새 비밀번호를 다시 한 번 입력해 주세요.");
+				System.out.println("새 비밀번호를 다시 한 번 입력해 주세요: ");
 				newPwChk = ConnectController.scanData();
 
 				if (!newPw.equals(newPwChk)) {
+					System.out.println("입력하신 비밀번호가 일치하지 않습니다.");
+					System.out.println("다시 입력해 주세요.");
+					UtilController.line();
 					newPw = null;
 				}
 			}
 
-			sql = "update " + admVo.getClassName() + " set adm_pw = " + newPw + " where adm_no = ?";
+			sql = "update " + admVo.getClassName() + " set adm_pw = ? where adm_no = ?";
 
 			pstmt = ConnectController.getPstmt(sql);
 
 			try {
-				pstmt.setInt(1, admVo.getAdm_no());
+				pstmt.setString(1,  newPw);
+				pstmt.setInt(2, admVo.getAdm_no());
 			} catch (Exception e) {
 				System.out.println("pstmt set데이터 중 문제 발생");
 				continue;
@@ -219,6 +223,7 @@ public class UserController {
 				System.out.println("비밀번호 변경 중 문제가 발생했습니다.");
 				System.out.println("다시 시도해주세요.");
 			}
+			return;
 		}
 	}
 

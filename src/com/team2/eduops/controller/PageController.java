@@ -1,5 +1,9 @@
 package com.team2.eduops.controller;
 
+import java.io.FileNotFoundException;
+import java.sql.SQLException;
+import java.text.ParseException;
+
 import com.team2.eduops.model.AdminVO;
 import com.team2.eduops.model.QuizVO;
 import com.team2.eduops.model.StudentVO;
@@ -12,6 +16,9 @@ public class PageController {
 	JoinController jc = new JoinController();
 	QuizController qc = new QuizController();
 	AlgorithmController ac = new AlgorithmController();
+	CheckInOut cio = new CheckInOut();
+	AttendStudentController asc = new AttendStudentController();
+	AttendProfessorContoller apc = new AttendProfessorContoller();
 
 	StudentVO stdVo;
 	AdminVO admVo;
@@ -63,12 +70,14 @@ public class PageController {
 
 		boolean isStdPageRun = true;
 		while (isStdPageRun) {
-			mc.showStudentPage(stdVo.getStd_name());
+			mc.showStudentPage(stdVo, cio.showcheckIO(stdVo));
 
 			int menuNo = ConnectController.scanIntData();
 			switch (menuNo) {
 			case 1:
-
+				// 입실
+				// 입실 시 -> 퇴실 처리 메소드
+				cio.checkIO(stdVo); 
 				break;
 			case 2:
 				nc.displayNotice();
@@ -80,7 +89,8 @@ public class PageController {
 				runStudentAlgorithmPage(stdVo);
 				break;
 			case 5:
-
+				// 근태 관리
+				runStudentAttendPage(stdVo);
 				break;
 			case 0:
 				isStdPageRun = false;
@@ -104,7 +114,8 @@ public class PageController {
 			int menuNo = ConnectController.scanIntData();
 			switch (menuNo) {
 			case 1:
-
+				// 출결 관리
+				
 				break;
 			case 2:
 				runNoticePage(admVo);
@@ -276,4 +287,101 @@ public class PageController {
 		} // end while
 	}
 
+	public void runStudentAttendPage(StudentVO stdVo){
+		boolean backpage = true;
+		while (backpage) {
+			mc.showStudentAttendPage(); // 메뉴 보이기
+			// 메뉴 고르기
+			switch (ConnectController.scanIntData()) {
+			case -1:
+				System.out.println("잘못된 입력값입니다. 다시 입력하여주세요.");
+				break;
+			case 0:
+				System.out.println("뒤 페이지로 이동합니다.");
+				backpage = false;
+				break;
+			case 1:
+				//일자별 근태 조회
+				System.out.println("일자별 근태 조회 페이지입니다.");
+				asc.lookupDaily(stdVo);
+				break;
+
+			case 2:
+				System.out.println("월별 근태 조회 페이지입니다.");
+				asc.lookupMonthly(stdVo);
+				break;
+
+			case 3:
+				System.out.println("누적 지원금 조회 페이지입니다.");
+				runCashMenuPage(stdVo);
+				break;
+
+			case 4:
+				System.out.println("휴가신청 페이지입니다.");
+				asc.applyVacation(stdVo);
+				break;
+
+			default:
+				System.out.println("메뉴에 없는 번호를 선택하셨습니다. 1~4번 중에서 선택하세요.");
+				break;
+			} // switch end
+		} // while end
+	}// atttendMenu end
+
+	public void runCashMenuPage(StudentVO stdVo) {
+		boolean backpage2 = true;
+		while (backpage2) {
+			mc.showStudentAttendCashPage();
+			switch (ConnectController.scanIntData()) {
+			case -1:
+				System.out.println("잘못된 입력값입니다. 다시 입력하여주세요.");
+				break;
+			case 0:
+				System.out.println("뒤 페이지로 이동합니다.");
+				backpage2 = false;
+				break;
+			case 1:
+				System.out.print("현재 누적 지원금:");
+				asc.lookupCashPresent(stdVo);
+				break;
+			case 2:
+				System.out.println("월별 지원금 조회 페이지입니다.");
+				asc.lookupCashPast(stdVo);
+				break;
+			default:
+				System.out.println("메뉴에 없는 번호를 선택하였습니다. 1~2번 중에서 선택하세요.");
+				break;
+			}
+		}
+	}
+	public void runAdminStudentPage(StudentVO stdVo){
+		boolean backpage = true;
+		while (backpage) {
+			mc.showStudentAttendCashPage();
+			switch (ConnectController.scanIntData()) {
+				case -1:
+					System.out.println("/t 잘못된 입력값입니다. 다시 입력하여주세요.");
+					break;
+				case 0:
+					System.out.println("/t 뒤 페이지로 이동합니다.");
+					backpage = false;
+					break;
+				case 1:
+					System.out.println("\t 6-1. 학생 보기");
+					System.out.println("\t 학생 보기 페이지입니다.");
+					apc.lookupStudent();
+					break;
+				case 2:
+					System.out.println("\t 6-2. 휴가 승인");
+					System.out.println("\t 휴가 승인 페이지입니다.");
+					int vacationCode=apc.lookupVacation(stdVo);
+					apc.updateAttendance(vacationCode,stdVo);
+
+					break;
+				default:
+					System.out.println("메뉴에 없는 번호를 선택하였습니다. 1~2번 중에서 선택하세요.");
+					break;
+			}
+		}
+	}
 }

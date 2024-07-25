@@ -110,7 +110,7 @@ public class PageController {
 			switch (menuNo) {
 			case 1:
 				// 출결 관리
-
+//				runAdminAttendancePage();
 				break;
 			case 2:
 				runNoticePage(admVo);
@@ -177,6 +177,7 @@ public class PageController {
 //	                	break;
 			case 2:
 				qc.selectQuizAll();
+				break;
 			case 3:
 				qc.selectQuizAnswer(stdVo);
 				break;
@@ -334,33 +335,38 @@ public class PageController {
 		}
 	}
 
-	public void runAdminAttendancePage(StudentVO stdVo) {
-		boolean backpage = true;
-		while (backpage) {
-			mc.showAdminAttenancePage();
-			switch (ConnectController.scanIntData()) {
-				case -1:
-					System.out.println("/t 잘못된 입력값입니다. 다시 입력하여주세요.");
-					break;
-				case 0:
-					System.out.println("/t 뒤 페이지로 이동합니다.");
-					backpage = false;
-					break;
-				case 1:
-					System.out.println("\t 1-1. 출결 보기");
-					System.out.println("\t 출결 보기 페이지입니다.");
-					//함수 넣기
-					break;
-				case 2:
-					System.out.println("\t 1-2. 출결 변경");
-					System.out.println("\t 출결 변경 페이지입니다.");
-					//함수 넣기
-				default:
-					System.out.println("메뉴에 없는 번호를 선택하였습니다. 1~2번 중에서 선택하세요.");
-					break;
-			}
-		}
-	}
+//	public void runAdminAttendancePage() {
+//		while (true) {
+//			mc.showAdminAttenancePage();
+//			
+//			int menuNo = ConnectController.scanIntData();
+//			switch (menuNo) {
+//				case -1:
+//					System.out.println("/t 잘못된 입력값입니다. 다시 입력하여주세요.");
+//					break;
+//				case 0:
+//					System.out.println("/t 뒤 페이지로 이동합니다.");
+//					return;
+//				case 1:
+//					displayAttendance();
+//					break;
+//				case 2:
+//					updateAttendance();
+//				case 1:
+//					System.out.println("\t 1-1. 출결 보기");
+//					System.out.println("\t 출결 보기 페이지입니다.");
+//					//함수 넣기
+//					break;
+//				case 2:
+//					System.out.println("\t 1-2. 출결 변경");
+//					System.out.println("\t 출결 변경 페이지입니다.");
+//					//함수 넣기
+//				default:
+//					System.out.println("메뉴에 없는 번호를 선택하였습니다. 1~2번 중에서 선택하세요.");
+//					break;
+//			}
+//		}
+//	}
 
 
 	public void runAdminStudentPage(StudentVO stdVo){
@@ -392,10 +398,6 @@ public class PageController {
 			}
 		}
 	}
-	
-	
-	
-	
 	
 	
 	

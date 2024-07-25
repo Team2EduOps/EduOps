@@ -19,6 +19,7 @@ public class ConnectionHelper {
 				Class.forName("oracle.jdbc.OracleDriver");
 				conn = DriverManager.getConnection("jdbc:oracle:thin:@192.168.0.156:1521:xe", "eduops", "eduopsoracle");
 //				conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "test", "oracle");
+				
 						
 			} else if(dsn.equalsIgnoreCase("mysql")) {
 				Class.forName("com.mysql.jdbc.Driver");

@@ -218,7 +218,7 @@ public class CheckInOut {
 				updateIO(stdVo);
 				break;
 			case 1:
-				deleteIO(stdVo);
+				System.out.println(formattedDate+ ": 출석");
 				break;
 			case 2: System.out.println(formattedDate+ ": 공가");
 				break;

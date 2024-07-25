@@ -250,17 +250,4 @@ public class AttendProfessorContoller {
             int rowsAffected = ConnectController.executePstmtUpdate(pstmt);
             System.out.println(rowsAffected + ": 휴가 승인");
     }
-    /*
-    public class seeAttendance(AdminVO adminVO){
-        String sql = "SELECT * FROM STUDENT";
-        PreparedStatement pstmt = ConnectController.getPstmt(sql);
-        ResultSet rs = ConnectController.executePstmtQuery(pstmt);
-            while (rs.next()) {
-                System.out.println(rs.getInt("STD_NO") + ":" + rs.getString("STD_NAME"));
-            }
-
-        System.out.print("확인하고자 하는 학생의 번호: ");
-        int stdNo = ConnectController.scanIntData();
-        }
-        */
 }

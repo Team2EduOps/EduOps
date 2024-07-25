@@ -12,7 +12,6 @@ import com.team2.eduops.model.StudentVO;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 /* *********학생메뉴_1.입실 1.퇴실 메뉴 ************ */
-
 public class CheckInOut {
 	static LocalDate localDate;
 	static Date sqlDate;
@@ -24,8 +23,9 @@ public class CheckInOut {
 	static PreparedStatement pstmt;
 	static ResultSet rs;
 
+
 	// ********입실 명단을 list에 추가 +DB에 삽입********
-	public static void updateIO(StudentVO stdVo) {
+	public void updateIO(StudentVO stdVo) {
 		localDate = LocalDate.now();
 		sqlDate = Date.valueOf(localDate);
 		localDateTime = LocalDateTime.now();
@@ -49,7 +49,7 @@ public class CheckInOut {
 	}
 
 	// *********퇴실시 명단에서 삭제+DB에 update(CO_time과 Attend_status)**********
-	public static void deleteIO(StudentVO stdVo) {
+	public void deleteIO(StudentVO stdVo) {
 		localDate = LocalDate.now();
 		sqlDate = Date.valueOf(localDate);
 		localDateTime = LocalDateTime.now();
@@ -165,7 +165,13 @@ public class CheckInOut {
 
 						if(rs.next()){
 							// ATTEND_STATUS 값을 가져옴
-							Integer attendStatus = rs.getObject("ATTEND_STATUS", Integer.class);
+							//Integer attendStatus = rs.getObject("ATTEND_STATUS", Integer.class);
+							Integer attendStatus = null;
+							Object obj = rs.getObject("ATTEND_STATUS");
+							if(obj != null) {
+								attendStatus = ((Number)obj).intValue();
+							}
+
 							if (attendStatus == null) {
 								checkIo = 5;
 							} else {

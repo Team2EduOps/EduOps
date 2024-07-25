@@ -161,7 +161,7 @@ public class AttendStudentController {
         }
     }//lookupMonthly end
 
-    //**********5-3.누적 지원금 메뉴 : showCashMenu********
+
     //*************applyVacation- 휴가 신청(근태 page)*************************
     public void applyVacation(StudentVO stdVo) {
         LocalDate localDate = LocalDate.now();
@@ -194,7 +194,7 @@ public class AttendStudentController {
         if (success != -1) {
             System.out.println("파일이 추가되었습니다.");
         }
-    }//showcashmenu end
+    }//apply vacation menu
 
     //*********현재 누적 지원금 조회*************
     public void lookupCashPresent(StudentVO stdVo) {
@@ -257,19 +257,26 @@ public class AttendStudentController {
                 int[] statusCount = new int[5]; // 0: 결석, 1: 출석, 2: 공가, 3: 지각, 4: 조퇴
                 String firstdate = inputMonth + "-01";
                 String lastdate = inputMonth + "-31";
+
+                // SQL 쿼리 작성
                 String sql = "SELECT ATTEND_STATUS " +
                         "FROM ATTENDANCE " +
                         "WHERE ATTEND_DATE BETWEEN TO_DATE(?, 'YYYY-MM-DD') AND TO_DATE(?, 'YYYY-MM-DD') " +
-                        "AND STD_NO = "+ stdVo.getStd_no();
+                        "AND STD_NO = ?";
                 PreparedStatement pstmt = ConnectController.getPstmt(sql);
+
                 try {
                     pstmt.setString(1, firstdate);
                     pstmt.setString(2, lastdate);
+                    pstmt.setInt(3, stdVo.getStd_no());
                 } catch (SQLException e) {
                     System.out.println("lookupCashPast-pstmt 오류");
                     throw new RuntimeException(e);
                 }
+
                 ResultSet rs = ConnectController.executePstmtQuery(pstmt);
+                //쿼리 실행
+
                 //case1- DB에 없는 값, 튜플 X
                 try {
                     if (!rs.isBeforeFirst()) {
@@ -281,6 +288,7 @@ public class AttendStudentController {
                                 statusCount[status]++;
                             }
                         }//while end
+
                         System.out.println("결석(0): " + statusCount[0]);
                         System.out.println("출석(1): " + statusCount[1]);
                         System.out.println("공가(2): " + statusCount[2]);

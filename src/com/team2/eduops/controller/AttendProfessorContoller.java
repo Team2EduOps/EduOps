@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
 public class AttendProfessorContoller {
    //********출결 보기 ********
 
@@ -52,6 +53,8 @@ public class AttendProfessorContoller {
             this.attendStatus=attendStatus;
         }
     }
+
+
     //********교수-학생관리-학생보기
     public void lookupStudent(){
         System.out.println("학생 보기 페이지입니다.");

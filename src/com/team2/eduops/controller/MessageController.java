@@ -5,6 +5,7 @@ import com.team2.eduops.model.StudentVO;
 public class MessageController {
 
 	CheckInOut cio = new CheckInOut();
+
 	//////// CLI 화면 띄우기 메소드들 /////////
 	public void showEntrancePage() {
 		// 로그인회원가입 페이지 띄우기

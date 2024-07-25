@@ -14,12 +14,12 @@ public class JoinController {
 		ResultSet rs;
 		int result = -1;
 
-		while (result == -1) {
+		while (true) {
 			System.out.println("===학생 회원가입 페이지===");
 
 			// ID 값 중복 체크
 			while (stdVo.getStd_id() == null) {
-				System.out.println("ID를 입력해주세요: ");
+				System.out.println("ID를 입력해주세요(최대 15자): ");
 				stdVo.setStd_id(ConnectController.scanData());
 
 				sql = "Select std_name from " + stdVo.getClassName() + " where std_id = ?";
@@ -59,7 +59,7 @@ public class JoinController {
 				}
 			}
 
-			System.out.println("PW를 입력해주세요: ");
+			System.out.println("PW를 입력해주세요(최대 20자): ");
 			stdVo.setStd_pw(ConnectController.scanData());
 
 			System.out.println("성함을 입력해주세요: ");
@@ -140,12 +140,16 @@ public class JoinController {
 
 			result = ConnectController.executePstmtUpdate(pstmt);
 
-			if (result == -1) {
-				System.out.println("문제 발생");
+			if (result == 1) {
+				ConnectController.commit();
+				System.out.println("회원가입이 완료되었습니다. 로그인해주세요.");
+				return;
 			}
+
+			System.out.println("쿼리문 실행 중 문제가 발생했습니다.");
+			System.out.println("회원가입을 다시 시도해주세요.");
+			return;
 		}
-		ConnectController.commit();
-		System.out.println("회원가입이 완료되었습니다. 로그인해주세요.");
 	}
 
 	public void adminJoin() {
@@ -155,7 +159,7 @@ public class JoinController {
 		ResultSet rs;
 		int result = -1;
 
-		while (result == -1) {
+		while (true) {
 			System.out.println("===관리자 회원가입 페이지===");
 
 			// ID 값 중복 체크
@@ -229,13 +233,17 @@ public class JoinController {
 
 			result = ConnectController.executePstmtUpdate(pstmt);
 
-			if (result == -1) {
-				System.out.println("문제 발생");
+			if (result == 1) {
+				ConnectController.commit();
+				System.out.println("회원가입이 완료되었습니다. 로그인해주세요.");
+				return;
 			}
+
+			System.out.println("쿼리문 실행 중 문제가 발생했습니다.");
+			System.out.println("회원가입을 다시 시도해주세요.");
+			return;
 		}
 
-		ConnectController.commit();
-		System.out.println("회원가입이 완료되었습니다. 로그인해주세요.");
 	}
 
 }

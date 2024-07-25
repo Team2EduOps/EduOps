@@ -253,7 +253,8 @@ public class UserController {
 			pstmt = ConnectController.getPstmt(sql);
 
 			try {
-				pstmt.setInt(1, stdVo.getStd_no());
+				pstmt.setInt(1,  seatNo);
+				pstmt.setInt(2, stdVo.getStd_no());
 			} catch (Exception e) {
 				System.out.println("pstmt set데이터 중 문제 발생");
 				continue;
@@ -263,9 +264,13 @@ public class UserController {
 
 			if (result == 1) {
 				ConnectController.commit();
-				System.out.println("팀 이름 변경 성공!");
+				System.out.println("자리 번호 변경 성공!");
+				return;
+			} else if(result == 0) {
+				System.out.println("중복된 자리 번호입니다.");
+				System.out.println("다시 시도해주세요.");
 			} else {
-				System.out.println("팀 이름 변경 중 문제가 발생했습니다.");
+				System.out.println("자리 번호 변경 중 문제가 발생했습니다.");
 				System.out.println("다시 시도해주세요.");
 			}
 		}

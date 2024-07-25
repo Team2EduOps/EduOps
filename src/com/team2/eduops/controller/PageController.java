@@ -233,10 +233,12 @@ public class PageController {
 				// 전체보기
 				ac.selectAlgorithmAll();
 				break;
+			case 4:
+				ac.selectAlgorithmAnswer(stdVo);
 			case 0:
 				return;
 			default:
-				System.out.println("없는 번호 선택하였습니다. 1~2번 중에서 선택하세요.");
+				System.out.println("없는 번호 선택하였습니다. 1~4번 중에서 선택하세요.");
 			} // end switch
 		} // end while
 	}

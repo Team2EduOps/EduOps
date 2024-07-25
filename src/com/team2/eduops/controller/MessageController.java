@@ -3,6 +3,8 @@ package com.team2.eduops.controller;
 import com.team2.eduops.model.StudentVO;
 
 public class MessageController {
+
+	CheckInOut cio = new CheckInOut();
 	//////// CLI 화면 띄우기 메소드들 /////////
 	public void showEntrancePage() {
 		// 로그인회원가입 페이지 띄우기
@@ -14,15 +16,15 @@ public class MessageController {
 	}
 
 	public void showStudentPage(StudentVO stdVo, int checkIo) {
-
 		String std_name = stdVo.getStd_name();
 		String checkIoStr = "입실";
 		switch(checkIo){
-			case 1,2,3,4: checkIoStr=" 퇴실 처리 완료: 오늘 출석 조회";
+			case 1,2,3,4: checkIoStr="퇴실 완료: 오늘자 조회";
 				break;
 			case 5: checkIoStr="퇴실";
 				break;
 			default: checkIoStr="입실";
+				break;
 		}
 
 		// 학생 홈 페이지 띄우기
@@ -97,12 +99,12 @@ public class MessageController {
 
     public void showStudentAttendPage() {
         System.out.println("\n------5.근태관리-------");
-        System.out.println("근태 관리 페이지입니다.");
-        System.out.println("\t 5-1. 일자별");
-        System.out.println("\t 5-2. 월별");
-        System.out.println("\t 5-3. 누적 지원금 조회");
-        System.out.println("\t 5-4. 휴가 신청");
-        System.out.println("\t 뒤 페이지 이동: 0");
+        System.out.println("\t 근태 관리 페이지입니다.");
+        System.out.println("\t 1. 일자별");
+        System.out.println("\t 2. 월별");
+        System.out.println("\t 3. 누적 지원금 조회");
+        System.out.println("\t 4. 휴가 신청");
+        System.out.println("\t 0. 뒤로 가기");
         System.out.println("\t >> 원하는 메뉴 선택 하세요.   ");
     }
 
@@ -111,15 +113,22 @@ public class MessageController {
 		System.out.println("누적 지원금 조회페이지입니다.");
 		System.out.println("\t 1. 현재 누적 지원금");
 		System.out.println("\t 2. 지난 지원금: 월별");
-		System.out.println("\t 뒤 페이지 이동: 0");
+		System.out.println("\t 0. 뒤로 가기");
 		System.out.println("\t >> 원하는 메뉴 선택 하세요.   ");
+	}
+
+	public void showAdminAttenancePage(){
+		System.out.println("\n-----1-1.출결 관리-------");
+		System.out.println("\t 출결 관리 페이지입니다. ");
+		System.out.println("\t 1. 출결 보기");
+		System.out.println("\t 2. 출결 승인");
 	}
 
 	public void showAdminStudentPage() {
 		System.out.println("\n-----6.학생 관리-------");
 		System.out.println("\t 1. 학생 보기");
 		System.out.println("\t 2. 휴가 승인");
-		System.out.println("\t 뒤 페이지 이동: 0");
+		System.out.println("\t 0. 뒤로 가기");
 		System.out.println("\t >> 원하는 메뉴 선택 하세요.   ");
 	}
 }

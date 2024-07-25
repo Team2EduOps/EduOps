@@ -8,15 +8,29 @@ import java.util.TimerTask;
 
 
 /* **********매일 출석부data 갱신,예약하는 스케쥴러:메인에 들어가야함 *******/
-public class ScheduleAttend {
-  /*  static LocalDate localDate;
+public class AdministerAttendance {
+    static LocalDate localDate;
     static Date sqlDate;
     static Timestamp timestamp;
     static PreparedStatement pstmt;
     static ResultSet rs;
 
+    /*
+    public class seeAttendance(AdminVO adminVO){
+    String sql = "SELECT * FROM STUDENT";
+    PreparedStatement pstmt = ConnectController.getPstmt(sql);
+    ResultSet rs = ConnectController.executePstmtQuery(pstmt);
+    while (rs.next()) {
+             System.out.println(rs.getInt("STD_NO") + ":" + rs.getString("STD_NAME"));
+    }
+
+    System.out.print("확인하고자 하는 학생의 번호: ");
+     int stdNo = ConnectController.scanIntData();
+    }
+*/
     //******main이 돌고 있을 때, 6:01에 결석자 insert*******
-    public static void insertTimer(){
+  /*  public static void insertTimer(){
+
         Timer timer = new Timer();
         TimerTask dailyTask = new TimerTask() {
             LocalDate localDate = LocalDate.now();
@@ -27,7 +41,7 @@ public class ScheduleAttend {
             public void run() {
                 String sql = "INSERT INTO ATTENDANCE (STD_NO, ATTEND_DATE, ATTEND_VALUES) VALUES (?,?,?)";
                 pstmt = ConnectController.getPstmt(sql);
-                pstmt.setInt(1,stdno);
+                pstmt.setInt(1, stdVo.o);
                 pstmt.setDate(2,sqlDate);
                 pstmt.setTimestamp(3,timestamp);
                 ConnectController.executePstmtUpdate(pstmt);
@@ -50,5 +64,6 @@ public class ScheduleAttend {
         timer.scheduleAtFixedRate(dailyTask, delay, period);        // 타이머 스케줄링
 
     }
-*/
+    */
+
 }

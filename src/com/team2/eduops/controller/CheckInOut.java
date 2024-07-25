@@ -112,8 +112,6 @@ public class CheckInOut {
 			} else {
 				attendStatus = 4;
 			}
-		} else {
-			System.out.println("입실을 하지 않았습니다. 입실 먼저해주세요.");
 		}
 
 		sql = "UPDATE ATTENDANCE set ATTEND_STATUS = ? where STD_NO = ? and ATTEND_DATE = ?";
@@ -143,57 +141,45 @@ public class CheckInOut {
 			sqlDate = Date.valueOf(localDate);
 			System.out.println(localDate);
 
-			// 튜플 가져오기 : 값이 없는 경우 _결석과 입실 "입실"띄우기
+			// data 가져오기 : 값이 없는 경우 _결석과 입실 "입실"띄우기
 			String sql = "SELECT * from ATTENDANCE where std_no = ? AND ATTEND_DATE = ?";
 			pstmt = ConnectController.getPstmt(sql);
-
 			try {
 				pstmt.setInt(1, stdVo.getStd_no());
 				pstmt.setDate(2, sqlDate);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("pstmt set데이터 중 문제 발생");
-				continue;
-			}
-
-			rs = ConnectController.executePstmtQuery(pstmt);
-            try {
+				rs = ConnectController.executePstmtQuery(pstmt);
 				if (UtilController.isNull(rs)) {
 					continue;
 				}
 				if (!rs.isBeforeFirst()) { // 값이 없으면, 입실+결석(0) 모두 "입실" 띄워야함
 					checkIo = 0;
-				}
+				}else {
+					// attend_status 가져오기 : 업로드 되는 경우_1(출석),2(공가),3(지각),4(조퇴)
+					sql = "SELECT ATTEND_STATUS from ATTENDANCE where std_no = ? AND ATTEND_DATE = ?";
 
-            } catch (SQLException e) {
-				checkIo = -1;
-				System.out.println("showcheckIO_rs 오류");
-                e.printStackTrace();
-				continue;
-            }
-			// attend_status 가져오기 : 업로드 되는 경우_1(출석),2(공가),3(지각),4(조퇴)
-			sql = "SELECT ATTEND_STATUS from ATTENDANCE where std_no = ? AND ATTEND_DATE = ?";
-			pstmt = ConnectController.getPstmt(sql);
+					try {
+						pstmt = ConnectController.getPstmt(sql);
+						pstmt.setInt(1, stdVo.getStd_no());
+						pstmt.setDate(2, sqlDate);
+						rs = ConnectController.executePstmtQuery(pstmt);
 
-			try {
-				pstmt.setInt(1, stdVo.getStd_no());
-				pstmt.setDate(2, sqlDate);
+						if(rs.next()){
+							// ATTEND_STATUS 값을 가져옴
+							Integer attendStatus = rs.getObject("ATTEND_STATUS", Integer.class);
+							if (attendStatus == null) {
+								checkIo = 5;
+							} else {
+								checkIo = rs.getInt("ATTEND_STATUS");
+							}
+						}//1(출석),2(공가),3(지각),4(조퇴) 반환
 
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("pstmt set데이터 중 문제 발생");
-				continue;
-			}
-			try {
-				if (UtilController.isNull(rs)) {
-					continue;
-				}
-				if (!rs.isBeforeFirst()) { // 튜플인 있으면서 attend_status 값이 없으면, "퇴실"출력:5
-					checkIo = 1;
-				}else{
-					checkIo=rs.getInt("ATTEND_STATUS"); //1(출석),2(공가),3(지각),4(조퇴) 반환
-				}
+					} catch (SQLException e) {
+						checkIo = -1;
+						System.out.println("showcheckIO_rs 오류");
+						e.printStackTrace();
+						continue;
+					}
+				}//if-else end
 
 			} catch (SQLException e) {
 				checkIo = -1;
@@ -201,7 +187,7 @@ public class CheckInOut {
 				e.printStackTrace();
 				continue;
 			}
-		}
+		}//while end
         return checkIo;
     } //**********showchkeckIO*********************
 
@@ -217,7 +203,7 @@ public class CheckInOut {
 				updateIO(stdVo);
 				break;
 			case 1:
-				deleteIO(stdVo);
+				System.out.println(formattedDate+ ": 출석");
 				break;
 			case 2: System.out.println(formattedDate+ ": 공가");
 				break;

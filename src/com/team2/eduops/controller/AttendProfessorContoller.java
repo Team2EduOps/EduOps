@@ -1,5 +1,6 @@
 package com.team2.eduops.controller;
 
+import com.team2.eduops.model.AdminVO;
 import com.team2.eduops.model.StudentVO;
 
 import javax.xml.transform.Result;
@@ -15,6 +16,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class AttendProfessorContoller {
+   //********출결 보기 ********
+
     //********오늘 출석을 보기 위한 STD_NAME, SEAT_NO,ATTEND_STATUS, CI_TIME,CO_TIME을 학생별로 저장할 클래스 생성
     public class TodayAttendance {
         String stdName;

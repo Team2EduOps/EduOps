@@ -6,6 +6,8 @@ import java.sql.*;
 
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.io.File;
@@ -130,9 +132,18 @@ public class AttendStudentController {
                         while (rs.next()) {
                             Object columnValue = rs.getObject("Attend_status");
                             // case2- DB에 튜플 O, 상태 O
-                            System.out.print("\t 날짜: " + rs.getString(1));
-                            System.out.println("\t Attend_status: " + rs.getInt(2));
+                            String dateStr = rs.getString(1);
+                            int attendStatus = rs.getInt("ATTEND_STATUS");
 
+                            // 날짜 문자열을 원하는 형식으로 변환합니다.
+                            try {
+                                LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                                String formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy년 M월 d일"));
+                                System.out.print("\t 날짜 : " + formattedDate);
+                                System.out.println("\t 출석상태 :"+ attendStatus);
+                            } catch (DateTimeParseException e) {
+                                System.err.println("날짜 형식 변환 오류: " + e.getMessage());
+                            }
                             // case3-오늘 퇴실 처리 X ,튜플 O, 상태 X
                             if (columnValue == null) {
                                 System.out.println("\t 오늘은 퇴실 처리를 하지 않아 조회가 불가합니다.");
@@ -144,6 +155,8 @@ public class AttendStudentController {
                     System.out.println("lookupmonthly: rs-SQLExeption e오류");
                     throw new RuntimeException(e);
                 }
+            }else{
+                System.out.println("맞지 않는 형식으로 출력하였습니다. 다시 입력하세요.");
             }
         }
     }//lookupMonthly end
@@ -245,9 +258,17 @@ public class AttendStudentController {
                 String firstdate = inputMonth + "-01";
                 String lastdate = inputMonth + "-31";
                 String sql = "SELECT ATTEND_STATUS " +
-                        "FROM ATTENDANCE WHERE ATTEND_DATE BETWEEN TO_DATE('" + firstdate + "','YYYY-MM-DD') AND TO_DATE('" + lastdate + "','YYYY-MM-DD') " +
-                        "AND STD_NO = " + stdVo.getStd_name();
+                        "FROM ATTENDANCE " +
+                        "WHERE ATTEND_DATE BETWEEN TO_DATE(?, 'YYYY-MM-DD') AND TO_DATE(?, 'YYYY-MM-DD') " +
+                        "AND STD_NO = "+ stdVo.getStd_no();
                 PreparedStatement pstmt = ConnectController.getPstmt(sql);
+                try {
+                    pstmt.setString(1, firstdate);
+                    pstmt.setString(2, lastdate);
+                } catch (SQLException e) {
+                    System.out.println("lookupCashPast-pstmt 오류");
+                    throw new RuntimeException(e);
+                }
                 ResultSet rs = ConnectController.executePstmtQuery(pstmt);
                 //case1- DB에 없는 값, 튜플 X
                 try {

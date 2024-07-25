@@ -23,11 +23,9 @@ public class PageController {
 // main 메소드 안에서 종료하기 전까지 계속 돌아갈 메소드
 	public void runPage() {
 		int userNo;
-//		MessageController ms = new MessageController();
 
 		while (true) {
 			userNo = -1;
-//			ms.showEntrancePage();
 			mc.showEntrancePage();
 
 			int menuNo = ConnectController.scanIntData();
@@ -167,14 +165,8 @@ public class PageController {
 
 			switch (menuNo) {
 			case 1:
-				qc.addQuizAnswer(stdVo);
+				qc.insertQuizAnswer(stdVo);
 				break;
-//	                case 2:
-//	                	selectAll(vo.getClassName());
-//	                	line();
-//	                	update(vo.getClassName());
-//	                	menulist();
-//	                	break;
 			case 2:
 				qc.selectQuizAll();
 				break;
@@ -227,7 +219,7 @@ public class PageController {
 				break;
 			case 2:
 				// 알고리즘 제출
-				ac.addAlgorithmAnswer(stdVo);
+				ac.insertAlgorithmAnswer(stdVo);
 				break;
 			case 3:
 				// 전체보기

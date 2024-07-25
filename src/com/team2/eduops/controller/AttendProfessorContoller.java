@@ -155,15 +155,15 @@ public class AttendProfessorContoller {
 
     //*********교수-학생관리-휴가승인-휴가 보여줌
     public int lookupVacation() {
-        String sql = "SELECT v.vacation_code, v.vacation_date, v.vacate_file, s.std_no, s.std_name"+
-                "FROM VACATION v\n" +
-                "JOIN STUDENT s ON v.std_no = s.std_no\n" +
-                "WHERE v.vacation_code = ?";
+        String sql = "SELECT v.vacate_code, v.vacate_date, v.vacate_file, s.std_no, s.std_name " +
+                "FROM VACATION v " +
+                "JOIN STUDENT s ON v.std_no = s.std_no";
+
         PreparedStatement pstmt = ConnectController.getPstmt(sql);
         try {
             ResultSet rs = ConnectController.executePstmtQuery(pstmt);
+            System.out.println("Vacation code \t Std_name \t Vacation Date");
             while (rs.next()) {
-                System.out.println("Vacation code \t Std_name \t Vacation Date");
                 System.out.print(rs.getInt("Vacate_code"));
                 System.out.print(rs.getString("std_name"));
                 System.out.println(rs.getDate("Vacate_Date"));
@@ -233,6 +233,7 @@ public class AttendProfessorContoller {
                 e.printStackTrace();
             }
             System.out.print("해당 파일을 삭제하실 건가요?(1:yes,2:no)");
+
             if (ConnectController.scanIntData() != 1) {
                 bool = false;
             }

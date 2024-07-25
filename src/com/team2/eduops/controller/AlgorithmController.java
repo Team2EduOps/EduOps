@@ -25,11 +25,11 @@ public class AlgorithmController {
 	}
 
 	public void addAlgorithmAnswer(StudentVO stdVo) { // 문제 코드 제출
-		selectAlgorithmAnswer(stdVo);
-		UtilController.line();
+//		selectAlgorithmAnswer(stdVo);
+//		UtilController.line();
 		insertAlgorithmAnswer(stdVo);
-		UtilController.line();
-		selectAlgorithmAnswer(stdVo);
+//		UtilController.line();
+//		selectAlgorithmAnswer(stdVo);
 	}
 
 	/*
@@ -123,8 +123,14 @@ public class AlgorithmController {
 
         // 날짜 입력 및 데이터 조회
         while (true) {
-            System.out.println("조회할 날짜를 입력하세요 (형식: yy/MM/dd): ");
+            System.out.println("조회할 날짜를 입력하세요 (형식: yy/MM/dd), 메뉴로 돌아가려면 0 입력):");
             String selectDate = ConnectController.scanData();
+            
+         // 날짜가 0이면 메서드를 종료하고 메뉴로 돌아감
+	        if ("0".equals(selectDate)) {
+	            System.out.println("메뉴로 돌아갑니다.");
+	            return;
+	        }
 
             try {
                 java.util.Date utilDate = inputDateFormat.parse(selectDate);
@@ -168,7 +174,8 @@ public class AlgorithmController {
                     // 원하는 출력 형식으로 결과 출력
                     System.out.println("학생이름 - " + stdName);
                     System.out.println("알고리즘 이름 - " + alName);
-                    System.out.println("코드 - " + alText);
+                    System.out.println("코드 - ");
+                    System.out.println(alText);
                     System.out.println("날짜 - " + date);
                     System.out.println();  // 빈 줄을 추가하여 각 레코드 구분
                 }
@@ -267,8 +274,14 @@ public class AlgorithmController {
 
 	    while (true) {
 	        // 팀별 보기 처리
-	        System.out.println("조회할 팀 이름을 입력하세요: ");
+	        System.out.println("조회할 팀 이름을 입력하세요, 메뉴로 돌아가려면 0 입력 : ");
 	        teamName = ConnectController.scanData();
+	        
+	     // 팀이름이 0이면 메서드를 종료하고 메뉴로 돌아감
+	        if ("0".equals(teamName)) {
+	            System.out.println("메뉴로 돌아갑니다.");
+	            return;
+	        }
 
 	        sql = "SELECT C.std_name, B.al_name, A.al_text, C.team_name " +
 	              "FROM Algorithm A " +
@@ -306,7 +319,8 @@ public class AlgorithmController {
 	                // 원하는 출력 형식으로 결과 출력
 	                System.out.println("학생이름 - " + stdName);
 	                System.out.println("알고리즘 이름 - " + alName);
-	                System.out.println("코드 - " + alText);
+	                System.out.println("코드 - ");
+	                System.out.println(alText);
 	                System.out.println("팀이름 - " + team);  // 빈 줄을 추가하여 각 레코드 구분
 	            }
 	            
@@ -319,6 +333,7 @@ public class AlgorithmController {
 	        }
 	        
 	     // 계속 검색할지 여부를 묻는 부분
+	        UtilController.line();
             System.out.println("다른 팀을 검색하시겠습니까? (y/n): ");
             String response = ConnectController.scanData();
             if (!response.equalsIgnoreCase("y")) {
@@ -339,12 +354,22 @@ public class AlgorithmController {
 			//String algorithmText = ConnectController.scanData();
 			System.out.println("알고리즘 코드를 입력하세요 (종료하려면 'END' 입력):");
             String algorithmText = getAlgorithmTextFromInput();
-			System.out.println("알고리즘 번호 : ");
-			int algorithmNo = ConnectController.scanIntData();
+//			System.out.println("알고리즘 번호 : ");
+//			int algorithmNo = ConnectController.scanIntData();
+            
+            System.out.println("알고리즘 번호를 입력하세요 (메뉴로 돌아가려면 0 입력):");
+			String algorithmNo = ConnectController.scanData();
+			
+			// 퀴즈 번호가 0이면 메서드를 종료하고 메뉴로 돌아감
+	        if ("0".equals(algorithmNo)) {
+	            System.out.println("메뉴로 돌아갑니다.");
+	            return;
+	        }
+			
 			int stdNo = stdvo.getStd_no();
 			pstmt.setString(1, algorithmText);
 			pstmt.setInt(2, stdNo);
-			pstmt.setInt(3, algorithmNo);
+			pstmt.setString(3, algorithmNo);
 			result = ConnectController.executePstmtUpdate(pstmt);
 			System.out.println(result + "개 입력완료");
 		} catch (SQLException e) {
@@ -401,7 +426,8 @@ public class AlgorithmController {
 //				System.out.printf("%-" + col1Width + "s%" + col2Width + "d%" + col3Width + "d\n", alText, stdNo, alNo);
 				
 				// 원하는 출력 형식으로 결과 출력
-	            System.out.println("알고리즘 코드 - " + alText);
+	            System.out.println("알고리즘 코드 - ");
+	            System.out.println(alText);
 	            System.out.println("학생 번호 - " + stdNo);
 	            System.out.println("알고리즘 번호 - " + alNo);
 	            System.out.println();  // 빈 줄을 추가하여 각 레코드 구분
@@ -416,10 +442,22 @@ public class AlgorithmController {
 		String sql = "INSERT INTO " + algorithmNameVo.getClassName() + " (AL_URL, AL_NAME, STD_NO) VALUES (?,?,?)";
 		int result = -1;
 		try (PreparedStatement pstmt = ConnectController.getPstmt(sql)) {
-			System.out.println("알고리즘 주소 : ");
+			//System.out.println("알고리즘 주소 : ");
+			System.out.println("알고리즘 주소를 입력하세요 (메뉴로 돌아가려면 0 입력):");
 			String algorithmUrl = ConnectController.scanData();
-			System.out.println("알고리즘 이름 : ");
+			
+			// 알고리즘 주소가 0이면 메서드를 종료하고 메뉴로 돌아감
+			if ("0".equals(algorithmUrl)) {
+	            System.out.println("메뉴로 돌아갑니다.");
+	            return;
+	        }
+			
+			System.out.println("알고리즘 이름 : (메뉴로 돌아가려면 0 입력)");
 			String algorithmName = ConnectController.scanData();
+			if ("0".equals(algorithmName)) {
+	            System.out.println("메뉴로 돌아갑니다.");
+	            return;
+	        }
 			int stdNo = stdvo.getStd_no();
 			pstmt.setString(1, algorithmUrl);
 			pstmt.setString(2, algorithmName);

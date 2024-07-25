@@ -29,11 +29,11 @@ public class QuizController {
 
 	// 퀴즈코드 추가 메소드
 	public void addQuizAnswer(StudentVO stdVo) {
-		selectQuizAnswer(stdVo);
-		UtilController.line();
+//		selectQuizAnswer(stdVo);
+//		UtilController.line();
 		insertQuizAnswer(stdVo);
-		UtilController.line();
-		selectQuizAnswer(stdVo);
+//		UtilController.line();
+//		selectQuizAnswer(stdVo);
 	}
 
 	//////// insert ////////////////////////////
@@ -47,9 +47,18 @@ public class QuizController {
 //			String quizCode = ConnectController.scanData();
 			System.out.println("퀴즈 코드를 입력하세요 (종료하려면 'END' 입력):");
 			String QuizText = getQuizTextFromInput();
-			System.out.println("퀴즈 번호: ");
-			int stdNo = stdVo.getStd_no();
+			//System.out.println("퀴즈 번호: ");
+			System.out.println("퀴즈 번호를 입력하세요 (메뉴로 돌아가려면 0 입력):");
 			String quizNo = ConnectController.scanData();
+			
+			// 퀴즈 번호가 0이면 메서드를 종료하고 메뉴로 돌아감
+	        if ("0".equals(quizNo)) {
+	            System.out.println("메뉴로 돌아갑니다.");
+	            return;
+	        }
+			
+			int stdNo = stdVo.getStd_no();
+			
 			pstmt.setString(1, QuizText);
 			pstmt.setInt(2, stdNo);
 			pstmt.setString(3, quizNo);
@@ -85,8 +94,14 @@ public class QuizController {
 		String sql = "INSERT INTO " + quizNameVo.getClassName() + " (QUIZ_NAME, ADM_NO) VALUES (?,?)";
 		int result = -1;
 		try (PreparedStatement pstmt = ConnectController.getPstmt(sql)) {
-			System.out.println("퀴즈 이름: ");
+			System.out.println("퀴즈 이름: (메뉴로 돌아가려면 0 입력)");
 			String quizName = ConnectController.scanData();
+			
+			// 알고리즘 주소가 0이면 메서드를 종료하고 메뉴로 돌아감
+						if ("0".equals(quizName)) {
+				            System.out.println("메뉴로 돌아갑니다.");
+				            return;
+				        }
 			int admNo = admVo.getAdm_no();
 			pstmt.setString(1, quizName);
 			pstmt.setInt(2, admNo);
@@ -136,7 +151,8 @@ public class QuizController {
 //						quizNo);
 
 				// 원하는 출력 형식으로 결과 출력
-				System.out.println("퀴즈코드 - " + quizText);
+				System.out.println("퀴즈코드 - ");
+				System.out.println(quizText);
 				System.out.println("학생 번호 - " + stdNo);
 				System.out.println("퀴즈 번호 - " + quizNo);
 				System.out.println(); // 빈 줄을 추가하여 각 레코드 구분
@@ -147,7 +163,7 @@ public class QuizController {
 		}
 	}
 
-	// select all // 퀴즈 문제 제출 - 전체보기
+	// select all // 문제보기
 	public void selectQuizAll() {
 
 		String sql = "SELECT * FROM " + quizNameVo.getClassName();
@@ -248,9 +264,15 @@ public class QuizController {
 
 		// 날짜 입력 및 데이터 조회
 		while (true) {
-			System.out.println("조회할 날짜를 입력하세요 (형식: yy/MM/dd): ");
+			System.out.println("조회할 날짜를 입력하세요 (형식: yy/MM/dd), 메뉴로 돌아가려면 0 입력):");
 			String selectDate = ConnectController.scanData();
 
+			// 날짜가 0이면 메서드를 종료하고 메뉴로 돌아감
+	        if ("0".equals(selectDate)) {
+	            System.out.println("메뉴로 돌아갑니다.");
+	            return;
+	        }
+			
 			try {
 				java.util.Date utilDate = inputDateFormat.parse(selectDate);
 				sqlDate = new Date(utilDate.getTime());
@@ -291,7 +313,8 @@ public class QuizController {
 					// 원하는 출력 형식으로 결과 출력
 					System.out.println("학생이름 - " + stdName);
 					System.out.println("퀴즈 이름 - " + quizName);
-					System.out.println("퀴즈 내용 - " + quizText);
+					System.out.println("퀴즈 내용 - ");
+					System.out.println(quizText);
 					System.out.println("날짜 - " + date);
 					System.out.println(); // 빈 줄을 추가하여 각 레코드 구분
 				}
@@ -366,8 +389,14 @@ public class QuizController {
 		ResultSet rs;
 
 		while (true) {
-			System.out.println("조회할 팀 이름을 입력하세요: ");
+			System.out.println("조회할 팀 이름을 입력하세요, 메뉴로 돌아가려면 0 입력 : ");
 			teamName = ConnectController.scanData();
+			
+			// 팀이름이 0이면 메서드를 종료하고 메뉴로 돌아감
+	        if ("0".equals(teamName)) {
+	            System.out.println("메뉴로 돌아갑니다.");
+	            return;
+	        }
 
 			sql = "SELECT C.std_name, B.quiz_name, A.quiz_text, C.team_name " + "FROM Quiz A "
 					+ "INNER JOIN QUIZ_NAME B ON A.quiz_no = B.quiz_no "
@@ -403,9 +432,9 @@ public class QuizController {
 					// 원하는 출력 형식으로 결과 출력
 					System.out.println("학생이름 - " + stdName);
 					System.out.println("퀴즈 이름 - " + quizName);
-					System.out.println("코드 - " + quizText);
+					System.out.println("코드 - ");
+					System.out.println(quizText);
 					System.out.println("팀이름 - " + team); // 빈 줄을 추가하여 각 레코드 구분
-					System.out.println("");
 				}
 
 				if (!hasData) {
@@ -417,6 +446,7 @@ public class QuizController {
 			}
 
 			// 팀 이름 입력을 다시 받을지 여부를 사용자에게 묻기
+			UtilController.line();
 			System.out.println("다른 팀 이름을 조회하시겠습니까? (y/n)");
 			String response = ConnectController.scanData();
 			if (!response.equalsIgnoreCase("y")) {

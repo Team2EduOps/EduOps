@@ -184,7 +184,7 @@ public class AttendProfessorContoller {
     // Update(attendance):attend_status, Insert(attendance):attend_status
     // delete(vacation):vacation_code***********
     public boolean selectVacation(int vacationCode) {
-        String sql = "SELECT vacation_date, VACATE_FILE FROM VACATION WHERE vacation_code = ?";
+        String sql = "SELECT vacate_date, VACATE_FILE FROM VACATION WHERE vacate_code = ?";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         InputStream is = null;
@@ -201,12 +201,12 @@ public class AttendProfessorContoller {
             } else {
                 // 결과가 존재하면, 데이터 처리
                 while (rs.next()) {
-                    Date vacationDate = rs.getDate("vacation_date");
+                    Date vacationDate = rs.getDate("vacate_date");
                     System.out.println("휴가 날짜: " + vacationDate);
 
                     // 파일 데이터 처리
                     is = rs.getBinaryStream("VACATE_FILE");
-                    fos = new FileOutputStream("./image.wpbp");
+                    fos = new FileOutputStream("./image.png");
                     byte[] buf = new byte[512];
                     int len;
                     while ((len = is.read(buf)) > 0) {

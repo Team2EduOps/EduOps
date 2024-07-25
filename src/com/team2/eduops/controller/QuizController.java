@@ -190,7 +190,7 @@ public class QuizController {
 	// select all // 문제보기
 	public void selectQuizAll() {
 
-		String sql = "SELECT * FROM " + quizNameVo.getClassName();
+		String sql = "SELECT * FROM " + quizNameVo.getClassName() + " ORDER BY QUIZ_DATE ASC";
 
 		try (PreparedStatement pstmt = ConnectController.getPstmt(sql);
 				ResultSet rs = ConnectController.executePstmtQuery(pstmt)) {

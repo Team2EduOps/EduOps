@@ -361,7 +361,7 @@ public class AlgorithmController {
 
 	// select all
 	public void selectAlgorithmAll() {
-		String sql = "SELECT * FROM " + algorithmNameVo.getClassName();
+		String sql = "SELECT * FROM " + algorithmNameVo.getClassName() + " ORDER BY AL_DATE ASC";
 
 		try (PreparedStatement pstmt = ConnectController.getPstmt(sql);
 				ResultSet rs = ConnectController.executePstmtQuery(pstmt)) {

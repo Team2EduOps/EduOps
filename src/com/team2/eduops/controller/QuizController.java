@@ -37,7 +37,7 @@ public class QuizController {
 	}
 
 	//////// insert ////////////////////////////
-
+/*
 	// insert // 퀴즈 코드 제출
 	public void insertQuizAnswer(StudentVO stdVo) {
 		String sql = "INSERT INTO " + quizVo.getClassName() + " (QUIZ_TEXT, STD_NO, QUIZ_NO) VALUES (?,?,?)";
@@ -71,6 +71,66 @@ public class QuizController {
 			ConnectController.commit();
 		}
 	}
+*/
+	// insert // 퀴즈 코드 제출
+	public void insertQuizAnswer(StudentVO stdVo) {
+	    String sql = "INSERT INTO " + quizVo.getClassName() + " (QUIZ_TEXT, STD_NO, QUIZ_NO) VALUES (?,?,?)";
+	    int result = -1;
+	    
+	    try (PreparedStatement pstmt = ConnectController.getPstmt(sql)) {
+	        // 퀴즈 텍스트 입력 받기
+	        System.out.println("퀴즈 코드를 입력하세요 (종료하려면 'END' 입력):");
+	        String QuizText = getQuizTextFromInput();
+
+	        // 유효한 퀴즈 번호를 받을 때까지 루프
+	        while (true) {
+	            System.out.println("퀴즈 번호를 입력하세요 (메뉴로 돌아가려면 0 입력):");
+	            String quizNo = ConnectController.scanData();
+
+	            // 메뉴로 돌아가기
+	            if ("0".equals(quizNo)) {
+	                System.out.println("메뉴로 돌아갑니다.");
+	                return; // 메서드 종료
+	            }
+
+	            // 퀴즈 번호 유효성 검사
+	            if (isValidQuizNo(quizNo)) {
+	                // 유효한 퀴즈 번호일 경우 데이터 삽입
+	                int stdNo = stdVo.getStd_no();
+
+	                pstmt.setString(1, QuizText);
+	                pstmt.setInt(2, stdNo);
+	                pstmt.setString(3, quizNo);
+	                result = ConnectController.executePstmtUpdate(pstmt);
+	                System.out.println(result + "개 입력완료");
+
+	                if (!UtilController.isNegative(result)) {
+	                    ConnectController.commit();
+	                }
+	                break; // 성공적으로 입력이 완료되면 루프 종료
+	            } else {
+	                // 유효하지 않은 퀴즈 번호 입력 시 메시지 출력
+	                System.out.println("유효하지 않은 퀴즈 번호입니다. 다시 시도하세요.");
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+	// 퀴즈 번호 유효성 검사 메서드
+	private boolean isValidQuizNo(String quizNo) {
+	    String validationQuery = "SELECT 1 FROM " + quizNameVo.getClassName() + " WHERE QUIZ_NO = ?";
+	    try (PreparedStatement validationPstmt = ConnectController.getPstmt(validationQuery)) {
+	        validationPstmt.setString(1, quizNo);
+	        ResultSet rs = validationPstmt.executeQuery();
+	        return rs.next(); // 결과가 있으면 true, 없으면 false
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return false; // 예외 발생 시 false 반환
+	}
+
 
 	private String getQuizTextFromInput() {
 		Scanner scanner = new Scanner(System.in);
@@ -88,6 +148,53 @@ public class QuizController {
 		return QuizText.toString();
 	}
 
+	
+	
+	// insert // 퀴즈 문제 제출 - 이름, 담당자(관리자)
+	public void insertQuiz(AdminVO admVo) {
+	    String sql = "INSERT INTO " + quizNameVo.getClassName() + " (QUIZ_NAME, ADM_NO) VALUES (?,?)";
+	    int result = -1;
+
+	    try (PreparedStatement pstmt = ConnectController.getPstmt(sql)) {
+	        String quizName = null;
+
+	        // 퀴즈 이름 입력 받기
+	        while (quizName == null || quizName.trim().isEmpty()) {
+	            System.out.println("퀴즈 이름을 입력하세요 (메뉴로 돌아가려면 0 입력):");
+	            quizName = ConnectController.scanData();
+
+	            // 퀴즈 이름이 0이면 메서드를 종료하고 메뉴로 돌아감
+	            if ("0".equals(quizName)) {
+	                System.out.println("메뉴로 돌아갑니다.");
+	                return;
+	            }
+	            
+	            // 빈 문자열이나 공백이 입력된 경우 다시 입력 받기
+	            if (quizName.trim().isEmpty()) {
+	                System.out.println("퀴즈 이름은 비어 있을 수 없습니다. 다시 입력하세요.");
+	                quizName = null; // 재입력을 위해 null로 설정
+	            }
+	        }
+
+	        int admNo = admVo.getAdm_no();
+	        pstmt.setString(1, quizName);
+	        pstmt.setInt(2, admNo);
+
+	        result = ConnectController.executePstmtUpdate(pstmt);
+	        System.out.println(result + "개 입력완료");
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    if (!UtilController.isNegative(result)) {
+	        ConnectController.commit();
+	    }
+	}
+
+	
+	
+/*
 	// insert // 퀴즈 문제 제출 - 이름, 담당자(관리자)
 	public void insertQuiz(AdminVO admVo) {
 
@@ -114,11 +221,11 @@ public class QuizController {
 			ConnectController.commit();
 		}
 	}
-
+*/
 	//////// insert ////////////////////////////
 
 	////// selectAll ////////
-	// select all //퀴즈 코드 제출 - 모든 데이터 선택
+	// select all //퀴즈 코드 보기- 모든 데이터 선택
 	public void selectQuizAnswer(StudentVO stdVo) {
 		String sql = "SELECT QUIZ_TEXT, STD_NO, QUIZ_NO FROM " + quizVo.getClassName() + " WHERE STD_NO = ?";
 

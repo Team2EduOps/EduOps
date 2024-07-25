@@ -344,7 +344,7 @@ public class AlgorithmController {
 
 	
 	
-	
+	/*
 	// insert // 알고리즘 번호 및 코드 기입
 	public void insertAlgorithmAnswer(StudentVO stdvo) {
 		String sql = "INSERT INTO " + algorithmVo.getClassName() + " ( AL_TEXT, STD_NO, AL_NO ) VALUES (?,?,?)";
@@ -379,6 +379,75 @@ public class AlgorithmController {
 			ConnectController.commit();
 		}
 	}
+	*/
+	
+	public void insertAlgorithmAnswer(StudentVO stdvo) {
+	    String sql = "INSERT INTO " + algorithmVo.getClassName() + " (AL_TEXT, STD_NO, AL_NO) VALUES (?,?,?)";
+	    int result = -1;
+
+	    try (PreparedStatement pstmt = ConnectController.getPstmt(sql)) {
+	        // 알고리즘 텍스트 입력 받기
+	        System.out.println("알고리즘 코드를 입력하세요 (종료하려면 'END' 입력):");
+	        String algorithmText = getAlgorithmTextFromInput();
+
+	        // 유효한 알고리즘 번호를 받을 때까지 루프
+	        while (true) {
+	            System.out.println("알고리즘 번호를 입력하세요 (메뉴로 돌아가려면 0 입력):");
+	            String algorithmNo = ConnectController.scanData();
+
+	            // 메뉴로 돌아가기
+	            if ("0".equals(algorithmNo)) {
+	                System.out.println("메뉴로 돌아갑니다.");
+	                return; // 메서드 종료
+	            }
+
+	            // 알고리즘 번호 유효성 검사
+	            if (isValidAlgorithmNo(algorithmNo)) {
+	                try {
+	                    int stdNo = stdvo.getStd_no();
+
+	                    pstmt.setString(1, algorithmText);
+	                    pstmt.setInt(2, stdNo);
+	                    pstmt.setString(3, algorithmNo);
+
+	                    // 디버깅용: 쿼리와 파라미터 출력
+//	                    System.out.println("Executing query: " + pstmt.toString());
+//	                    System.out.println("Parameters: " + algorithmText + ", " + stdNo + ", " + algorithmNo);
+
+	                    result = ConnectController.executePstmtUpdate(pstmt);
+	                    System.out.println(result + "개 입력완료");
+
+	                    if (!UtilController.isNegative(result)) {
+	                        ConnectController.commit();
+	                    }
+	                    break; // 성공적으로 입력이 완료되면 루프 종료
+	                } catch (SQLException e) {
+	                    e.printStackTrace();
+	                }
+	            } else {
+	                // 유효하지 않은 알고리즘 번호 입력 시 메시지 출력
+	                System.out.println("유효하지 않은 알고리즘 번호입니다. 다시 시도하세요.");
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+	// 알고리즘 번호 유효성 검사 메서드
+	private boolean isValidAlgorithmNo(String algorithmNo) {
+	    String validationQuery = "SELECT 1 FROM " + algorithmNameVo.getClassName() + " WHERE AL_NO = ?";
+	    try (PreparedStatement validationPstmt = ConnectController.getPstmt(validationQuery)) {
+	        validationPstmt.setString(1, algorithmNo);
+	        ResultSet rs = validationPstmt.executeQuery();
+	        return rs.next(); // 결과가 있으면 true, 없으면 false
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return false; // 예외 발생 시 false 반환
+	}
+
+
 	
 	private String getAlgorithmTextFromInput() {
         Scanner scanner = new Scanner(System.in);
@@ -436,7 +505,68 @@ public class AlgorithmController {
 			e.printStackTrace();
 		}
 	}
+	
+	public void insertAlgorithm(StudentVO stdvo) {
+	    String sql = "INSERT INTO " + algorithmNameVo.getClassName() + " (AL_URL, AL_NAME, STD_NO) VALUES (?,?,?)";
+	    int result = -1;
 
+	    try (PreparedStatement pstmt = ConnectController.getPstmt(sql)) {
+	        // 알고리즘 주소 입력 받기
+	        String algorithmUrl = null;
+	        while (algorithmUrl == null || algorithmUrl.trim().isEmpty()) {
+	            System.out.println("알고리즘 주소를 입력하세요 (메뉴로 돌아가려면 0 입력):");
+	            algorithmUrl = ConnectController.scanData();
+
+	            // 알고리즘 주소가 0이면 메서드를 종료하고 메뉴로 돌아감
+	            if ("0".equals(algorithmUrl)) {
+	                System.out.println("메뉴로 돌아갑니다.");
+	                return;
+	            }
+	            
+	            if (algorithmUrl.trim().isEmpty()) {
+	                System.out.println("알고리즘 주소는 비어 있을 수 없습니다. 다시 입력하세요.");
+	                algorithmUrl = null; // 재입력을 위해 null로 설정
+	            }
+	        }
+
+	        // 알고리즘 이름 입력 받기
+	        String algorithmName = null;
+	        while (algorithmName == null || algorithmName.trim().isEmpty()) {
+	            System.out.println("알고리즘 이름을 입력하세요 (메뉴로 돌아가려면 0 입력):");
+	            algorithmName = ConnectController.scanData();
+
+	            // 알고리즘 이름이 0이면 메서드를 종료하고 메뉴로 돌아감
+	            if ("0".equals(algorithmName)) {
+	                System.out.println("메뉴로 돌아갑니다.");
+	                return;
+	            }
+	            
+	            if (algorithmName.trim().isEmpty()) {
+	                System.out.println("알고리즘 이름은 비어 있을 수 없습니다. 다시 입력하세요.");
+	                algorithmName = null; // 재입력을 위해 null로 설정
+	            }
+	        }
+
+	        int stdNo = stdvo.getStd_no();
+	        pstmt.setString(1, algorithmUrl);
+	        pstmt.setString(2, algorithmName);
+	        pstmt.setInt(3, stdNo);
+
+	        result = ConnectController.executePstmtUpdate(pstmt);
+	        System.out.println(result + "개 입력완료");
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    
+	    if(!UtilController.isNegative(result)) {
+	        ConnectController.commit();
+	    }
+	}
+
+	
+	
+/*
 	// insert 문제 출제 // 알고리즘 주소, 알고리즘 이름, 담당자번호
 	public void insertAlgorithm(StudentVO stdvo) {
 		String sql = "INSERT INTO " + algorithmNameVo.getClassName() + " (AL_URL, AL_NAME, STD_NO) VALUES (?,?,?)";
@@ -473,7 +603,9 @@ public class AlgorithmController {
 			ConnectController.commit();
 		}
 	}
-
+*/
+	
+	
 	// select all
 	public void selectAlgorithmAll() {
 		String sql = "SELECT * FROM " + algorithmNameVo.getClassName();

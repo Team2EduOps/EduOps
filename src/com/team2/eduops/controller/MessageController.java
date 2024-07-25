@@ -59,7 +59,8 @@ public class MessageController {
 		System.out.println("\n -=-=-=-=-= 퀴즈 코드 제출 =-=-=-=-=-");
 		System.out.println("\t 1. 퀴즈 번호 및 코드 제출"); // 퀴즈 코드, 퀴즈 번호 담당자(관리자)
 //	        System.out.println("\t 2. 퀴즈 제출 수정");  // 퀴즈 코드 , 퀴즈 번호, 학생번호 수정, where 퀴즈번호, 학생번호 설정
-		System.out.println("\t 3. 전체보기");
+		System.out.println("\t 2. 문제 보기");
+		System.out.println("\t 3. 코드 보기");
 		System.out.println("\t 0. 뒤로 가기");
 		System.out.println("\t >> 원하는 메뉴 선택 하세요.  ");
 	}
@@ -73,13 +74,14 @@ public class MessageController {
 	}
 
 	public void showStudentAlgorithmPage() {
-		System.out.println("\n -=-=-=-=-= 알고리즘 문제 선정 =-=-=-=-=-");
-		System.out.println("\t 1. 알고리즘 문제 선정"); // 알고리즘 주소, 알고리즘 이름, 담당자
-		System.out.println("\t 2. 알고리즘 번호 및 코드 제출"); // 알고리즘 번호 및 코드 기입, 제출자 번호
+    	System.out.println("\n -=-=-=-=-= 알고리즘 문제 선정 =-=-=-=-=-");
+        System.out.println("\t 1. 알고리즘 문제 선정");  // 알고리즘 주소, 알고리즘 이름, 담당자
+        System.out.println("\t 2. 알고리즘 번호 및 코드 제출");  // 알고리즘 번호 및 코드 기입, 제출자 번호
 //        System.out.println("\t 2. 알고리즘 문제 수정");  // 알고리즘 주소, 알고리즘 이름, 담당자 (al_no 로 수정)
-		System.out.println("\t 3. 전체보기");
-		System.out.println("\t 0. 뒤로가기 ");
-		System.out.println("\t >> 원하는 메뉴 선택 하세요.    ");
+        System.out.println("\t 3. 문제보기");
+        System.out.println("\t 4. 코드보기");
+        System.out.println("\t 0. 뒤로가기 ");
+        System.out.println("\t >> 원하는 메뉴 선택 하세요.    ");
 	}
 
 	public void showAdminAlgorithmPage() {

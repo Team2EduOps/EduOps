@@ -183,8 +183,11 @@ public class PageController {
 //	                	update(vo.getClassName());
 //	                	menulist();
 //	                	break;
-			case 3:
-				qc.selectQuizAnswerAll();
+			case 2: //문제보기
+				qc.selectQuizAll();
+				break;
+			case 3: //코드보기
+				qc.selectQuizAnswer(stdVo);
 				break;
 			case 0:
 				isRunStudentQuizPage = false;
@@ -242,8 +245,12 @@ public class PageController {
 				ac.addAlgorithmAnswer(stdVo);
 				break;
 			case 3:
-				// 전체보기
+				// 문제보기
 				ac.selectAlgorithmAll();
+				break;
+			case 4:
+				// 코드보기
+				ac.selectAlgorithmAnswer(stdVo);
 				break;
 			case 0:
 				// exception

@@ -1,15 +1,15 @@
-
 package com.team2.eduops.controller;
 
 import com.team2.eduops.model.StudentVO;
 
 import java.sql.*;
-
-import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.text.ParseException;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,10 +18,9 @@ import java.io.FileNotFoundException;
 
 //학생 출결 관리 관련 메소드들
 public class AttendStudentController {
-    static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     //*********날짜 형식 맞는지 확인 메소드************
-    private static boolean isValidDate(String dateString) {
+    private boolean isValidDate(String dateString) {
         if (dateString == null || dateString.isEmpty()) {
             return false;
         }
@@ -42,29 +41,28 @@ public class AttendStudentController {
             System.out.print("\t OOOO-OO-OO 형식에 맞춰 입력해주세요:");
             inputDate = ConnectController.scanData();
 
-            if (isValidDate(inputDate)) { //날짜형식에 맞다면!
+            if (isValidDate(inputDate)) { // 날짜형식에 맞다면!
                 String sql = "SELECT ATTEND_STATUS FROM ATTENDANCE WHERE TO_CHAR(ATTEND_DATE,'YYYY-MM-DD') = '" + inputDate + "' AND STD_NO = " + stdVo.getSeat_no();
                 PreparedStatement pstmt = ConnectController.getPstmt(sql);
                 ResultSet rs = ConnectController.executePstmtQuery(pstmt);
                 if (UtilController.isNull(rs)) {
                     System.out.println("lookupDaily 함수: rs=Null오류");
                 }
-                //case1- DB에 없는 값, 튜플 X
+                // case1 - DB에 없는 값, 튜플 X
                 try {
                     if (!rs.isBeforeFirst()) {
                         System.out.println("\t 해당 날짜에 데이터가 없습니다.");
                     } else {
                         while (rs.next()) {
-                            Object columnValue = rs.getObject("Attend_status");
-
-                            // case2-오늘 퇴실 처리 X ,튜플 O, 상태 X
-                            if (columnValue == null) {
+                            // case2 - 오늘 퇴실 처리 X, 튜플 O, 상태 X
+                            int result = rs.getInt("ATTEND_STATUS");
+                            if (rs.wasNull()) {
                                 System.out.println("\t 오늘은 퇴실 처리를 하지 않아 조회가 불가합니다.");
                                 bool = false;
+                                continue; // 다음 루프를 진행하도록 continue 사용
                             }
 
-                            // case3- DB에 튜플 O, 상태 O
-                            int result = rs.getInt("Attend_status");
+                            // case3 - DB에 튜플 O, 상태 O
                             switch (result) {
                                 case 0:
                                     System.out.println("\t " + inputDate + "날 결석하였습니다.");
@@ -88,21 +86,22 @@ public class AttendStudentController {
                         }
                     }
                 } catch (SQLException e) {
-                    System.out.println("lookupDaily함수: rs-SQLEXception 문데");
+                    System.out.println("lookupDaily 함수: rs-SQLException 문제");
                     throw new RuntimeException(e);
                 }
             } else {
                 System.out.println("\t 올바른 형식이 아닙니다.. 다시 입력해 주세요.");
-            }//if end
-        }
-    }//while end
+            } // if end
+        } // while end
+    } // lookupDaily end
+
 
     //********년 월 형식 맞는지 확인 메소드**********
-    public static boolean isValidYearMonth(String date) {
+    public boolean isValidYearMonth(String date) {
         final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM");
-        final String DATE_PATTERN = "yyyy-MM";
+        DATE_FORMAT.setLenient(false); // 엄격한 날짜 형식 검증
         try {
-            Date parseDate = DATE_FORMAT.parse(date);
+            java.util.Date parseDate = DATE_FORMAT.parse(date);
             return DATE_FORMAT.format(parseDate).equals(date);
         } catch (ParseException e) {
             return false;
@@ -162,26 +161,36 @@ public class AttendStudentController {
         }
     }//lookupMonthly end
 
-
     //*************applyVacation- 휴가 신청(근태 page)*************************
     public void applyVacation(StudentVO stdVo) {
-        LocalDate localDate = LocalDate.now();
-        Date sqlDate = java.sql.Date.valueOf(localDate);
-        String sql = "INSERT INTO VACATION(VACATE_DATE, VACATE_FILE, STD_NO, ADM_NO) VALUES(?, ?, ?, ?)";
-        PreparedStatement pstmt = ConnectController.getPstmt(sql);
-        String path = ConnectController.scanData();
+        System.out.print("휴가 신청 일자를 포맷(OOOO-OO-OO)에 맞춰 입력해주세요:");
+        String inputDate = ConnectController.scanData();
+        boolean bool =true;
 
+        while (!isValidDate(inputDate)) {
+            System.out.println("날짜 형식이 올바르지 않습니다. 다시 입력해주세요.");
+            inputDate =ConnectController.scanData();
+        } //올바른 형식일때까지 실행
+        // 입력받은 날짜를 java.sql.Date로 변환
+        LocalDate localDate = LocalDate.parse(inputDate, DateTimeFormatter.ISO_LOCAL_DATE);
+        Date sqlDate = Date.valueOf(localDate);
+        System.out.println("휴가 신청 이미지 파일의 절대 경로를 올려주세요.");
+        System.out.print("경로 :");
+        String path = ConnectController.scanData();
         File f = new File("./" + path);
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(f);
         } catch (FileNotFoundException e) {
             System.out.println("applyVacation함수- FileNotFoundException 오류");
-            throw new RuntimeException(e);
-        }
+            e.printStackTrace();
+            return;
 
+        }
+        String sql = "INSERT INTO VACATION(VACATE_DATE, VACATE_FILE, STD_NO, ADM_NO) VALUES(?, ?, ?, ?)";
+        PreparedStatement pstmt = ConnectController.getPstmt(sql);
         try {
-            pstmt.setDate(1, (java.sql.Date) sqlDate);
+            pstmt.setDate(1, sqlDate);
             pstmt.setBinaryStream(2, fis, (int) f.length());
             pstmt.setInt(3, stdVo.getStd_no());
             pstmt.setInt(4, 1);
@@ -189,18 +198,20 @@ public class AttendStudentController {
             System.out.println("applyVacation함수 - pstmt- SQLException 오류");
             throw new RuntimeException(e);
         }
-        int success = ConnectController.executePstmtUpdate(pstmt);
-        ConnectController.commit();
+            int success = ConnectController.executePstmtUpdate(pstmt);
+            ConnectController.commit();
+            if (success != -1) {
+                System.out.println("파일이 추가되었습니다.");
+            }else System.out.println("파일이 생성되지 않았습니다.");
+            System.out.println("applyVacation함수: rs-SQLEXception 문데");
 
-        if (success != -1) {
-            System.out.println("파일이 추가되었습니다.");
-        }
     }//apply vacation menu
+
 
     //*********현재 누적 지원금 조회*************
     public void lookupCashPresent(StudentVO stdVo) {
         // 현재 날짜와 시간을 가져옵니다.
-        Date now = new Date();
+        java.util.Date now = new java.util.Date();
         // SimpleDateFormat을 사용하여 "yyyy-MM" 형식으로 포맷팅합니다.
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
         String formattedDate = sdf.format(now);

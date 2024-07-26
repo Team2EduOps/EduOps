@@ -129,7 +129,7 @@ public class MessageController {
 		System.out.println("\n-----1-1.출결 관리-------");
 		System.out.println("\t 출결 관리 페이지입니다. ");
 		System.out.println("\t 1. 출결 보기");
-		System.out.println("\t 2. 출결 승인");
+		System.out.println("\t 2. 출결 변경");
 		System.out.println("\t 0. 뒤로 가기");
 		System.out.print("\t >> 원하는 메뉴 선택 하세요.   ");
 	}

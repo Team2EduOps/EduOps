@@ -112,7 +112,7 @@ public class PageController {
 			int menuNo = ConnectController.scanIntData();
 			switch (menuNo) {
 			case 1:
-				runAdminAttendancePage(stdVo);
+				runAdminAttendancePage();
 				break;
 			case 2:
 				runNoticePage(admVo);
@@ -128,7 +128,7 @@ public class PageController {
 				isAdmPageRun = false;
 				break;
 			case 6:
-				runAdminStudentPage(stdVo);
+				runAdminStudentPage();
 
 			case 0:
 				isAdmPageRun = false;
@@ -355,7 +355,7 @@ public class PageController {
 		}
 	}
 
-	public void runAdminAttendancePage(StudentVO stdVo) {
+	public void runAdminAttendancePage() {
 		boolean backpage = true;
 		while (backpage) {
 			mc.showAdminAttenancePage();
@@ -384,7 +384,7 @@ public class PageController {
 	}
 
 
-	public void runAdminStudentPage(StudentVO stdVo){
+	public void runAdminStudentPage(){
 		boolean backpage = true;
 		while (backpage) {
 			mc.showAdminStudentPage();
@@ -406,7 +406,7 @@ public class PageController {
 					System.out.println("\t 휴가 승인 페이지입니다.");
 					int vacationCode =apc.lookupVacation();
 					if(apc.selectVacation(vacationCode)){
-						apc.updateAttendance(vacationCode,stdVo);
+						apc.updateVacation(vacationCode);
 					}
 
 					break;

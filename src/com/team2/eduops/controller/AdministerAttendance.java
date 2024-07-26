@@ -15,7 +15,81 @@ public class AdministerAttendance {
     static Timestamp timestamp;
     static PreparedStatement pstmt;
     static ResultSet rs;
+  //**************
+    public void updateAttendance(int vacationCode) {
+        String sql = "SELECT vacation_date, VACATE_FILE FROM VACATION WHERE vacation_code = ?";
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        InputStream is = null;
+        FileOutputStream fos = null;
+        boolean bool = true;
+        Date vacationDate = null;
+        pstmt = ConnectController.getPstmt(sql);
+        try {
+            pstmt.setInt(1, vacationCode);// 파라미터 설정
+            rs = ConnectController.executePstmtQuery(pstmt);
+                // 결과가 존재하면, 데이터 처리
+            while (rs.next()) {
+                    vacationDate = rs.getDate("vacation_date");
+            }
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        //update 먼저 시도: 만약 조퇴이거나 지각을 사유로 처리한거면, 공가인거면 정보가 저장됨
+        String updateSQL = "UPDATE attendance SET attend_status = ? WHERE std_no = ? AND attend_date = ?";
+        pstmt = ConnectController.getPstmt(updateSQL);
+        try {
+            pstmt.setInt(1, 2);
+            pstmt.setInt(2, stdVo.getStd_no());
+            pstmt.setDate(3, vacationDate);// 근태 상태를 2로 설정
+            int result = ConnectController.executePstmtUpdate(pstmt);
+            if (ConnectController.commit() == -1) {
+                System.out.println("커밋 오류");
+            }
+            //update 될 행이 없을 경우: 0값 반환 :insert함
+            if(result==0){
+                String insertSQL = "INSERT INTO ATTENDANCE (std_no,attend_date,attend_status) VALUES (?,?,?)";
+                pstmt = ConnectController.getPstmt(insertSQL);
+                try {
+                    pstmt.setInt(1, stdVo.getStd_no());
+                    pstmt.setDate(2, vacationDate);
+                    pstmt.setInt(3, 2);// 근태 상태를 2로 설정
+                    ConnectController.executePstmtUpdate(pstmt);
+                    if (ConnectController.commit() == -1) {
+                        System.out.println("커밋 오류");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("updateAttendance함수 오류_INSERT -pstmt-SQLException");
+                    throw new RuntimeException(e);
+                }
+            } //if end
+
+        } catch (SQLException e) {
+            System.out.println("updateAttendance함수 오류_UPDATE -pstmt-SQLException");
+            throw new RuntimeException(e);
+        }
+
+        ConnectController.executePstmtUpdate(pstmt);
+        if (ConnectController.commit() == -1) {
+            System.out.println("커밋 오류");
+        }
+
+        String deleteSQL = "DELETE FROM VACATION WHERE vacation_code = ?";
+        pstmt = ConnectController.getPstmt(deleteSQL);
+        try {
+            pstmt.setInt(1,vacationCode);
+            int rowsAffected = ConnectController.executePstmtUpdate(pstmt);
+            if (ConnectController.commit() == -1) {
+                System.out.println("커밋 오류");
+            }
+            System.out.println(rowsAffected + ": 휴가 승인");
+        } catch (SQLException e) {
+            System.out.println("updateAttendance함수 오류 -pstmt-SQLException");
+            throw new RuntimeException(e);
+        }
+    }
 //학생을 보면서 없는 table도 생성
     public class seeAttendance(){
     String sql = "SELECT S.STD_NAME, NVL(MAX(A.ATTEND_DATE), TO_DATE('1970-01-01', 'YYYY-MM-DD')) AS LAST_ATTEND_DATE " +

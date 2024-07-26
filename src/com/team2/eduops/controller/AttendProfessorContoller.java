@@ -240,21 +240,24 @@ public class AttendProfessorContoller {
         return bool;
     }
 
-    public void updateAttendance(int vacationCode,StudentVO stdVo) {
-        String sql = "SELECT vacation_date, VACATE_FILE FROM VACATION WHERE vacation_code = ?";
+    //**********휴가 승인***************
+    public void updateVacation(int vacationCode) {
+        String sql = "SELECT vacation_date, VACATE_FILE,std_no FROM VACATION WHERE vacation_code = ?";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         InputStream is = null;
         FileOutputStream fos = null;
         boolean bool = true;
         Date vacationDate = null;
+        int stdNo = 0;
         pstmt = ConnectController.getPstmt(sql);
         try {
-            pstmt.setInt(1, vacationCode); // 파라미터 설정
+            pstmt.setInt(1, vacationCode);// 파라미터 설정
             rs = ConnectController.executePstmtQuery(pstmt);
-                // 결과가 존재하면, 데이터 처리
+            // 결과가 존재하면, 데이터 처리
             while (rs.next()) {
-                    vacationDate = rs.getDate("vacation_date");
+                vacationDate = rs.getDate("vacation_date");
+                stdNo = rs.getInt("std_no");
             }
 
         } catch (SQLException e) {
@@ -266,7 +269,7 @@ public class AttendProfessorContoller {
         pstmt = ConnectController.getPstmt(updateSQL);
         try {
             pstmt.setInt(1, 2);
-            pstmt.setInt(2, stdVo.getStd_no());
+            pstmt.setInt(2, stdNo);
             pstmt.setDate(3, vacationDate);// 근태 상태를 2로 설정
             int result = ConnectController.executePstmtUpdate(pstmt);
             if (ConnectController.commit() == -1) {
@@ -277,7 +280,7 @@ public class AttendProfessorContoller {
                 String insertSQL = "INSERT INTO ATTENDANCE (std_no,attend_date,attend_status) VALUES (?,?,?)";
                 pstmt = ConnectController.getPstmt(insertSQL);
                 try {
-                    pstmt.setInt(1, stdVo.getStd_no());
+                    pstmt.setInt(1, stdNo);
                     pstmt.setDate(2, vacationDate);
                     pstmt.setInt(3, 2);// 근태 상태를 2로 설정
                     ConnectController.executePstmtUpdate(pstmt);

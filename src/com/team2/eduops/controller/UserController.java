@@ -173,6 +173,7 @@ public class UserController {
 				System.out.println("팀 이름 변경 중 문제가 발생했습니다.");
 				System.out.println("다시 시도해주세요.");
 			}
+			return;
 		}
 	}
 

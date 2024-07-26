@@ -13,7 +13,7 @@ public class NoticeController {
 	public void displayNotice() {
 		System.out.println("          공지");
 		System.out.println("========================");
-		String sql = "SELECT * from NOTICE where POSTED_DATE > TRUNC(SYSDATE) - 7";
+		String sql = "SELECT * from NOTICE where POSTED_DATE > TRUNC(SYSDATE) - 7"; 
 		PreparedStatement pstmt = ConnectController.getPstmt(sql);
 		ResultSet rs = ConnectController.executePstmtQuery(pstmt);
 		try {
@@ -31,6 +31,9 @@ public class NoticeController {
 		try {
 			System.out.println("추가할 공지를 입력해주세요");
 			String new_notice = ConnectController.scanData();
+			if(new_notice.isEmpty()) {
+				return;
+			}
 			String sql = "INSERT INTO NOTICE(CONTENTS) VALUES(?)";
 			PreparedStatement pstmt = ConnectController.getPstmt(sql);
 			pstmt.setString(1, new_notice);
@@ -73,6 +76,9 @@ public class NoticeController {
 			else {
 				System.out.println("수정할 공지의 내용을 입력해주세요");
 				String new_contents = ConnectController.scanData();
+				if(new_contents.isEmpty()) {
+					return;
+				}
 				sql = "UPDATE NOTICE SET CONTENTS = '" + new_contents + "' WHERE POST_NO = " + postNo_to_modify;
 				pstmt = ConnectController.getPstmt(sql);
 				ConnectController.executePstmtUpdate(pstmt);

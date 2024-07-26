@@ -231,7 +231,7 @@ public class AttendProfessorContoller {
                 System.out.println("자원 해제 오류");
                 e.printStackTrace();
             }
-            System.out.print("해당 휴가를 승인할 건가요?(1:yes,2:no)");
+            System.out.print("해당 파일을 삭제하실 건가요?(1:yes,2:no)");
 
             if (ConnectController.scanIntData() != 1) {
                 bool = false;
@@ -242,7 +242,7 @@ public class AttendProfessorContoller {
 
     //**********휴가 승인***************
     public void updateVacation(int vacationCode) {
-        String sql = "SELECT vacate_date, VACATE_FILE,std_no FROM VACATION WHERE vacate_code = ?";
+        String sql = "SELECT vacation_date, VACATE_FILE,std_no FROM VACATION WHERE vacation_code = ?";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         InputStream is = null;
@@ -256,7 +256,7 @@ public class AttendProfessorContoller {
             rs = ConnectController.executePstmtQuery(pstmt);
             // 결과가 존재하면, 데이터 처리
             while (rs.next()) {
-                vacationDate = rs.getDate("vacate_date");
+                vacationDate = rs.getDate("vacation_date");
                 stdNo = rs.getInt("std_no");
             }
 
@@ -303,7 +303,7 @@ public class AttendProfessorContoller {
             System.out.println("커밋 오류");
         }
 
-        String deleteSQL = "DELETE FROM VACATION WHERE vacate_code = ?";
+        String deleteSQL = "DELETE FROM VACATION WHERE vacation_code = ?";
         pstmt = ConnectController.getPstmt(deleteSQL);
         try {
             pstmt.setInt(1,vacationCode);

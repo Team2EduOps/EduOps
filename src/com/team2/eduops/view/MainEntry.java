@@ -15,5 +15,4 @@ public class MainEntry {
 		au.attendUpdate();
 		pc.runPage();
 	}
-
 }

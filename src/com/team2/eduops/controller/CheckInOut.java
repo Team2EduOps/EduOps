@@ -12,6 +12,7 @@ import com.team2.eduops.model.StudentVO;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 
+
 /* *********학생메뉴_1.입실 1.퇴실 메뉴 ************ */
 public class CheckInOut {
 

@@ -37,10 +37,10 @@ public class AttendStudentController {
     public void lookupDaily(StudentVO stdVo) {
         String inputDate;
         boolean bool = true;
-        while (bool) {
+
             System.out.print("\t OOOO-OO-OO 형식에 맞춰 입력해주세요:");
             inputDate = ConnectController.scanData();
-
+        while (bool) {
             if (isValidDate(inputDate)) { // 날짜형식에 맞다면!
                 String sql = "SELECT ATTEND_STATUS FROM ATTENDANCE WHERE TO_CHAR(ATTEND_DATE,'YYYY-MM-DD') = '" + inputDate + "' AND STD_NO = " + stdVo.getSeat_no();
                 PreparedStatement pstmt = ConnectController.getPstmt(sql);
@@ -52,6 +52,7 @@ public class AttendStudentController {
                 try {
                     if (!rs.isBeforeFirst()) {
                         System.out.println("\t 해당 날짜에 데이터가 없습니다.");
+                        bool=false;
                     } else {
                         while (rs.next()) {
                             // case2 - 오늘 퇴실 처리 X, 튜플 O, 상태 X
@@ -129,6 +130,7 @@ public class AttendStudentController {
                         System.out.println("\t 해당 월에 데이터가 없습니다.");
                     } else {
                         System.out.println("\t Attend_status= 0:결석,1:출석,2:공가,3:지각,4:조퇴");
+                        System.out.println("\t 공지: 오늘 날짜는 퇴실 이후에 반영됩니다.");
                         while (rs.next()) {
                             Object columnValue = rs.getObject("Attend_status");
                             // case2- DB에 튜플 O, 상태 O

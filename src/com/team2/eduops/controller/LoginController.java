@@ -9,7 +9,7 @@ import com.team2.eduops.model.StudentVO;
 // 로그인 기능 관련 메소드들
 public class LoginController {
 
-	public int userLogin(int menuNo) {
+	public int userLogin(int menuNo, MessageController mc) {
 		int userNo = -1;
 		String id;
 		String pw;
@@ -34,7 +34,7 @@ public class LoginController {
 		String sqlId = sqlType + "_id";
 		String sqlPw = sqlType + "_pw";
 
-		showUserLoginPage(userType);
+		mc.showUserLoginPage(userType);
 
 		while (userNo == -1) {
 			System.out.println("아이디를 입력하세요: ");
@@ -92,20 +92,5 @@ public class LoginController {
 			return false;
 		}
 		return true;
-	}
-
-	public void showUserLoginPage(String userType) {
-		System.out.println("===" + userType + " 로그인 페이지===");
-		System.out.println("안녕하세요 :)");
-	}
-
-	public void showStudentLoginPage() {
-		System.out.println("===학생 로그인 페이지===");
-		System.out.println("안녕하세요 :)");
-	}
-
-	public void showAdminLoginPage() {
-		System.out.println("===관리자 로그인 페이지===");
-		System.out.println("안녕하세요 :)");
 	}
 }

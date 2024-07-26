@@ -19,13 +19,16 @@ public class MessageController {
 	public void showStudentPage(StudentVO stdVo, int checkIo) {
 		String std_name = stdVo.getStd_name();
 		String checkIoStr = "입실";
-		switch(checkIo){
-			case 1,2,3,4: checkIoStr="퇴실 완료: 오늘자 조회";
-				break;
-			case 5: checkIoStr="퇴실";
-				break;
-			default: checkIoStr="입실";
-				break;
+		switch (checkIo) {
+		case 1, 2, 3, 4:
+			checkIoStr = "퇴실 완료: 오늘자 조회";
+			break;
+		case 5:
+			checkIoStr = "퇴실";
+			break;
+		default:
+			checkIoStr = "입실";
+			break;
 		}
 
 		// 학생 홈 페이지 띄우기
@@ -67,8 +70,9 @@ public class MessageController {
 	public void showStudentQuizPage() {
 		System.out.println("\n -=-=-=-=-= 퀴즈 코드 제출 =-=-=-=-=-");
 		System.out.println("\t 1. 퀴즈 번호 및 코드 제출"); // 퀴즈 코드, 퀴즈 번호 담당자(관리자)
-//	        System.out.println("\t 2. 퀴즈 제출 수정");  // 퀴즈 코드 , 퀴즈 번호, 학생번호 수정, where 퀴즈번호, 학생번호 설정
-		System.out.println("\t 3. 전체보기");
+//		           System.out.println("\t 2. 퀴즈 제출 수정");  // 퀴즈 코드 , 퀴즈 번호, 학생번호 수정, where 퀴즈번호, 학생번호 설정
+		System.out.println("\t 2. 문제 보기");
+		System.out.println("\t 3. 코드 보기");
 		System.out.println("\t 0. 뒤로 가기");
 		System.out.println("\t >> 원하는 메뉴 선택 하세요.  ");
 	}
@@ -85,10 +89,11 @@ public class MessageController {
 		System.out.println("\n -=-=-=-=-= 알고리즘 문제 선정 =-=-=-=-=-");
 		System.out.println("\t 1. 알고리즘 문제 선정"); // 알고리즘 주소, 알고리즘 이름, 담당자
 		System.out.println("\t 2. 알고리즘 번호 및 코드 제출"); // 알고리즘 번호 및 코드 기입, 제출자 번호
-//        System.out.println("\t 2. 알고리즘 문제 수정");  // 알고리즘 주소, 알고리즘 이름, 담당자 (al_no 로 수정)
-		System.out.println("\t 3. 전체보기");
+//		        System.out.println("\t 2. 알고리즘 문제 수정");  // 알고리즘 주소, 알고리즘 이름, 담당자 (al_no 로 수정)
+		System.out.println("\t 3. 문제보기");
+		System.out.println("\t 4. 코드보기");
 		System.out.println("\t 0. 뒤로가기 ");
-		System.out.print("\t >> 원하는 메뉴 선택 하세요.    ");
+		System.out.println("\t >> 원하는 메뉴 선택 하세요.    ");
 	}
 
 	public void showAdminAlgorithmPage() {
@@ -100,16 +105,16 @@ public class MessageController {
 
 	}
 
-    public void showStudentAttendPage() {
-        System.out.println("\n------5.근태관리-------");
-        System.out.println("\t 근태 관리 페이지입니다.");
-        System.out.println("\t 1. 일자별");
-        System.out.println("\t 2. 월별");
-        System.out.println("\t 3. 누적 지원금 조회");
-        System.out.println("\t 4. 휴가 신청");
+	public void showStudentAttendPage() {
+		System.out.println("\n------5.근태관리-------");
+		System.out.println("\t 근태 관리 페이지입니다.");
+		System.out.println("\t 1. 일자별");
+		System.out.println("\t 2. 월별");
+		System.out.println("\t 3. 누적 지원금 조회");
+		System.out.println("\t 4. 휴가 신청");
 		System.out.println("\t 0. 뒤로 가기");
 		System.out.print("\t >> 원하는 메뉴 선택 하세요.   ");
-    }
+	}
 
 	public void showStudentAttendCashPage() {
 		System.out.println("\n------5-3.누적 지원금 조회-------");
@@ -120,7 +125,7 @@ public class MessageController {
 		System.out.print("\t >> 원하는 메뉴 선택 하세요.   ");
 	}
 
-	public void showAdminAttenancePage(){
+	public void showAdminAttenancePage() {
 		System.out.println("\n-----1-1.출결 관리-------");
 		System.out.println("\t 출결 관리 페이지입니다. ");
 		System.out.println("\t 1. 출결 보기");
@@ -136,7 +141,7 @@ public class MessageController {
 		System.out.println("\t 0. 뒤로 가기");
 		System.out.print("\t >> 원하는 메뉴 선택 하세요.   ");
 	}
-	
+
 	public void showStdUserPage() {
 		System.out.println("\n------6.사용자 정보-------");
 		System.out.println("사용자 정보 페이지입니다.");
@@ -150,5 +155,20 @@ public class MessageController {
 		System.out.println("사용자 정보 페이지입니다.");
 		System.out.println("\t 1. 비밀번호 변경");
 		System.out.println("\t 0: 뒤로 가기");
+	}
+
+	public void showUserLoginPage(String userType) {
+		System.out.println("===" + userType + " 로그인 페이지===");
+		System.out.println("안녕하세요 :)");
+	}
+
+	public void showStudentLoginPage() {
+		System.out.println("===학생 로그인 페이지===");
+		System.out.println("안녕하세요 :)");
+	}
+
+	public void showAdminLoginPage() {
+		System.out.println("===관리자 로그인 페이지===");
+		System.out.println("안녕하세요 :)");
 	}
 }

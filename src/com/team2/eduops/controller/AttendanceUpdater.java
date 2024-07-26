@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
-
+/*
 // 배열 생성을 위한 클래스
 class DataRecord {
     private int intValue;

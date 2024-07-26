@@ -12,8 +12,7 @@ import java.util.ArrayList;
 
 
 public class AttendProfessorContoller {
-    //********출결 보기 ********
-
+    //********출결 보기 *********
     //********오늘 출석을 보기 위한 STD_NAME, SEAT_NO, ATTEND_STATUS, CI_TIME, CO_TIME을 학생별로 저장할 클래스 생성
     public class TodayAttendance {
         String stdName;
@@ -270,6 +269,9 @@ public class AttendProfessorContoller {
             pstmt.setInt(2, stdVo.getStd_no());
             pstmt.setDate(3, vacationDate);// 근태 상태를 2로 설정
             int result = ConnectController.executePstmtUpdate(pstmt);
+            if (ConnectController.commit() == -1) {
+                System.out.println("커밋 오류");
+            }
             //update 될 행이 없을 경우: 0값 반환 :insert함
             if(result==0){
                 String insertSQL = "INSERT INTO ATTENDANCE (std_no,attend_date,attend_status) VALUES (?,?,?)";
@@ -278,6 +280,10 @@ public class AttendProfessorContoller {
                     pstmt.setInt(1, stdVo.getStd_no());
                     pstmt.setDate(2, vacationDate);
                     pstmt.setInt(3, 2);// 근태 상태를 2로 설정
+                    ConnectController.executePstmtUpdate(pstmt);
+                    if (ConnectController.commit() == -1) {
+                        System.out.println("커밋 오류");
+                    }
                 } catch (SQLException e) {
                     System.out.println("updateAttendance함수 오류_INSERT -pstmt-SQLException");
                     throw new RuntimeException(e);
@@ -298,12 +304,14 @@ public class AttendProfessorContoller {
         pstmt = ConnectController.getPstmt(deleteSQL);
         try {
             pstmt.setInt(1,vacationCode);
-            ConnectController.executePstmtUpdate(pstmt);
+            int rowsAffected = ConnectController.executePstmtUpdate(pstmt);
+            if (ConnectController.commit() == -1) {
+                System.out.println("커밋 오류");
+            }
+            System.out.println(rowsAffected + ": 휴가 승인");
         } catch (SQLException e) {
             System.out.println("updateAttendance함수 오류 -pstmt-SQLException");
             throw new RuntimeException(e);
         }
-            int rowsAffected = ConnectController.executePstmtUpdate(pstmt);
-            System.out.println(rowsAffected + ": 휴가 승인");
     }
 }

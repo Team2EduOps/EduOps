@@ -41,29 +41,28 @@ public class AttendStudentController {
             System.out.print("\t OOOO-OO-OO 형식에 맞춰 입력해주세요:");
             inputDate = ConnectController.scanData();
 
-            if (isValidDate(inputDate)) { //날짜형식에 맞다면!
+            if (isValidDate(inputDate)) { // 날짜형식에 맞다면!
                 String sql = "SELECT ATTEND_STATUS FROM ATTENDANCE WHERE TO_CHAR(ATTEND_DATE,'YYYY-MM-DD') = '" + inputDate + "' AND STD_NO = " + stdVo.getSeat_no();
                 PreparedStatement pstmt = ConnectController.getPstmt(sql);
                 ResultSet rs = ConnectController.executePstmtQuery(pstmt);
                 if (UtilController.isNull(rs)) {
                     System.out.println("lookupDaily 함수: rs=Null오류");
                 }
-                //case1- DB에 없는 값, 튜플 X
+                // case1 - DB에 없는 값, 튜플 X
                 try {
                     if (!rs.isBeforeFirst()) {
                         System.out.println("\t 해당 날짜에 데이터가 없습니다.");
                     } else {
                         while (rs.next()) {
-                            Object columnValue = rs.getObject("Attend_status");
-
-                            // case2-오늘 퇴실 처리 X ,튜플 O, 상태 X
-                            if (columnValue == null) {
+                            // case2 - 오늘 퇴실 처리 X, 튜플 O, 상태 X
+                            int result = rs.getInt("ATTEND_STATUS");
+                            if (rs.wasNull()) {
                                 System.out.println("\t 오늘은 퇴실 처리를 하지 않아 조회가 불가합니다.");
                                 bool = false;
+                                continue; // 다음 루프를 진행하도록 continue 사용
                             }
 
-                            // case3- DB에 튜플 O, 상태 O
-                            int result = rs.getInt("Attend_status");
+                            // case3 - DB에 튜플 O, 상태 O
                             switch (result) {
                                 case 0:
                                     System.out.println("\t " + inputDate + "날 결석하였습니다.");
@@ -87,14 +86,15 @@ public class AttendStudentController {
                         }
                     }
                 } catch (SQLException e) {
-                    System.out.println("lookupDaily함수: rs-SQLEXception 문데");
+                    System.out.println("lookupDaily 함수: rs-SQLException 문제");
                     throw new RuntimeException(e);
                 }
             } else {
                 System.out.println("\t 올바른 형식이 아닙니다.. 다시 입력해 주세요.");
-            }//if end
-        }//while end
-    }//lookupdayil end
+            } // if end
+        } // while end
+    } // lookupDaily end
+
 
     //********년 월 형식 맞는지 확인 메소드**********
     public boolean isValidYearMonth(String date) {

@@ -57,8 +57,7 @@ public class AttendanceUpdater {
             //가장 이른날~어제 + 월~ 금만!
             for (DataRecord dr : records) {
                 LocalDate increaseDate = dr.getDateValue().toLocalDate();
-                boolean bool=increaseDate.isBefore(today); //1. 체크 - 어제까지의 날짜인지
-                DayOfWeek dayOfWeek = increaseDate.getDayOfWeek();
+                //1. 체크 - 어제까지의 날짜인지
                 while(increaseDate.isBefore(today)) {
                     boolean bool = true;  // 매번 초기화
                     DayOfWeek dayOfWeek = increaseDate.getDayOfWeek();

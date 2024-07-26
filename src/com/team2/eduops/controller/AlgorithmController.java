@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Scanner;
 
 import com.team2.eduops.model.AlgorithmNameVO;
 import com.team2.eduops.model.AlgorithmVO;
@@ -191,7 +190,7 @@ public class AlgorithmController {
 	    try (PreparedStatement pstmt = ConnectController.getPstmt(sql)) {
 	        // 알고리즘 텍스트 입력 받기
 	        System.out.println("알고리즘 코드를 입력하세요 (종료하려면 'END' 입력):");
-	        String algorithmText = getAlgorithmTextFromInput();
+	        String algorithmText = UtilController.getTextFromInput();
 
 	        // 유효한 알고리즘 번호를 받을 때까지 루프
 	        while (true) {
@@ -251,23 +250,6 @@ public class AlgorithmController {
 	}
 
 
-	
-	private String getAlgorithmTextFromInput() {
-        Scanner scanner = new Scanner(System.in);
-        StringBuilder algorithmText = new StringBuilder();
-        String line;
-        
-        while (true) {
-            line = scanner.nextLine();
-            if (line.equalsIgnoreCase("END")) {
-                break;
-            }
-            algorithmText.append(line).append("\n");
-        }
-        
-        return algorithmText.toString();
-    }
-
 	// select all //모든 데이터 선택
 	public void selectAlgorithmAnswer(StudentVO stdVo) {
 		String sql = "SELECT AL_TEXT, STD_NO, AL_NO FROM " + algorithmVo.getClassName() + " WHERE STD_NO = ?";
@@ -276,10 +258,6 @@ public class AlgorithmController {
 			PreparedStatement pstmt = ConnectController.getPstmt(sql);
 			pstmt.setInt(1, stdVo.getStd_no());
 			ResultSet rs = ConnectController.executePstmtQuery(pstmt);
-			// 열 너비 정의 (예상 데이터 크기에 따라 조정)
-			int col1Width = 35; // AL_TEXT 용
-			int col2Width = 20; // STD_NO 용
-			int col3Width = 20; // AL_NO 용
 
 			// 결과 집합의 각 행 출력
 			while (rs.next()) {

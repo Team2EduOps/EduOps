@@ -13,6 +13,11 @@ public class MessageController {
 		System.out.println("0. 프로그램 종료");
 	}
 
+	public void showUserLoginPage(String userType) {
+		System.out.println("===" + userType + " 로그인 페이지===");
+		System.out.println("안녕하세요 :)");
+	}
+	
 	public void showStudentPage(StudentVO stdVo, int checkIo) {
 		String std_name = stdVo.getStd_name();
 		String checkIoStr = "입실";
@@ -36,6 +41,7 @@ public class MessageController {
 		System.out.println("3. 퀴즈 제출");
 		System.out.println("4. 알고리즘 관리");
 		System.out.println("5. 근태 관리");
+		System.out.println("6. 사용자 정보");
 		System.out.println("0. 로그아웃");
 	}
 

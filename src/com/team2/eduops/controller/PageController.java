@@ -31,13 +31,13 @@ public class PageController {
 			int menuNo = ConnectController.scanIntData();
 			switch (menuNo) {
 			case 1:
-				userNo = lc.userLogin(menuNo);
+				userNo = lc.userLogin(menuNo, mc);
 				if (lc.checkLogin(userNo)) {
 					runStudentPage(userNo);
 				}
 				break;
 			case 2:
-				userNo = lc.userLogin(menuNo);
+				userNo = lc.userLogin(menuNo, mc);
 				if (lc.checkLogin(userNo)) {
 					runAdminPage(userNo);
 				}
@@ -123,6 +123,7 @@ public class PageController {
 				jc.adminJoin();
 				return;
 			case 6:
+				runAdminStudentPage();
 				break;
 			case 7:
 				runAdmUserPage(admVo);
@@ -363,7 +364,7 @@ public class PageController {
 //	}
 
 
-	public void runAdminStudentPage(StudentVO stdVo){
+	public void runAdminStudentPage(){
 		boolean backpage = true;
 		while (backpage) {
 			mc.showAdminStudentPage();
@@ -383,8 +384,8 @@ public class PageController {
 				case 2:
 					System.out.println("\t 6-2. 휴가 승인");
 					System.out.println("\t 휴가 승인 페이지입니다.");
-					int vacationCode=apc.lookupVacation(stdVo);
-					apc.updateAttendance(vacationCode,stdVo);
+					int vacationCode = apc.lookupVacation();
+					apc.updateAttendance(vacationCode);
 					break;
 				default:
 					System.out.println("메뉴에 없는 번호를 선택하였습니다. 1~2번 중에서 선택하세요.");

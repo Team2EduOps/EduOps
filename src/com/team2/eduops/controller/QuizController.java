@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Scanner;
 
 import com.team2.eduops.model.AdminVO;
 import com.team2.eduops.model.QuizNameVO;
@@ -36,7 +35,7 @@ public class QuizController {
 	    try (PreparedStatement pstmt = ConnectController.getPstmt(sql)) {
 	        // 퀴즈 텍스트 입력 받기
 	        System.out.println("퀴즈 코드를 입력하세요 (종료하려면 'END' 입력):");
-	        String QuizText = getQuizTextFromInput();
+	        String QuizText = UtilController.getTextFromInput();
 
 	        // 유효한 퀴즈 번호를 받을 때까지 루프
 	        while (true) {
@@ -85,23 +84,6 @@ public class QuizController {
 	        e.printStackTrace();
 	    }
 	    return false; // 예외 발생 시 false 반환
-	}
-
-
-	private String getQuizTextFromInput() {
-		Scanner scanner = new Scanner(System.in);
-		StringBuilder QuizText = new StringBuilder();
-		String line;
-
-		while (true) {
-			line = scanner.nextLine();
-			if (line.equalsIgnoreCase("END")) {
-				break;
-			}
-			QuizText.append(line).append("\n");
-		}
-
-		return QuizText.toString();
 	}
 
 	
@@ -161,11 +143,6 @@ public class QuizController {
 			pstmt.setInt(1, stdVo.getStd_no());
 			
 			ResultSet rs = ConnectController.executePstmtQuery(pstmt);
-			// 열 너비 정의 (예상 데이터 크기에 따라 조정)
-			int col1Width = 35; // AL_TEXT 용
-			int col2Width = 20; // STD_NO 용
-			int col3Width = 20; // AL_NO 용
-
 
 			// 결과 집합의 각 행 출력
 			while (rs.next()) {

@@ -15,7 +15,6 @@ public class ConnectController {
 	static PreparedStatement pstmt;
 	static ResultSet rs;
 
-	
 	// connect
 	public static void connect() {
 		try {
@@ -44,12 +43,12 @@ public class ConnectController {
 		try {
 			conn.rollback();
 			result = 1;
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
-	
+
 	// commmit
 	// commit 메소드 실행 성공 시 1, 실패 시 -1 값 리턴
 	public static int commit() {
@@ -57,15 +56,14 @@ public class ConnectController {
 		try {
 			conn.commit();
 			result = 1;
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
-	
+
 	////////////////////////////////
-	
-	
+
 	// Scanner 객체 사용해서 String 값 받기 메소드
 	// isNull(String str) 메소드로 null값 체크 후 사용
 	public static String scanData() {
@@ -75,9 +73,9 @@ public class ConnectController {
 
 		} catch (Exception e) {
 			System.out.println("scanner 값 받아오기 문제 발생");
-		} finally {
-			return str;
 		}
+		return str;
+
 	}
 
 	// data를 String 값으로 scan하여 parseInt 시도 -> 성공 시 입력된 정수값 리턴, 실패 시 음수값인 -1 값 리턴
@@ -89,34 +87,34 @@ public class ConnectController {
 			i = Integer.parseInt(tmp);
 		} catch (Exception e) {
 			System.out.println("정수 변환에 문제 발생");
-		} finally {
-			return i;
 		}
+		return i;
+
 	}
 
 	////////////////////////////////
-	
+
 	// 준비한 쿼리문 String값 매개변수로 받아서 null값으로 비워둔 pstmt 안에 넣은 후 return
 	// 받아서 쓸 때 isNull(pstmt) 우선 실행하여 true값 받으면 문제 상황 발생
 	public static PreparedStatement getPstmt(String sql) {
 		pstmt = null;
 		try {
-		pstmt = conn.prepareStatement(sql);
-		} catch(Exception e) {
+			pstmt = conn.prepareStatement(sql);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return pstmt;
 	}
-	
+
 	// 쿼리문 단순실행 -> 성공 시 성공 결과값 정수 리턴, 실패 시 -1 리턴
 	public static int executePstmtUpdate(PreparedStatement pstmt) {
 		int result = -1;
 		try {
 			result = pstmt.executeUpdate();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return result; 
+		return result;
 	}
 
 	// 쿼리문 실행 후 db에서 값 받아옴 -> 성공 시 ResultSet rs 안에 값 담아서 return, 실패 시 null값 리턴
@@ -124,9 +122,9 @@ public class ConnectController {
 		ResultSet rs = null;
 		try {
 			rs = pstmt.executeQuery();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rs; 
+		return rs;
 	}
 }

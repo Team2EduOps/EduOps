@@ -48,4 +48,20 @@ public class UtilController {
 	public static void line() {
 		System.out.println("");
 	}
+	
+	
+	public static String getTextFromInput() {
+		StringBuilder text = new StringBuilder();
+		String line;
+
+		while (true) {
+			line = ConnectController.scanData();
+			if (line.equalsIgnoreCase("END")) {
+				break;
+			}
+			text.append(line).append("\n");
+		}
+
+		return text.toString();
+	}
 }

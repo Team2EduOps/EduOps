@@ -153,7 +153,6 @@ public class CheckInOut {
 					checkIo = 0;
 					break;
 				}
-				
 			} catch(Exception e) {
 				System.out.println("rs.next() 실행 중 에러 발생");
 			}
@@ -170,13 +169,19 @@ public class CheckInOut {
 				if (rs.next()) {
 					// ATTEND_STATUS 값을 가져옴
 					// Integer attendStatus = rs.getObject("ATTEND_STATUS", Integer.class);
-					int attendStatus = rs.getInt("ATTEND_STATUS");
-
-					if (attendStatus == null) {
-						checkIo = 5;
-					} else {
-						checkIo = rs.getInt("ATTEND_STATUS");
+					
+					int attendStatus;
+					try {
+						attendStatus = rs.getInt("ATTEND_STATUS");
+						
+					} catch (Exception e) {
+						System.out.println("출석 상태에 정상값이 들어있지 않습니다.");
+						System.out.println("데이터베이스 수정이 필요합니다.");
+						return checkIo;
 					}
+					
+					checkIo = attendStatus;
+
 				} // 1(출석),2(공가),3(지각),4(조퇴) 반환
 
 			} catch (SQLException e) {
@@ -217,7 +222,7 @@ public class CheckInOut {
 			deleteIO(stdVo);
 			break;
 		default:
-			break;
+			System.out.println("에러 발생");
 		}// switch end
 	}// checkIO end
 }

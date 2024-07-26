@@ -42,7 +42,7 @@ public class AttendStudentController {
             inputDate = ConnectController.scanData();
         while (bool) {
             if (isValidDate(inputDate)) { // 날짜형식에 맞다면!
-                String sql = "SELECT ATTEND_STATUS FROM ATTENDANCE WHERE TO_CHAR(ATTEND_DATE,'YYYY-MM-DD') = '" + inputDate + "' AND STD_NO = " + stdVo.getSeat_no();
+                String sql = "SELECT ATTEND_STATUS FROM ATTENDANCE WHERE TO_CHAR(ATTEND_DATE,'YYYY-MM-DD') = '" + inputDate + "' AND STD_NO = " + stdVo.getStd_no();
                 PreparedStatement pstmt = ConnectController.getPstmt(sql);
                 ResultSet rs = ConnectController.executePstmtQuery(pstmt);
                 if (UtilController.isNull(rs)) {

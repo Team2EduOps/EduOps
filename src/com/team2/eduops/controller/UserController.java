@@ -122,6 +122,7 @@ public class UserController {
 				System.out.println("비밀번호 변경 중 문제가 발생했습니다.");
 				System.out.println("다시 시도해주세요.");
 			}
+			return;
 		}
 	}
 

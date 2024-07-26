@@ -152,12 +152,13 @@ public class UserController {
 				}
 			}
 
-			sql = "update " + stdVo.getClassName() + " set team_name = " + newTeam + " where std_no = ?";
+			sql = "update " + stdVo.getClassName() + " set team_name = ? where std_no = ?";
 
 			pstmt = ConnectController.getPstmt(sql);
 
 			try {
-				pstmt.setInt(1, stdVo.getStd_no());
+				pstmt.setString(1,  newTeam);
+				pstmt.setInt(2, stdVo.getStd_no());
 			} catch (Exception e) {
 				System.out.println("pstmt set데이터 중 문제 발생");
 				continue;

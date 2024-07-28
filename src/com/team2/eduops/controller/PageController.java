@@ -13,7 +13,7 @@ public class PageController {
 	AlgorithmController ac = new AlgorithmController();
 	CheckInOut cio = new CheckInOut();
 	AttendStudentController asc = new AttendStudentController();
-	AttendProfessorContoller apc = new AttendProfessorContoller();
+	AttendProfessorController apc = new AttendProfessorController();
 
 	StudentVO stdVo;
 	AdminVO admVo;
@@ -341,8 +341,7 @@ public class PageController {
 	}
 
 	public void runAdminAttendancePage() {
-		boolean backpage = true;
-		while (backpage) {
+		while (true) {
 			mc.showAdminAttenancePage();
 			switch (ConnectController.scanIntData()) {
 			case -1:
@@ -350,17 +349,13 @@ public class PageController {
 				break;
 			case 0:
 				System.out.println("/t 뒤 페이지로 이동합니다.");
-				backpage = false;
-				break;
+				return;
 			case 1:
-				System.out.println("\t 1-1. 출결 보기");
-				System.out.println("\t 출결 보기 페이지입니다.");
-				// 함수 넣기
+				apc.displayAttendance();
 				break;
 			case 2:
-				System.out.println("\t 1-2. 출결 변경");
-				System.out.println("\t 출결 변경 페이지입니다.");
-				// 함수 넣기
+				apc.updateAttendance();
+				break;
 			default:
 				System.out.println("메뉴에 없는 번호를 선택하였습니다. 1~2번 중에서 선택하세요.");
 				break;

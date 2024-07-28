@@ -9,11 +9,18 @@ import java.io.InputStream;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
-public class AttendProfessorContoller {
+public class AttendProfessorController {
 	// ********출결 보기 *********
 	// ********오늘 출석을 보기 위한 STD_NAME, SEAT_NO, ATTEND_STATUS, CI_TIME, CO_TIME을 학생별로
 	// 저장할 클래스 생성
@@ -315,6 +322,134 @@ public class AttendProfessorContoller {
 			throw new RuntimeException(e);
 		}
 	}
+	//////////////////////////////////////////////
+
+	public void displayAttendance() {
+		System.out.println("\t 1-1. 출결 보기");
+		System.out.println("\t 출결 보기 페이지입니다.");
+
+		// 예시 날짜 범위: 월요일부터 금요일
+		LocalDate startDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+		LocalDate endDate = startDate.plusDays(4); // 금요일
+
+		System.out.println(startDate);
+		System.out.println(endDate);
+
+		// 날짜 형식 지정
+//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+		// java.sql.Date로 변환
+		java.sql.Date sqlStartDate = java.sql.Date.valueOf(startDate);
+		java.sql.Date sqlEndDate = java.sql.Date.valueOf(endDate);
+
+		String sql;
+		PreparedStatement pstmt;
+		ResultSet rs;
+
+		// 학생번호 전체 가져오기
+		sql = "select std_no, std_name from Student order by std_no asc";
+
+		pstmt = ConnectController.getPstmt(sql);
+
+		rs = ConnectController.executePstmtQuery(pstmt);
+
+		HashMap<Integer, String> stdList = new HashMap<>();
+
+		try {
+			while (rs.next()) {
+				stdList.put(rs.getInt("std_no"), rs.getString("std_name"));
+			}
+		} catch (Exception e) {
+			System.out.println("학생 번호값 리스트에 넣는중 오류 발생");
+			return;
+		}
+
+//		SELECT S.std_name, A.attend_status FROM Attendance A JOIN Student S ON A.std_no = S.std_no WHERE A.std_no = 1 AND A.attend_date BETWEEN TO_DATE('2024-07-01', 'YYYY-MM-DD') AND TO_DATE('2024-08-31', 'YYYY-MM-DD') ORDER BY A.attend_date ASC;
+
+		sql = "SELECT S.std_name, A.attend_status, A.attend_date FROM Attendance A "
+				+ "JOIN Student S ON A.std_no = S.std_no " + "WHERE A.std_no = ? AND A.attend_date BETWEEN ? AND ? "
+				+ "ORDER BY A.attend_date ASC";
+
+		for (Map.Entry<Integer, String> entry : stdList.entrySet()) {
+			int stdNo = entry.getKey();
+			String stdName = entry.getValue();
+
+			pstmt = ConnectController.getPstmt(sql);
+			try {
+				pstmt.setInt(1, stdNo);
+				pstmt.setDate(2, sqlStartDate);
+				pstmt.setDate(3, sqlEndDate);
+			} catch (Exception e) {
+				System.out.println("pstmt set데이터 중 오류 발생");
+				return;
+			}
+
+			rs = ConnectController.executePstmtQuery(pstmt);
+
+			String mon = "X";
+			String tue = "X";
+			String wed = "X";
+			String thu = "X";
+			String fri = "X";
+
+			try {
+				while (rs.next()) {
+					stdName = rs.getString("std_name");
+
+					LocalDate attendDate = rs.getDate("attend_date").toLocalDate();
+					int attendStatus = rs.getInt("attend_status");
+					String printStatus = "X";
+
+					switch (attendStatus) {
+					case 0:
+						printStatus = "X";
+						break;
+					case 2:
+						printStatus = "ㅁ";
+						break;
+					case 1:
+						printStatus = "O";
+						break;
+					case 3:
+					case 4:
+						printStatus = "△";
+						break;
+					default:
+						break;
+					}
+
+					// 각 요일에 해당하는 출석 상태를 설정
+					switch (attendDate.getDayOfWeek()) {
+					case MONDAY:
+						mon = printStatus;
+						break;
+					case TUESDAY:
+						tue = printStatus;
+						break;
+					case WEDNESDAY:
+						wed = printStatus;
+						break;
+					case THURSDAY:
+						thu = printStatus;
+						break;
+					case FRIDAY:
+						fri = printStatus;
+						break;
+					default:
+						// 다른 요일은 무시
+						break;
+					}
+
+					// 각 요일의 출석 상태 출력
+				}
+				System.out.printf("%d\t%s\t%s\t%s\t%s\t%s\t%s\n", stdNo, stdName, mon, tue, wed, thu, fri);
+				UtilController.line();
+			} catch (Exception e) {
+				System.out.println("문제 발생");
+			}
+		}
+
+	}
 
 	//////////////////////////////////////////////
 
@@ -324,13 +459,13 @@ public class AttendProfessorContoller {
 
 		String strDate = null;
 		String stdName;
-		
+
 		String sql;
 		PreparedStatement pstmt;
 
 		System.out.println("\t 1-2. 출결 변경");
 		System.out.println("\t 출결 변경 페이지입니다.");
-		
+
 		// 출결 보기 메소드 호출하여 학생 출석 상황 뿌리기
 
 		while (stdNo == -1) {
@@ -365,25 +500,26 @@ public class AttendProfessorContoller {
 				System.out.println("날짜를 형식에 맞게 입력해 주세요.");
 				continue;
 			}
-			
-			
+
 		}
+
+		// 학생 번호와 출결 날짜로 그 날 출결 데이터 있는지 확인 후 없으면 없다고 출력 후 리턴
 
 		// 학생 번호로 학생 이름 select 해오기
 		stdName = selectStdName(stdNo);
 
 		// '학생 이름'의 'yy/MM/dd' 일자의 정보를 변경합니다
 		int statusNo = -1;
-		while(statusNo == -1) {
+		while (statusNo == -1) {
 			System.out.printf("%s의 %s 일자 정보를 변경합니다.", stdName, strDate);
 			UtilController.line();
 			System.out.println("1. 출석  2. 병가  3. 지각  4. 조퇴");
-			
+
 			// 1 /2 /3 /4 입력 받기
 			statusNo = ConnectController.scanIntData();
-			
+
 			// 예외처리 - 정보값을 정확히 입력해 주세요
-			switch(statusNo) {
+			switch (statusNo) {
 			case 1, 2, 3, 4:
 				break;
 			default:
@@ -391,36 +527,36 @@ public class AttendProfessorContoller {
 				System.out.println("정보값을 정확히 입력해 주세요.");
 			}
 		}
-		
+
 		// update문 실행
 		sql = "update Attendance set attend_status = ? where std_no = ? and attend_date = ?";
 		pstmt = ConnectController.getPstmt(sql);
 		try {
-			pstmt.setInt(1,  statusNo);
-			pstmt.setInt(2,  stdNo);
-			pstmt.setString(3,  strDate);
-		}catch(Exception e) {
+			pstmt.setInt(1, statusNo);
+			pstmt.setInt(2, stdNo);
+			pstmt.setString(3, strDate);
+		} catch (Exception e) {
 			System.out.println("pstmt set데이터 중 에러 발생");
 			return;
 		}
 		int result = -1;
 		try {
 			result = ConnectController.executePstmtUpdate(pstmt);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println("executeUpdate 중 에러 발생");
 			System.out.println("출결 변경이 실행되지 않았습니다.");
 			return;
 		}
-		
+
 		// 변경이 완료되었습니다
-		if(result == 1) {
+		if (result == 1) {
 			System.out.println("출결 변경이 성공적으로 완료되었습니다.");
 			return;
 		}
-		
+
 		System.out.println("출결 변경 중 문제가 발생했습니다.");
 		System.out.println("출결 변경이 실행되지 않았습니다.");
-		
+
 	}
 
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -458,8 +594,8 @@ public class AttendProfessorContoller {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
-		if(UtilController.isNull(stdName)) {
+
+		if (UtilController.isNull(stdName)) {
 			System.out.println("이름 받아오기 중 문제 발생");
 		}
 		return stdName;

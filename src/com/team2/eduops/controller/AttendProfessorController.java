@@ -17,7 +17,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Map;
 
 public class AttendProfessorController {
@@ -327,13 +327,21 @@ public class AttendProfessorController {
 	public void displayAttendance() {
 		System.out.println("\t 1-1. 출결 보기");
 		System.out.println("\t 출결 보기 페이지입니다.");
+		LocalDate today = LocalDate.now();
 
-		// 예시 날짜 범위: 월요일부터 금요일
-		LocalDate startDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+		// 오늘 날짜 이전의 주의 월요일 찾기
+		LocalDate startDate = today.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
+		// 오늘 날짜 이전의 주의 금요일 찾기
 		LocalDate endDate = startDate.plusDays(4); // 금요일
 
-		System.out.println(startDate);
-		System.out.println(endDate);
+
+		System.out.print("학생번호|학생이름|");
+		LocalDate date= startDate;
+		while(!date.isAfter(endDate)){
+			System.out.print(date+"|");
+			date=date.plusDays(1);
+		}
+		System.out.println();
 
 		// 날짜 형식 지정
 //		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -442,7 +450,7 @@ public class AttendProfessorController {
 
 					// 각 요일의 출석 상태 출력
 				}
-				System.out.printf("%d\t%s\t%s\t%s\t%s\t%s\t%s\n", stdNo, stdName, mon, tue, wed, thu, fri);
+				System.out.printf("  %d\t   %s\t     %s\t     \t%s\t     \t%s\t      \t%s\t   \t%s\n", stdNo, stdName, mon, tue, wed, thu, fri);
 				UtilController.line();
 			} catch (Exception e) {
 				System.out.println("문제 발생");
@@ -456,13 +464,10 @@ public class AttendProfessorController {
 	// 출결 변경
 	public void updateAttendance() {
 		int stdNo = -1;
-
 		String strDate = null;
 		String stdName;
-
 		String sql;
 		PreparedStatement pstmt;
-
 		System.out.println("\t 1-2. 출결 변경");
 		System.out.println("\t 출결 변경 페이지입니다.");
 
@@ -529,7 +534,7 @@ public class AttendProfessorController {
 		}
 
 		// update문 실행
-		sql = "update Attendance set attend_status = ? where std_no = ? and attend_date = ?";
+		sql = "update Attendance set attend_status = ? where std_no = ? and attend_date = TO_DATE(?,'YYYY-MM-DD')";
 		pstmt = ConnectController.getPstmt(sql);
 		try {
 			pstmt.setInt(1, statusNo);
